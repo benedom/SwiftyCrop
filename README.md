@@ -47,7 +47,7 @@ The [Swift Package Manager](https://swift.org/package-manager/) is a tool for ma
 To integrate `SwiftyCrop` into your Xcode project using Xcode 14.3 or later, specify it in `File > Swift Packages > Add Package Dependency...`:
 
 ```ogdl
-https://github.com/elai950/AlertToast.git, :branch="master" // TODO: Adjust URL
+https://github.com/benedom/SwiftyCrop, :branch="master"
 ```
 
 ### Manually
@@ -131,4 +131,4 @@ Benedikt Betz
 
 ## 📃 License
 
-`SwiftyCrop` is available under the MIT license. See the [LICENSE](https://github.com/elai950/AlertToast/blob/master/LICENSE.md) file for more info. // TODO
+`SwiftyCrop` is available under the MIT license. See the [LICENSE](https://github.com/benedom/SwiftyCrop/blob/master/LICENSE.md) file for more info.
