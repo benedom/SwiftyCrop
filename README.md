@@ -79,8 +79,8 @@ struct ExampleView: View {
             Below is a sample implementation:
              */
 
-             Button("Show cropper") {
-                selectedImage = UIImage(named: "") // TODO: Test
+             Button("Show cropper with system image") {
+                selectedImage = UIImage(systemName: "photo")
                 showImageCropper.toggle()
              }
 
@@ -91,7 +91,7 @@ struct ExampleView: View {
                     imageToCrop: selectedImage,
                     maskShape: .square
                 ) { croppedImage in
-                    // Do something with the returned cropped image
+                    // Do something with the returned, cropped image
                 }
             }
         }
@@ -115,7 +115,7 @@ let configuration = SwiftyCropConfiguration(
                     maskShape: .square,
                     configuration: configuration // Use the configuration
                 ) { croppedImage in
-                    // Do something with the returned cropped image
+                    // Do something with the returned, cropped image
                 }
             }
         }
