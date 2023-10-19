@@ -1,6 +1,9 @@
-# SwiftyCrop
+# SwiftyCrop - SwiftUI
 
-// TODO: Screenshots, GIFs
+<p align="center">
+    <img src="https://github.com/benedom/SwiftyCrop/blob/master/Assets/crop_circle.png" style="margin: auto;"/>
+    <img src="https://github.com/benedom/SwiftyCrop/blob/master/Assets/crop_square.png" style="margin: auto;"/>
+</p>
 
 ## 🔭 Overview
 SwiftyCrop allows users to seamlessly crop images within their SwiftUI applications. It provides a user-friendly interface that makes cropping an image as simple as selecting the desired area.
@@ -31,8 +34,8 @@ The localization file can be found in `Sources/SwiftyCrop/Resources`.
 ## 🧳 Requirements
 
 - iOS 16.0 or later
-- Xcode 14.3 or later
-- Swift 5.0 or later
+- Xcode 15.0 or later
+- Swift 5.9 or later
 
 
 ## 💻 Installation
@@ -69,8 +72,6 @@ struct ExampleView: View {
     var body: some View {
         VStack {
             /*
-            Your view implementation here.
-
             Update `selectedImage` with the image you want to crop,
             e.g. after picking it from the library or downloading it.
 
@@ -79,8 +80,10 @@ struct ExampleView: View {
             Below is a sample implementation:
              */
 
-             Button("Show cropper with system image") {
-                selectedImage = UIImage(systemName: "photo")
+             Button("Crop downloaded image") {
+                Task {
+                    selectedImage = await downloadExampleImage()
+                }
                 showImageCropper.toggle()
              }
 
@@ -95,6 +98,17 @@ struct ExampleView: View {
                 }
             }
         }
+    }
+
+    // Example function for downloading an image
+    private func downloadExampleImage() async -> UIImage? {
+        let urlString = "https://picsum.photos/1000/1200"
+        guard let url = URL(string: urlString),
+              let (data, _) = try? await URLSession.shared.data(from: url),
+              let image = UIImage(data: data)
+        else { return nil }
+
+        return image
     }
 }
 ```
@@ -127,7 +141,7 @@ All issue reports, feature requests, pull requests and GitHub stars are welcomed
 
 ## ✍️ Author
 
-Benedikt Betz
+Benedikt Betz & Check24
 
 ## 📃 License
 

@@ -1,3 +1,3 @@
-enum MaskShape {
+public enum MaskShape {
     case circle, square
 }

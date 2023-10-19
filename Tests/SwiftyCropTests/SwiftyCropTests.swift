@@ -2,11 +2,9 @@ import XCTest
 @testable import SwiftyCrop
 
 final class SwiftyCropTests: XCTestCase {
-    func testExample() throws {
-        // XCTest Documentation
-        // https://developer.apple.com/documentation/xctest
-
-        // Defining Test Cases and Test Methods
-        // https://developer.apple.com/documentation/xctest/defining_test_cases_and_test_methods
+    func testConfigurationInit() {
+        let configuration = SwiftyCropConfiguration(maxMagnificationScale: 1.0, maskRadius: 1.0)
+        XCTAssertEqual(configuration.maxMagnificationScale, 1.0)
+        XCTAssertEqual(configuration.maskRadius, 1.0)
     }
 }

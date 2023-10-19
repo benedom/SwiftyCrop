@@ -31,7 +31,7 @@ struct CropView: View {
     
     var body: some View {
         VStack {
-            Text("interaction_instructions", tableName: localizableTableName)
+            Text("interaction_instructions", tableName: localizableTableName, bundle: .module)
                 .font(.system(size: 16, weight: .regular))
                 .foregroundColor(.white)
                 .padding(.top, 30)
@@ -100,7 +100,7 @@ struct CropView: View {
                 Button {
                     dismiss()
                 } label: {
-                    Text("cancel_button", tableName: localizableTableName)
+                    Text("cancel_button", tableName: localizableTableName, bundle: .module)
                 }
                 .foregroundColor(.white)
                 
@@ -110,7 +110,7 @@ struct CropView: View {
                     onComplete(viewModel.crop(image))
                     dismiss()
                 } label: {
-                    Text("save_button", tableName: localizableTableName)
+                    Text("save_button", tableName: localizableTableName, bundle: .module)
                 }
                 .foregroundColor(.white)
             }
