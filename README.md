@@ -1,7 +1,7 @@
 # SwiftyCrop - SwiftUI
 
 <p align="center">
-    <img src="https://github.com/benedom/SwiftyCrop/blob/master/Assets/crop_circle.png" style="margin: auto;"/>
+    <img src="https://github.com/benedom/SwiftyCrop/blob/master/Assets/crop_circle.png" style="margin: auto; width: 300"/>
     <img src="https://github.com/benedom/SwiftyCrop/blob/master/Assets/crop_square.png" style="margin: auto;"/>
 </p>
 
