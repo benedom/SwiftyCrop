@@ -24,12 +24,12 @@ The localization file can be found in `Sources/SwiftyCrop/Resources`.
 
 ## 📕 Contents
 
-- [Requirements](#🧳-requirements)
-- [Installation](#💻-installation)
-- [Usage](#🛠️-usage)
-- [Contributors](#👨‍💻-contributors)
-- [Author](#✍️-author)
-- [License](#📃-license)
+- [Requirements](#-requirements)
+- [Installation](#-installation)
+- [Usage](#-usage)
+- [Contributors](#-contributors)
+- [Author](#-author)
+- [License](#-license)
 
 ## 🧳 Requirements
 
@@ -127,7 +127,8 @@ let configuration = SwiftyCropConfiguration(
                 SwiftyCropView(
                     imageToCrop: selectedImage,
                     maskShape: .square,
-                    configuration: configuration // Use the configuration
+                    // Use the configuration
+                    configuration: configuration
                 ) { croppedImage in
                     // Do something with the returned, cropped image
                 }
@@ -141,7 +142,7 @@ All issue reports, feature requests, pull requests and GitHub stars are welcomed
 
 ## ✍️ Author
 
-Benedikt Betz & Check24
+Benedikt Betz & CHECK24
 
 ## 📃 License
 
