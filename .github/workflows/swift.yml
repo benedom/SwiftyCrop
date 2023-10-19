@@ -12,14 +12,12 @@ on:
 jobs:
   build:
 
-    runs-on: ios-latest
+    runs-on: macos-latest
 
     steps:
     - uses: actions/checkout@v3
     - uses: swift-actions/setup-swift@v1
     - name: Get swift version
       run: swift --version
-    - name: Build
-      run: swift build -v 
-    - name: Run tests
-      run: swift test -v
+    - name: Build and test
+      run: xcodebuild test -scheme SwiftyCrop -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest'
