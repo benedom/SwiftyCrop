@@ -11,6 +11,12 @@ on:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        platform:
+          - iOS
+        xcode:
+          - ^15
 
     runs-on: macos-latest
 
@@ -19,5 +25,7 @@ jobs:
     - uses: swift-actions/setup-swift@v1
     - name: Get swift version
       run: swift --version
-    - name: Build and test
-      run: xcodebuild test -scheme SwiftyCrop -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest'
+    - uses: mxcl/xcodebuild@v1
+      with:
+        xcode: ${{ matrix.xcode }}
+        platform: ${{ matrix.platform }}
