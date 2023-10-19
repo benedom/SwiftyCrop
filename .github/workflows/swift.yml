@@ -21,11 +21,14 @@ jobs:
     runs-on: macos-13
 
     steps:
-    - uses: actions/checkout@v3
-    - uses: swift-actions/setup-swift@v1
+    - name: Checkout
+      uses: actions/checkout@v3
     - name: Get swift version
+      uses: swift-actions/setup-swift@v1
+    - name: Print Swift version
       run: swift --version
-    - uses: mxcl/xcodebuild@v1
+    - name: Build & Test
+      uses: mxcl/xcodebuild@v1
       with:
         xcode: ${{ matrix.xcode }}
         platform: ${{ matrix.platform }}
