@@ -2,6 +2,10 @@
 [![Build](https://github.com/benedom/SwiftyCrop/actions/workflows/build-swift.yml/badge.svg?branch=master)](https://github.com/benedom/SwiftyCrop/actions/workflows/build-swift.yml)
 
 <p align="center">
+    <img src="https://github.com/benedom/SwiftyCrop/blob/master/Assets/demo.gif" style="margin: auto; width: 250px"/>
+</p>
+
+<p align="center">
     <img src="https://github.com/benedom/SwiftyCrop/blob/master/Assets/crop_circle.png" style="margin: auto; width: 250px"/>
     <img src="https://github.com/benedom/SwiftyCrop/blob/master/Assets/crop_square.png" style="margin: auto; width: 250px"/>
 </p>
