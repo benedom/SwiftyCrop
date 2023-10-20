@@ -118,14 +118,27 @@ struct ExampleView: View {
 }
 ```
 
-You can also configure `SwiftyCropView` by passing a `SwiftyCropConfiguration`:
+SwiftyCrop supports two different mask shapes for cropping:
+- `circle`
+- `square`
+
+This is only the shape of the mask the user will see when cropping the image. The resulting, cropped image will always be a square.
+
+You can also configure `SwiftyCropView` by passing a `SwiftyCropConfiguration`. A configuration has the following properties:
+
+| Property      | Description |
+| ----------- | ----------- |
+| `maxMagnificationScale` | `CGFloat`: The maximum scale factor that the image can be magnified while cropping. Defaults to `4.0`. |
+| `maskRadius` | `CGFloat`: The radius of the mask used for cropping. Defaults to `130`. A good way is to make it dependend on the screens size. |
+
+Create a configuration like this:
 ```swift
 let configuration = SwiftyCropConfiguration(
     maxMagnificationScale = 4.0,
     maskRadius: 130
 )
 ```
-
+and use it like this:
 ```swift
 .fullScreenCover(isPresented: $showImageCropper) {
             if let selectedImage = selectedImage {
