@@ -94,8 +94,8 @@ struct ExampleView: View {
              Button("Crop downloaded image") {
                 Task {
                     selectedImage = await downloadExampleImage()
+                    showImageCropper.toggle()
                 }
-                showImageCropper.toggle()
              }
 
         }
