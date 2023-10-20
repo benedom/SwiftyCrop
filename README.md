@@ -3,7 +3,9 @@
 ![Static Badge](https://img.shields.io/badge/Platform%20-%20iOS%20-%20light_green)
 ![Static Badge](https://img.shields.io/badge/iOS%20-%20%3E%2016.0%20-%20light_green)
 ![Static Badge](https://img.shields.io/badge/Swift%20-%20%3E%205.9%20-%20orange)
-![Static Badge](https://img.shields.io/badge/License%20-%20MIT%20-%20blue?link=https%3A%2F%2Fgithub.com%2Fbenedom%2FSwiftyCrop%2Fblob%2Fmaster%2FLICENSE.md)
+<a href="https://github.com/benedom/SwiftyCrop/blob/master/LICENSE.md">
+  <img src="https://img.shields.io/badge/License%20-%20MIT%20-%20blue" alt="License - MIT">
+</a>
 
 <p align="center">
     <img src="https://github.com/benedom/SwiftyCrop/blob/master/Assets/demo.gif" style="margin: auto; width: 250px"/>
