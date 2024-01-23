@@ -49,4 +49,7 @@ xcuserdata/
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
 
+### Visual Studio Code ###
+.build
+
 # End of https://www.toptal.com/developers/gitignore/api/macos,xcode
