@@ -121,7 +121,7 @@ struct CropView: View {
     }
     
     private func cropImage() -> UIImage? {
-        if maskShape == .circle {
+        if maskShape == .circle && configuration.cropImageCircular {
             viewModel.cropToCircle(image)
         } else {
             viewModel.cropToSquare(image)
