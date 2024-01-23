@@ -107,7 +107,7 @@ struct CropView: View {
                 Spacer()
                 
                 Button {
-                    onComplete(viewModel.crop(image))
+                    onComplete(cropImage())
                     dismiss()
                 } label: {
                     Text("save_button", tableName: localizableTableName, bundle: .module)
@@ -118,6 +118,14 @@ struct CropView: View {
             .padding()
         }
         .background(.black)
+    }
+    
+    private func cropImage() -> UIImage? {
+        if maskShape == .circle && configuration.cropImageCircular {
+            viewModel.cropToCircle(image)
+        } else {
+            viewModel.cropToSquare(image)
+        }
     }
     
     private struct MaskShapeView: View {

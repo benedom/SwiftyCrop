@@ -40,15 +40,91 @@ class CropViewModel: ObservableObject {
     }
     
     /**
-     Crops the image to the part that is dragged/zoomed inside the view. Cropped image will **always** be a square, no matter what mask shape is used.
+     Crops the image to the part that is dragged/zoomed inside the view. Cropped image will be a square.
      - Parameters:
         - image: The UIImage to crop
      - Returns: A cropped UIImage if the cropping operation is successful; otherwise nil.
      */
-    func crop(_ image: UIImage) -> UIImage? {
+    func cropToSquare(_ image: UIImage) -> UIImage? {
         guard let orientedImage = image.correctlyOriented else {
             return nil
         }
+        
+        let cropRect = calculateCropRect(orientedImage)
+        
+        guard let cgImage = orientedImage.cgImage,
+              let result = cgImage.cropping(to: cropRect) else {
+            return nil
+        }
+        
+        return UIImage(cgImage: result)
+    }
+    
+    /**
+     Crops the image to the part that is dragged/zoomed inside the view. Cropped image will be a circle.
+     - Parameters:
+        - image: The UIImage to crop
+     - Returns: A cropped UIImage if the cropping operation is successful; otherwise nil.
+     */
+    func cropToCircle(_ image: UIImage) -> UIImage? {
+        guard let orientedImage = image.correctlyOriented else {
+            return nil
+        }
+        
+        let cropRect = calculateCropRect(orientedImage)
+        
+        // A circular crop results in some transparency in the
+        // cropped image, so set opaque to false to ensure the
+        // cropped image does not include a background fill
+        let imageRendererFormat = orientedImage.imageRendererFormat
+        imageRendererFormat.opaque = false
+        
+        // UIGraphicsImageRenderer().image provides a block
+        // interface to draw into in a new UIImage
+        let circleCroppedImage = UIGraphicsImageRenderer(
+            // The cropRect.size is the size of
+            // the resulting circleCroppedImage
+            size: cropRect.size,
+            format: imageRendererFormat).image { context in
+           
+            // The drawRect is the cropRect starting at (0,0)
+            let drawRect = CGRect(
+                origin: .zero,
+                size: cropRect.size
+            )
+         
+            // addClip on a UIBezierPath will clip all contents
+            // outside of the UIBezierPath drawn after addClip
+            // is called, in this case, drawRect is a circle so
+            // the UIBezierPath clips drawing to the circle
+            UIBezierPath(ovalIn: drawRect).addClip()
+
+            // The drawImageRect is offsets the image’s bounds
+            // such that the circular clip is at the center of
+            // the image
+            let drawImageRect = CGRect(
+                origin: CGPoint(
+                    x: -cropRect.origin.x,
+                    y: -cropRect.origin.y
+                ),
+                size: orientedImage.size
+            )
+
+            // Draws the orientedImage inside of the
+            // circular clip
+            orientedImage.draw(in: drawImageRect)
+        }
+
+        return circleCroppedImage
+    }
+
+    /**
+     Calculates the rectangle to crop.
+     - Parameters:
+        - image: The UIImage to calculate the rectangle to crop for
+     - Returns: A CGRect representing the rectangle to crop.
+     */
+    private func calculateCropRect(_ orientedImage: UIImage) -> CGRect {
         // The relation factor of the originals image width/height and the width/height of the image displayed in the view (initial)
         let factor = min((orientedImage.size.width / imageSizeInView.width), (orientedImage.size.height / imageSizeInView.height))
         let centerInOriginalImage = CGPoint(x: orientedImage.size.width / 2, y: orientedImage.size.height / 2)
@@ -73,12 +149,7 @@ class CropViewModel: ObservableObject {
             height: cropRectDimension
         )
         
-        guard let cgImage = orientedImage.cgImage,
-              let result = cgImage.cropping(to: cropRect) else {
-            return nil
-        }
-        
-        return UIImage(cgImage: result)
+        return cropRect
     }
 }
 
