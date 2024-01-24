@@ -3,13 +3,13 @@ import SwiftUI
 struct CropView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel: CropViewModel
-    
+
     private let image: UIImage
     private let maskShape: MaskShape
     private let configuration: SwiftyCropConfiguration
     private let onComplete: (UIImage?) -> Void
     private let localizableTableName: String
-    
+
     init(
         image: UIImage,
         maskShape: MaskShape,
@@ -28,7 +28,7 @@ struct CropView: View {
         )
         localizableTableName = "Localizable"
     }
-    
+
     var body: some View {
         VStack {
             Text("interaction_instructions", tableName: localizableTableName, bundle: .module)
@@ -36,7 +36,7 @@ struct CropView: View {
                 .foregroundColor(.white)
                 .padding(.top, 30)
                 .zIndex(1)
-            
+
             ZStack {
                 Image(uiImage: image)
                     .resizable()
@@ -52,7 +52,7 @@ struct CropView: View {
                                 }
                         }
                     )
-                
+
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFit()
@@ -69,10 +69,10 @@ struct CropView: View {
                     .onChanged { value in
                         let sensitivity: CGFloat = 0.2
                         let scaledValue = (value.magnitude - 1) * sensitivity + 1
-                        
+
                         let maxScaleValues = viewModel.calculateMagnificationGestureMaxValues()
                         viewModel.scale = min(max(scaledValue * viewModel.scale, maxScaleValues.0), maxScaleValues.1)
-                        
+
                         let maxOffsetPoint = viewModel.calculateDragGestureMax()
                         let newX = min(max(viewModel.lastOffset.width, -maxOffsetPoint.x), maxOffsetPoint.x)
                         let newY = min(max(viewModel.lastOffset.height, -maxOffsetPoint.y), maxOffsetPoint.y)
@@ -86,8 +86,14 @@ struct CropView: View {
                         with: DragGesture()
                             .onChanged { value in
                                 let maxOffsetPoint = viewModel.calculateDragGestureMax()
-                                let newX = min(max(value.translation.width + viewModel.lastOffset.width, -maxOffsetPoint.x), maxOffsetPoint.x)
-                                let newY = min(max(value.translation.height + viewModel.lastOffset.height, -maxOffsetPoint.y), maxOffsetPoint.y)
+                                let newX = min(
+                                    max(value.translation.width + viewModel.lastOffset.width, -maxOffsetPoint.x),
+                                    maxOffsetPoint.x
+                                )
+                                let newY = min(
+                                    max(value.translation.height + viewModel.lastOffset.height, -maxOffsetPoint.y),
+                                    maxOffsetPoint.y
+                                )
                                 viewModel.offset = CGSize(width: newX, height: newY)
                             }
                             .onEnded { _ in
@@ -95,7 +101,7 @@ struct CropView: View {
                             }
                     )
             )
-            
+
             HStack {
                 Button {
                     dismiss()
@@ -103,9 +109,9 @@ struct CropView: View {
                     Text("cancel_button", tableName: localizableTableName, bundle: .module)
                 }
                 .foregroundColor(.white)
-                
+
                 Spacer()
-                
+
                 Button {
                     onComplete(cropImage())
                     dismiss()
@@ -119,7 +125,7 @@ struct CropView: View {
         }
         .background(.black)
     }
-    
+
     private func cropImage() -> UIImage? {
         if maskShape == .circle && configuration.cropImageCircular {
             viewModel.cropToCircle(image)
@@ -127,16 +133,16 @@ struct CropView: View {
             viewModel.cropToSquare(image)
         }
     }
-    
+
     private struct MaskShapeView: View {
         let maskShape: MaskShape
-        
+
         var body: some View {
             Group {
                 switch maskShape {
                 case .circle:
                     Circle()
-                    
+
                 case .square:
                     Rectangle()
                 }
