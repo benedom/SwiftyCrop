@@ -128,7 +128,7 @@ SwiftyCrop supports two different mask shapes for cropping:
 - `circle`
 - `square`
 
-This is only the shape of the mask the user will see when cropping the image. The resulting, cropped image will always be a square.
+This is only the shape of the mask the user will see when cropping the image. The resulting, cropped image will always be a square by default. You can override this using a configuration.
 
 You can also configure `SwiftyCropView` by passing a `SwiftyCropConfiguration`. A configuration has the following properties:
 
