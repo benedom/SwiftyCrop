@@ -166,7 +166,7 @@ and use it like this:
 
 All issue reports, feature requests, pull requests and GitHub stars are welcomed and much appreciated.
 
-Thanks to [@leoz](https://github.com/leoz) for adding the circular crop mode 🎉
+Thanks to [@leoz](https://github.com/leoz) for adding the circular crop mode and the demo app 🎉
 
 ## ✍️ Author
 
