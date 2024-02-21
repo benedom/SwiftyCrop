@@ -47,7 +47,7 @@ struct CropView: View {
                 viewModel.lastScale = viewModel.scale
                 viewModel.lastOffset = viewModel.offset
             }
-        
+
         let dragGesture = DragGesture()
             .onChanged { value in
                 let maxOffsetPoint = viewModel.calculateDragGestureMax()
@@ -64,9 +64,9 @@ struct CropView: View {
             .onEnded { _ in
                 viewModel.lastOffset = viewModel.offset
             }
-        
+
         let combinedGesture = magnificationGesture.simultaneously(with: dragGesture)
-        
+
         VStack {
             Text("interaction_instructions", tableName: localizableTableName, bundle: .module)
                 .font(.system(size: 16, weight: .regular))
