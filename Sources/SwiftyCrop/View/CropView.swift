@@ -30,6 +30,43 @@ struct CropView: View {
     }
 
     var body: some View {
+        let magnificationGesture = MagnificationGesture()
+            .onChanged { value in
+                let sensitivity: CGFloat = 0.2
+                let scaledValue = (value.magnitude - 1) * sensitivity + 1
+
+                let maxScaleValues = viewModel.calculateMagnificationGestureMaxValues()
+                viewModel.scale = min(max(scaledValue * viewModel.scale, maxScaleValues.0), maxScaleValues.1)
+
+                let maxOffsetPoint = viewModel.calculateDragGestureMax()
+                let newX = min(max(viewModel.lastOffset.width, -maxOffsetPoint.x), maxOffsetPoint.x)
+                let newY = min(max(viewModel.lastOffset.height, -maxOffsetPoint.y), maxOffsetPoint.y)
+                viewModel.offset = CGSize(width: newX, height: newY)
+            }
+            .onEnded { _ in
+                viewModel.lastScale = viewModel.scale
+                viewModel.lastOffset = viewModel.offset
+            }
+        
+        let dragGesture = DragGesture()
+            .onChanged { value in
+                let maxOffsetPoint = viewModel.calculateDragGestureMax()
+                let newX = min(
+                    max(value.translation.width + viewModel.lastOffset.width, -maxOffsetPoint.x),
+                    maxOffsetPoint.x
+                )
+                let newY = min(
+                    max(value.translation.height + viewModel.lastOffset.height, -maxOffsetPoint.y),
+                    maxOffsetPoint.y
+                )
+                viewModel.offset = CGSize(width: newX, height: newY)
+            }
+            .onEnded { _ in
+                viewModel.lastOffset = viewModel.offset
+            }
+        
+        let combinedGesture = magnificationGesture.simultaneously(with: dragGesture)
+        
         VStack {
             Text("interaction_instructions", tableName: localizableTableName, bundle: .module)
                 .font(.system(size: 16, weight: .regular))
@@ -64,43 +101,7 @@ struct CropView: View {
                     )
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .gesture(
-                MagnificationGesture()
-                    .onChanged { value in
-                        let sensitivity: CGFloat = 0.2
-                        let scaledValue = (value.magnitude - 1) * sensitivity + 1
-
-                        let maxScaleValues = viewModel.calculateMagnificationGestureMaxValues()
-                        viewModel.scale = min(max(scaledValue * viewModel.scale, maxScaleValues.0), maxScaleValues.1)
-
-                        let maxOffsetPoint = viewModel.calculateDragGestureMax()
-                        let newX = min(max(viewModel.lastOffset.width, -maxOffsetPoint.x), maxOffsetPoint.x)
-                        let newY = min(max(viewModel.lastOffset.height, -maxOffsetPoint.y), maxOffsetPoint.y)
-                        viewModel.offset = CGSize(width: newX, height: newY)
-                    }
-                    .onEnded { _ in
-                        viewModel.lastScale = viewModel.scale
-                        viewModel.lastOffset = viewModel.offset
-                    }
-                    .simultaneously(
-                        with: DragGesture()
-                            .onChanged { value in
-                                let maxOffsetPoint = viewModel.calculateDragGestureMax()
-                                let newX = min(
-                                    max(value.translation.width + viewModel.lastOffset.width, -maxOffsetPoint.x),
-                                    maxOffsetPoint.x
-                                )
-                                let newY = min(
-                                    max(value.translation.height + viewModel.lastOffset.height, -maxOffsetPoint.y),
-                                    maxOffsetPoint.y
-                                )
-                                viewModel.offset = CGSize(width: newX, height: newY)
-                            }
-                            .onEnded { _ in
-                                viewModel.lastOffset = viewModel.offset
-                            }
-                    )
-            )
+            .gesture(combinedGesture)
 
             HStack {
                 Button {
