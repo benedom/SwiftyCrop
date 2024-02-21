@@ -10,7 +10,6 @@ class CropViewModel: ObservableObject {
     @Published var lastScale: CGFloat = 1.0
     @Published var offset: CGSize = .zero
     @Published var lastOffset: CGSize = .zero
-    @Published var circleSize: CGSize = .zero
 
     init(
         maskRadius: CGFloat,
