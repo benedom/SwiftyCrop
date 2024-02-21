@@ -64,6 +64,14 @@ struct CropView: View {
             .onEnded { _ in
                 viewModel.lastOffset = viewModel.offset
             }
+        
+        let rotationGesture = RotationGesture()
+            .onChanged { value in
+                viewModel.angle = value
+            }
+            .onEnded { _ in
+                viewModel.lastAngle = viewModel.angle
+            }
 
         VStack {
             Text("interaction_instructions", tableName: localizableTableName, bundle: .module)
@@ -76,6 +84,7 @@ struct CropView: View {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFit()
+                    .rotationEffect(viewModel.angle)
                     .scaleEffect(viewModel.scale)
                     .offset(viewModel.offset)
                     .opacity(0.5)
@@ -91,6 +100,7 @@ struct CropView: View {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFit()
+                    .rotationEffect(viewModel.angle)
                     .scaleEffect(viewModel.scale)
                     .offset(viewModel.offset)
                     .mask(
@@ -101,6 +111,7 @@ struct CropView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .simultaneousGesture(magnificationGesture)
             .simultaneousGesture(dragGesture)
+            .simultaneousGesture(rotationGesture)
 
             HStack {
                 Button {

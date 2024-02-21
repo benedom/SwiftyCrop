@@ -10,6 +10,8 @@ class CropViewModel: ObservableObject {
     @Published var lastScale: CGFloat = 1.0
     @Published var offset: CGSize = .zero
     @Published var lastOffset: CGSize = .zero
+    @Published var angle: Angle = Angle(degrees: 0)
+    @Published var lastAngle: Angle = Angle(degrees: 0)
 
     init(
         maskRadius: CGFloat,
