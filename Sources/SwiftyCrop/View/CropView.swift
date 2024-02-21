@@ -64,7 +64,7 @@ struct CropView: View {
             .onEnded { _ in
                 viewModel.lastOffset = viewModel.offset
             }
-        
+
         let rotationGesture = RotationGesture()
             .onChanged { value in
                 viewModel.angle = value
@@ -138,10 +138,15 @@ struct CropView: View {
     }
 
     private func cropImage() -> UIImage? {
-        if maskShape == .circle && configuration.cropImageCircular {
-            return viewModel.cropToCircle(image)
+        if let rotatedImage: UIImage = viewModel.rotate(image, viewModel.lastAngle) {
+            if maskShape == .circle && configuration.cropImageCircular {
+                return viewModel.cropToCircle(rotatedImage)
+            } else {
+                return viewModel.cropToSquare(rotatedImage)
+            }
+            return rotatedImage
         } else {
-            return viewModel.cropToSquare(image)
+            return nil
         }
     }
 
