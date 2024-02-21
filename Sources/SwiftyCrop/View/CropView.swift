@@ -65,8 +65,6 @@ struct CropView: View {
                 viewModel.lastOffset = viewModel.offset
             }
 
-        let combinedGesture = magnificationGesture.simultaneously(with: dragGesture)
-
         VStack {
             Text("interaction_instructions", tableName: localizableTableName, bundle: .module)
                 .font(.system(size: 16, weight: .regular))
@@ -101,7 +99,8 @@ struct CropView: View {
                     )
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .gesture(combinedGesture)
+            .simultaneousGesture(magnificationGesture)
+            .simultaneousGesture(dragGesture)
 
             HStack {
                 Button {
