@@ -111,7 +111,7 @@ struct CropView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .simultaneousGesture(magnificationGesture)
             .simultaneousGesture(dragGesture)
-            .simultaneousGesture(rotationGesture)
+            .simultaneousGesture(configuration.rotateImage ? rotationGesture : nil)
 
             HStack {
                 Button {
@@ -138,15 +138,19 @@ struct CropView: View {
     }
 
     private func cropImage() -> UIImage? {
-        if let rotatedImage: UIImage = viewModel.rotate(image, viewModel.lastAngle) {
-            if maskShape == .circle && configuration.cropImageCircular {
-                return viewModel.cropToCircle(rotatedImage)
-            } else {
-                return viewModel.cropToSquare(rotatedImage)
+        var editedImage: UIImage = image
+        if configuration.rotateImage {
+            if let rotatedImage: UIImage = viewModel.rotate(
+                editedImage,
+                viewModel.lastAngle
+            ) {
+                editedImage = rotatedImage
             }
-            return rotatedImage
+        }
+        if configuration.cropImageCircular && maskShape == .circle {
+            return viewModel.cropToCircle(editedImage)
         } else {
-            return nil
+            return viewModel.cropToSquare(editedImage)
         }
     }
 

@@ -13,6 +13,7 @@ struct ContentView: View {
     @State private var selectedImage: UIImage?
     @State private var selectedShape: MaskShape = .square
     @State private var cropImageCircular: Bool = false
+    @State private var rotateImage: Bool = true
 
     var body: some View {
         VStack {
@@ -69,7 +70,8 @@ struct ContentView: View {
                     imageToCrop: selectedImage,
                     maskShape: selectedShape,
                     configuration: SwiftyCropConfiguration(
-                        cropImageCircular: cropImageCircular
+                        cropImageCircular: cropImageCircular,
+                        rotateImage: rotateImage
                     )
                 ) { croppedImage in
                     // Do something with the returned, cropped image
