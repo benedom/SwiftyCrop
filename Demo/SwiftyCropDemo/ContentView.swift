@@ -57,6 +57,7 @@ struct ContentView: View {
                     )
                 }
                 Toggle("Crop image to circle", isOn: $cropImageCircular)
+                Toggle("Rotate image", isOn: $rotateImage)
             }
             .buttonStyle(.bordered)
             .padding()
