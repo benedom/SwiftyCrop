@@ -137,13 +137,15 @@ You can also configure `SwiftyCropView` by passing a `SwiftyCropConfiguration`. 
 | `maxMagnificationScale` | `CGFloat`: The maximum scale factor that the image can be magnified while cropping. Defaults to `4.0`. |
 | `maskRadius` | `CGFloat`: The radius of the mask used for cropping. Defaults to `130`. A good way is to make it dependend on the screens size. |
 | `cropImageCircular` | `Bool`: When using the cropping mask `circle`, whether the resulting image should also be masked as circle. Defaults to `false`. |
+| `rotateImage` | `Bool`: Whether the image can be rotated when cropping using pinch gestures. Defaults to `true`. |
 
 Create a configuration like this:
 ```swift
 let configuration = SwiftyCropConfiguration(
     maxMagnificationScale = 4.0,
     maskRadius: 130,
-    cropImageCircular: false
+    cropImageCircular: false,
+    rotateImage: true
 )
 ```
 and use it like this:
@@ -166,7 +168,7 @@ and use it like this:
 
 All issue reports, feature requests, pull requests and GitHub stars are welcomed and much appreciated.
 
-Thanks to [@leoz](https://github.com/leoz) for adding the circular crop mode and the demo app 🎉
+Thanks to [@leoz](https://github.com/leoz) for adding the circular crop mode, the demo app and the rotation functionality 🎉
 
 ## ✍️ Author
 
