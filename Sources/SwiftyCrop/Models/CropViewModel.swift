@@ -10,7 +10,8 @@ class CropViewModel: ObservableObject {
     @Published var lastScale: CGFloat = 1.0
     @Published var offset: CGSize = .zero
     @Published var lastOffset: CGSize = .zero
-    @Published var circleSize: CGSize = .zero
+    @Published var angle: Angle = Angle(degrees: 0)
+    @Published var lastAngle: Angle = Angle(degrees: 0)
 
     init(
         maskRadius: CGFloat,
@@ -122,6 +123,47 @@ class CropViewModel: ObservableObject {
     }
 
     /**
+     Rotates the image to the angle that is rotated inside the view.
+     - Parameters:
+        - image: The UIImage to rotate
+        - angle: The Angle to rotate to
+     - Returns: A rotated UIImage if the rotating operation is successful; otherwise nil.
+     */
+    func rotate(_ image: UIImage, _ angle: Angle) -> UIImage? {
+        guard let orientedImage = image.correctlyOriented else {
+            return nil
+        }
+
+        guard let cgImage = orientedImage.cgImage else {
+            return nil
+        }
+
+        let ciImage = CIImage(cgImage: cgImage)
+
+        // Prepare filter
+        let filter = CIFilter.straightenFilter(
+            image: ciImage,
+            radians: angle.radians
+        )
+
+        // Get output image
+        guard let output = filter?.outputImage else {
+            return nil
+        }
+
+        // Create resulting image
+        let context = CIContext()
+        guard let result = context.createCGImage(
+            output,
+            from: output.extent
+        ) else {
+            return nil
+        }
+
+        return UIImage(cgImage: result)
+    }
+
+    /**
      Calculates the rectangle to crop.
      - Parameters:
         - image: The UIImage to calculate the rectangle to crop for
@@ -175,5 +217,25 @@ private extension UIImage {
         UIGraphicsEndImageContext()
 
         return normalizedImage
+    }
+}
+
+private extension CIFilter {
+    /**
+     Creates the straighten filter.
+     - Parameters:
+        - inputImage: The CIImage to use as an input image
+        - radians: An angle in radians
+     - Returns: A generated CIFilter.
+     */
+    static func straightenFilter(image: CIImage, radians: Double) -> CIFilter? {
+        let angle: Double = radians != 0 ? -radians : 0
+        guard let filter = CIFilter(name: "CIStraightenFilter") else {
+            return nil
+        }
+        filter.setDefaults()
+        filter.setValue(image, forKey: kCIInputImageKey)
+        filter.setValue(angle, forKey: kCIInputAngleKey)
+        return filter
     }
 }

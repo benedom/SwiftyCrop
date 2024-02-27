@@ -30,6 +30,49 @@ struct CropView: View {
     }
 
     var body: some View {
+        let magnificationGesture = MagnificationGesture()
+            .onChanged { value in
+                let sensitivity: CGFloat = 0.2
+                let scaledValue = (value.magnitude - 1) * sensitivity + 1
+
+                let maxScaleValues = viewModel.calculateMagnificationGestureMaxValues()
+                viewModel.scale = min(max(scaledValue * viewModel.scale, maxScaleValues.0), maxScaleValues.1)
+
+                let maxOffsetPoint = viewModel.calculateDragGestureMax()
+                let newX = min(max(viewModel.lastOffset.width, -maxOffsetPoint.x), maxOffsetPoint.x)
+                let newY = min(max(viewModel.lastOffset.height, -maxOffsetPoint.y), maxOffsetPoint.y)
+                viewModel.offset = CGSize(width: newX, height: newY)
+            }
+            .onEnded { _ in
+                viewModel.lastScale = viewModel.scale
+                viewModel.lastOffset = viewModel.offset
+            }
+
+        let dragGesture = DragGesture()
+            .onChanged { value in
+                let maxOffsetPoint = viewModel.calculateDragGestureMax()
+                let newX = min(
+                    max(value.translation.width + viewModel.lastOffset.width, -maxOffsetPoint.x),
+                    maxOffsetPoint.x
+                )
+                let newY = min(
+                    max(value.translation.height + viewModel.lastOffset.height, -maxOffsetPoint.y),
+                    maxOffsetPoint.y
+                )
+                viewModel.offset = CGSize(width: newX, height: newY)
+            }
+            .onEnded { _ in
+                viewModel.lastOffset = viewModel.offset
+            }
+
+        let rotationGesture = RotationGesture()
+            .onChanged { value in
+                viewModel.angle = value
+            }
+            .onEnded { _ in
+                viewModel.lastAngle = viewModel.angle
+            }
+
         VStack {
             Text("interaction_instructions", tableName: localizableTableName, bundle: .module)
                 .font(.system(size: 16, weight: .regular))
@@ -41,6 +84,7 @@ struct CropView: View {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFit()
+                    .rotationEffect(viewModel.angle)
                     .scaleEffect(viewModel.scale)
                     .offset(viewModel.offset)
                     .opacity(0.5)
@@ -56,6 +100,7 @@ struct CropView: View {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFit()
+                    .rotationEffect(viewModel.angle)
                     .scaleEffect(viewModel.scale)
                     .offset(viewModel.offset)
                     .mask(
@@ -64,43 +109,9 @@ struct CropView: View {
                     )
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .gesture(
-                MagnificationGesture()
-                    .onChanged { value in
-                        let sensitivity: CGFloat = 0.2
-                        let scaledValue = (value.magnitude - 1) * sensitivity + 1
-
-                        let maxScaleValues = viewModel.calculateMagnificationGestureMaxValues()
-                        viewModel.scale = min(max(scaledValue * viewModel.scale, maxScaleValues.0), maxScaleValues.1)
-
-                        let maxOffsetPoint = viewModel.calculateDragGestureMax()
-                        let newX = min(max(viewModel.lastOffset.width, -maxOffsetPoint.x), maxOffsetPoint.x)
-                        let newY = min(max(viewModel.lastOffset.height, -maxOffsetPoint.y), maxOffsetPoint.y)
-                        viewModel.offset = CGSize(width: newX, height: newY)
-                    }
-                    .onEnded { _ in
-                        viewModel.lastScale = viewModel.scale
-                        viewModel.lastOffset = viewModel.offset
-                    }
-                    .simultaneously(
-                        with: DragGesture()
-                            .onChanged { value in
-                                let maxOffsetPoint = viewModel.calculateDragGestureMax()
-                                let newX = min(
-                                    max(value.translation.width + viewModel.lastOffset.width, -maxOffsetPoint.x),
-                                    maxOffsetPoint.x
-                                )
-                                let newY = min(
-                                    max(value.translation.height + viewModel.lastOffset.height, -maxOffsetPoint.y),
-                                    maxOffsetPoint.y
-                                )
-                                viewModel.offset = CGSize(width: newX, height: newY)
-                            }
-                            .onEnded { _ in
-                                viewModel.lastOffset = viewModel.offset
-                            }
-                    )
-            )
+            .simultaneousGesture(magnificationGesture)
+            .simultaneousGesture(dragGesture)
+            .simultaneousGesture(configuration.rotateImage ? rotationGesture : nil)
 
             HStack {
                 Button {
@@ -127,10 +138,19 @@ struct CropView: View {
     }
 
     private func cropImage() -> UIImage? {
-        if maskShape == .circle && configuration.cropImageCircular {
-            viewModel.cropToCircle(image)
+        var editedImage: UIImage = image
+        if configuration.rotateImage {
+            if let rotatedImage: UIImage = viewModel.rotate(
+                editedImage,
+                viewModel.lastAngle
+            ) {
+                editedImage = rotatedImage
+            }
+        }
+        if configuration.cropImageCircular && maskShape == .circle {
+            return viewModel.cropToCircle(editedImage)
         } else {
-            viewModel.cropToSquare(image)
+            return viewModel.cropToSquare(editedImage)
         }
     }
 

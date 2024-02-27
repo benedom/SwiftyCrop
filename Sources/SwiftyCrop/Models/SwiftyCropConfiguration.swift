@@ -5,6 +5,7 @@ public struct SwiftyCropConfiguration {
     let maxMagnificationScale: CGFloat
     let maskRadius: CGFloat
     let cropImageCircular: Bool
+    let rotateImage: Bool
 
     /// Creates a new instance of `SwiftyCropConfiguration`.
     ///
@@ -15,13 +16,17 @@ public struct SwiftyCropConfiguration {
     ///                            Defaults to `130`.
     ///   - cropImageCircular: Option to enable circular crop.
     ///                            Defaults to `false`.
+    ///   - rotateImage: Option to rotate image.
+    ///                            Defaults to `true`.
     public init(
         maxMagnificationScale: CGFloat = 4.0,
         maskRadius: CGFloat = 130,
-        cropImageCircular: Bool = false
+        cropImageCircular: Bool = false,
+        rotateImage: Bool = true
     ) {
         self.maxMagnificationScale = maxMagnificationScale
         self.maskRadius = maskRadius
         self.cropImageCircular = cropImageCircular
+        self.rotateImage = rotateImage
     }
 }
