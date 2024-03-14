@@ -37,6 +37,7 @@ The localization file can be found in `Sources/SwiftyCrop/Resources`.
 
 - [Requirements](#-requirements)
 - [Installation](#-installation)
+- [Demo App](#📱-demo-app)
 - [Usage](#-usage)
 - [Contributors](#-contributors)
 - [Author](#-author)
@@ -58,7 +59,7 @@ There are two ways to use SwiftyCrop in your project:
 
 The [Swift Package Manager](https://swift.org/package-manager/) is a tool for managing the distribution of Swift code. It’s integrated with the Swift build system to automate the process of downloading, compiling, and linking dependencies.
 
-To integrate `SwiftyCrop` into your Xcode project using Xcode 14.3 or later, specify it in `File > Swift Packages > Add Package Dependency...`:
+To integrate `SwiftyCrop` into your Xcode project using Xcode 15.0 or later, specify it in `File > Swift Packages > Add Package Dependency...`:
 
 ```ogdl
 https://github.com/benedom/SwiftyCrop, :branch="master"
@@ -67,6 +68,10 @@ https://github.com/benedom/SwiftyCrop, :branch="master"
 ### Manually
 
 If you prefer not to use any of dependency managers, you can integrate `SwiftyCrop` into your project manually. Put `Sources/SwiftyCrop` folder in your Xcode project. Make sure to enable `Copy items if needed` and `Create groups`.
+
+## 📱 Demo App
+
+To get a feeling how `SwiftyCropView` works you can run the demo app (thanks to [@leoz](https://github.com/leoz)).
 
 ## 🛠️ Usage
 
