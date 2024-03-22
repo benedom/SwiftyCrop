@@ -28,6 +28,12 @@
             "value" : "Annuler"
           }
         },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mégsem"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -81,6 +87,12 @@
             "value" : "Déplacer et dimensionner"
           }
         },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mozgatás és méretezés"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
@@ -132,6 +144,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Enregistrer"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mentés"
           }
         },
         "it" : {
