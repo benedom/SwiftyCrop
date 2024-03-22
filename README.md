@@ -30,6 +30,7 @@ The following languages are supported & localized:
 - 🇪🇸 Spanish
 - 🇹🇷 Turkish
 - 🇺🇦 Ukrainian
+- 🇭🇺 Hungarian
 
 The localization file can be found in `Sources/SwiftyCrop/Resources`.
 
