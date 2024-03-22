@@ -175,6 +175,7 @@ and use it like this:
 All issue reports, feature requests, pull requests and GitHub stars are welcomed and much appreciated.
 
 Thanks to [@leoz](https://github.com/leoz) for adding the circular crop mode, the demo app and the rotation functionality 🎉
+Thanks to [@kevin-hv](https://github.com/kevin-hv) for adding the hungarian localization 🇭🇺
 
 ## ✍️ Author
 
