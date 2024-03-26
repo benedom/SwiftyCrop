@@ -63,7 +63,7 @@ The [Swift Package Manager](https://swift.org/package-manager/) is a tool for ma
 To integrate `SwiftyCrop` into your Xcode project using Xcode 15.0 or later, specify it in `File > Swift Packages > Add Package Dependency...`:
 
 ```ogdl
-https://github.com/benedom/SwiftyCrop, :branch="master"
+https://github.com/benedom/SwiftyCrop
 ```
 
 ### Manually
