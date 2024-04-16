@@ -2,10 +2,10 @@ import CoreGraphics
 
 /// `SwiftyCropConfiguration` is a struct that defines the configuration for cropping behavior.
 public struct SwiftyCropConfiguration {
-    let maxMagnificationScale: CGFloat
-    let maskRadius: CGFloat
-    let cropImageCircular: Bool
-    let rotateImage: Bool
+    public let maxMagnificationScale: CGFloat
+    public let maskRadius: CGFloat
+    public let cropImageCircular: Bool
+    public let rotateImage: Bool
 
     /// Creates a new instance of `SwiftyCropConfiguration`.
     ///
