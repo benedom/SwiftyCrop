@@ -82,7 +82,7 @@ struct ContentView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                         
                         Button {
-                            maskRadius = UIScreen.main.bounds.width / 2
+                            maskRadius = min(UIScreen.main.bounds.width, UIScreen.main.bounds.height) / 2
                         } label: {
                             Image(systemName: "arrow.up.left.and.arrow.down.right")
                                 .font(.footnote)
@@ -135,7 +135,9 @@ struct ContentView: View {
     
     // Example function for downloading an image
     private func downloadExampleImage() async -> UIImage? {
-        let urlString = "https://picsum.photos/1000/1200"
+        let portraitUrlString = "https://picsum.photos/1000/1200"
+        let landscapeUrlString = "https://picsum.photos/2000/1000"
+        let urlString = Int.random(in: 0...1) == 0 ? portraitUrlString : landscapeUrlString
         guard let url = URL(string: urlString),
               let (data, _) = try? await URLSession.shared.data(from: url),
               let image = UIImage(data: data)

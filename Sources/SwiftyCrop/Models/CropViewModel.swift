@@ -3,8 +3,12 @@ import UIKit
 
 class CropViewModel: ObservableObject {
     private let maxMagnificationScale: CGFloat
-    var imageSizeInView: CGSize = .zero
-    var maskRadius: CGFloat
+    var imageSizeInView: CGSize = .zero {
+        didSet {
+            maskRadius = min(maskRadius, min(imageSizeInView.width, imageSizeInView.height) / 2)
+        }
+    }
+    @Published var maskRadius: CGFloat
 
     @Published var scale: CGFloat = 1.0
     @Published var lastScale: CGFloat = 1.0
