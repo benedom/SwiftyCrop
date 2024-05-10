@@ -32,7 +32,7 @@ struct CropView: View {
     var body: some View {
         let magnificationGesture = MagnificationGesture()
             .onChanged { value in
-                let sensitivity: CGFloat = 0.2
+                let sensitivity: CGFloat = 0.1 * configuration.zoomSensitivity
                 let scaledValue = (value.magnitude - 1) * sensitivity + 1
 
                 let maxScaleValues = viewModel.calculateMagnificationGestureMaxValues()
