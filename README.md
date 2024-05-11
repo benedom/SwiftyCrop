@@ -144,6 +144,7 @@ You can also configure `SwiftyCropView` by passing a `SwiftyCropConfiguration`. 
 | `maskRadius` | `CGFloat`: The radius of the mask used for cropping. Defaults to `130`. A good way is to make it dependend on the screens size. |
 | `cropImageCircular` | `Bool`: When using the cropping mask `circle`, whether the resulting image should also be masked as circle. Defaults to `false`. |
 | `rotateImage` | `Bool`: Whether the image can be rotated when cropping using pinch gestures. Defaults to `true`. |
+| `zoomSensitivity` | `CGFloat`: Zoom sensitivity when cropping. Increase to make zoom faster / less sensitive. Defaults to `1.0`. |
 
 Create a configuration like this:
 ```swift
@@ -151,7 +152,8 @@ let configuration = SwiftyCropConfiguration(
     maxMagnificationScale = 4.0,
     maskRadius: 130,
     cropImageCircular: false,
-    rotateImage: true
+    rotateImage: true,
+    zoomSensitivity = 1.0
 )
 ```
 and use it like this:

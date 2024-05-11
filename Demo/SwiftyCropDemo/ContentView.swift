@@ -9,6 +9,7 @@ struct ContentView: View {
     @State private var rotateImage: Bool
     @State private var maxMagnificationScale: CGFloat
     @State private var maskRadius: CGFloat
+    @State private var zoomSensitivity: CGFloat
     @FocusState private var textFieldFocused: Bool
     
     init() {
@@ -17,6 +18,7 @@ struct ContentView: View {
         _rotateImage = State(initialValue: defaultConfiguration.rotateImage)
         _maxMagnificationScale = State(initialValue: defaultConfiguration.maxMagnificationScale)
         _maskRadius = State(initialValue: defaultConfiguration.maskRadius)
+        _zoomSensitivity = State(initialValue: defaultConfiguration.zoomSensitivity)
     }
     
     var body: some View {
@@ -91,6 +93,15 @@ struct ContentView: View {
                         DecimalTextField(value: $maskRadius)
                             .focused($textFieldFocused)
                     }
+                    
+                    HStack {
+                        Text("Zoom sensitivity")
+                        
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        DecimalTextField(value: $zoomSensitivity)
+                            .focused($textFieldFocused)
+                    }
                 }
             }
             .toolbar {
@@ -117,7 +128,8 @@ struct ContentView: View {
                         maxMagnificationScale: maxMagnificationScale,
                         maskRadius: maskRadius,
                         cropImageCircular: cropImageCircular,
-                        rotateImage: rotateImage
+                        rotateImage: rotateImage,
+                        zoomSensitivity: zoomSensitivity
                     )
                 ) { croppedImage in
                     // Do something with the returned, cropped image
