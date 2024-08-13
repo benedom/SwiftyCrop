@@ -4,17 +4,17 @@ struct CropView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel: CropViewModel
 
-    private let image: UIImage
+    private let image: PlatformImage
     private let maskShape: MaskShape
     private let configuration: SwiftyCropConfiguration
-    private let onComplete: (UIImage?) -> Void
+    private let onComplete: (PlatformImage?) -> Void
     private let localizableTableName: String
 
     init(
-        image: UIImage,
+        image: PlatformImage,
         maskShape: MaskShape,
         configuration: SwiftyCropConfiguration,
-        onComplete: @escaping (UIImage?) -> Void
+        onComplete: @escaping (PlatformImage?) -> Void
     ) {
         self.image = image
         self.maskShape = maskShape
@@ -81,9 +81,7 @@ struct CropView: View {
                 .zIndex(1)
 
             ZStack {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFit()
+                PlatformImageView(image: image)
                     .rotationEffect(viewModel.angle)
                     .scaleEffect(viewModel.scale)
                     .offset(viewModel.offset)
@@ -97,9 +95,7 @@ struct CropView: View {
                         }
                     )
 
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFit()
+                PlatformImageView(image: image)
                     .rotationEffect(viewModel.angle)
                     .scaleEffect(viewModel.scale)
                     .offset(viewModel.offset)
@@ -137,10 +133,10 @@ struct CropView: View {
         .background(.black)
     }
 
-    private func cropImage() -> UIImage? {
-        var editedImage: UIImage = image
+    private func cropImage() -> PlatformImage? {
+        var editedImage: PlatformImage = image
         if configuration.rotateImage {
-            if let rotatedImage: UIImage = viewModel.rotate(
+            if let rotatedImage: PlatformImage = viewModel.rotate(
                 editedImage,
                 viewModel.lastAngle
             ) {
@@ -168,5 +164,21 @@ struct CropView: View {
                 }
             }
         }
+    }
+}
+
+struct PlatformImageView: View {
+    let image: PlatformImage
+    
+    var body: some View {
+        #if canImport(UIKit)
+        Image(uiImage: image)
+            .resizable()
+            .scaledToFit()
+        #elseif canImport(AppKit)
+        Image(nsImage: image)
+            .resizable()
+            .scaledToFit()
+        #endif
     }
 }

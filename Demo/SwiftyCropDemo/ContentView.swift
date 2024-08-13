@@ -1,9 +1,15 @@
 import SwiftUI
 import SwiftyCrop
 
+#if canImport(UIKit)
+typealias PlatformImage = UIImage
+#elseif canImport(AppKit)
+typealias PlatformImage = NSImage
+#endif
+
 struct ContentView: View {
     @State private var showImageCropper: Bool = false
-    @State private var selectedImage: UIImage?
+    @State private var selectedImage: PlatformImage?
     @State private var selectedShape: MaskShape = .square
     @State private var cropImageCircular: Bool
     @State private var rotateImage: Bool
@@ -27,8 +33,7 @@ struct ContentView: View {
             
             Group {
                 if let selectedImage = selectedImage {
-                    Image(uiImage: selectedImage)
-                        .resizable()
+                    PlatformImageView(image: selectedImage)
                         .aspectRatio(contentMode: .fit)
                         .cornerRadius(8)
                 } else {
@@ -84,7 +89,15 @@ struct ContentView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                         
                         Button {
+#if canImport(UIKit)
                             maskRadius = min(UIScreen.main.bounds.width, UIScreen.main.bounds.height) / 2
+#elseif canImport(AppKit)
+                            if let screen = NSScreen.main {
+                                maskRadius = min(screen.frame.width, screen.frame.height) / 2
+                            } else {
+                                maskRadius = 200 // Default value if no screen is available
+                            }
+#endif
                         } label: {
                             Image(systemName: "arrow.up.left.and.arrow.down.right")
                                 .font(.footnote)
@@ -119,7 +132,19 @@ struct ContentView: View {
         .onAppear {
             loadImage()
         }
+        #if os(macOS)
+        .sheet(isPresented: $showImageCropper) {
+            imageCropperView
+        }
+        #else
         .fullScreenCover(isPresented: $showImageCropper) {
+            imageCropperView
+        }
+        #endif
+    }
+    
+    private var imageCropperView: some View {
+        Group {
             if let selectedImage = selectedImage {
                 SwiftyCropView(
                     imageToCrop: selectedImage,
@@ -137,6 +162,9 @@ struct ContentView: View {
                 }
             }
         }
+        #if canImport(AppKit)
+        .frame(width: 600, height: 400) // Adjust size as needed for macOS
+        #endif
     }
     
     private func loadImage() {
@@ -146,18 +174,33 @@ struct ContentView: View {
     }
     
     // Example function for downloading an image
-    private func downloadExampleImage() async -> UIImage? {
+    private func downloadExampleImage() async -> PlatformImage? {
         let portraitUrlString = "https://picsum.photos/1000/1200"
         let landscapeUrlString = "https://picsum.photos/2000/1000"
         let urlString = Int.random(in: 0...1) == 0 ? portraitUrlString : landscapeUrlString
         guard let url = URL(string: urlString),
               let (data, _) = try? await URLSession.shared.data(from: url),
-              let image = UIImage(data: data)
+              let image = PlatformImage(data: data)
         else { return nil }
         
         return image
     }
 }
+
+struct PlatformImageView: View {
+    let image: PlatformImage
+    
+    var body: some View {
+        #if canImport(UIKit)
+        Image(uiImage: image)
+            .resizable()
+        #elseif canImport(AppKit)
+        Image(nsImage: image)
+            .resizable()
+        #endif
+    }
+}
+
 
 #Preview {
     ContentView()

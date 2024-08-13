@@ -1,5 +1,15 @@
 import SwiftUI
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
+
+#if canImport(UIKit)
+typealias PlatformImage = UIImage
+#elseif canImport(AppKit)
+typealias PlatformImage = NSImage
+#endif
 
 class CropViewModel: ObservableObject {
     private let maxMagnificationScale: CGFloat
@@ -53,19 +63,28 @@ class CropViewModel: ObservableObject {
         - image: The UIImage to crop
      - Returns: A cropped UIImage if the cropping operation is successful; otherwise nil.
      */
-    func cropToSquare(_ image: UIImage) -> UIImage? {
+    func cropToSquare(_ image: PlatformImage) -> PlatformImage? {
         guard let orientedImage = image.correctlyOriented else {
             return nil
         }
 
         let cropRect = calculateCropRect(orientedImage)
 
+        #if canImport(UIKit)
         guard let cgImage = orientedImage.cgImage,
               let result = cgImage.cropping(to: cropRect) else {
             return nil
         }
-
         return UIImage(cgImage: result)
+        #elseif canImport(AppKit)
+        guard let cgImage = orientedImage.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
+            return nil
+        }
+        guard let croppedCGImage = cgImage.cropping(to: cropRect) else {
+            return nil
+        }
+        return NSImage(cgImage: croppedCGImage, size: cropRect.size)
+        #endif
     }
 
     /**
@@ -74,13 +93,14 @@ class CropViewModel: ObservableObject {
         - image: The UIImage to crop
      - Returns: A cropped UIImage if the cropping operation is successful; otherwise nil.
      */
-    func cropToCircle(_ image: UIImage) -> UIImage? {
+    func cropToCircle(_ image: PlatformImage) -> PlatformImage? {
         guard let orientedImage = image.correctlyOriented else {
             return nil
         }
 
         let cropRect = calculateCropRect(orientedImage)
-
+        
+        #if canImport(UIKit)
         // A circular crop results in some transparency in the
         // cropped image, so set opaque to false to ensure the
         // cropped image does not include a background fill
@@ -124,6 +144,21 @@ class CropViewModel: ObservableObject {
         }
 
         return circleCroppedImage
+        #elseif canImport(AppKit)
+        let circleCroppedImage = NSImage(size: cropRect.size)
+        circleCroppedImage.lockFocus()
+        let drawRect = NSRect(origin: .zero, size: cropRect.size)
+        NSBezierPath(ovalIn: drawRect).addClip()
+        let drawImageRect = NSRect(
+            origin: NSPoint(x: -cropRect.origin.x, y: -cropRect.origin.y),
+            size: orientedImage.size
+        )
+        orientedImage.draw(in: drawImageRect)
+        circleCroppedImage.unlockFocus()
+        return circleCroppedImage
+        #endif
+
+
     }
 
     /**
@@ -133,39 +168,42 @@ class CropViewModel: ObservableObject {
         - angle: The Angle to rotate to
      - Returns: A rotated UIImage if the rotating operation is successful; otherwise nil.
      */
-    func rotate(_ image: UIImage, _ angle: Angle) -> UIImage? {
+    func rotate(_ image: PlatformImage, _ angle: Angle) -> PlatformImage? {
         guard let orientedImage = image.correctlyOriented else {
             return nil
         }
 
+        #if canImport(UIKit)
         guard let cgImage = orientedImage.cgImage else {
             return nil
         }
+        #elseif canImport(AppKit)
+        guard let cgImage = orientedImage.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
+            return nil
+        }
+        #endif
 
         let ciImage = CIImage(cgImage: cgImage)
 
         // Prepare filter
-        let filter = CIFilter.straightenFilter(
-            image: ciImage,
-            radians: angle.radians
-        )
-
-        // Get output image
-        guard let output = filter?.outputImage else {
-            return nil
-        }
+        guard let filter = CIFilter.straightenFilter(image: ciImage, radians: angle.radians),
+            // Get output image
+            let output = filter.outputImage else {
+                return nil
+            }
 
         // Create resulting image
         let context = CIContext()
-        guard let result = context.createCGImage(
-            output,
-            from: output.extent
-        ) else {
+        guard let result = context.createCGImage(output, from: output.extent) else {
             return nil
         }
 
+        #if canImport(UIKit)
         return UIImage(cgImage: result)
-    }
+        #elseif canImport(AppKit)
+        return NSImage(cgImage: result, size: NSSize(width: result.width, height: result.height))
+        #endif
+        }
 
     /**
      Calculates the rectangle to crop.
@@ -173,7 +211,7 @@ class CropViewModel: ObservableObject {
         - image: The UIImage to calculate the rectangle to crop for
      - Returns: A CGRect representing the rectangle to crop.
      */
-    private func calculateCropRect(_ orientedImage: UIImage) -> CGRect {
+    private func calculateCropRect(_ orientedImage: PlatformImage) -> CGRect {
         // The relation factor of the originals image width/height
         // and the width/height of the image displayed in the view (initial)
         let factor = min(
@@ -206,21 +244,25 @@ class CropViewModel: ObservableObject {
     }
 }
 
-private extension UIImage {
+extension PlatformImage {
     /**
-     A UIImage instance with corrected orientation.
+     For iOS, A UIImage instance with corrected orientation.
      If the instance's orientation is already `.up`, it simply returns the original.
      - Returns: An optional UIImage that represents the correctly oriented image.
      */
-    var correctlyOriented: UIImage? {
+    var correctlyOriented: PlatformImage? {
+        #if canImport(UIKit)
         if imageOrientation == .up { return self }
-
+        
         UIGraphicsBeginImageContextWithOptions(size, false, scale)
         draw(in: CGRect(origin: .zero, size: size))
         let normalizedImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
 
         return normalizedImage
+        #elseif canImport(AppKit)
+        return self
+        #endif
     }
 }
 
