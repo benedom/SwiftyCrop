@@ -5,9 +5,16 @@ class CropViewModel: ObservableObject {
     private let maxMagnificationScale: CGFloat
     var imageSizeInView: CGSize = .zero {
         didSet {
-            maskRadius = min(maskRadius, min(imageSizeInView.width, imageSizeInView.height) / 2)
+            if maskShape == .rectangle {
+                let maxWidthForAspectRatio = (imageSizeInView.height * 4) / 3
+                maskRadius = min(maskRadius, min(maxWidthForAspectRatio, imageSizeInView.width) / 2)
+            } else {
+                maskRadius = min(maskRadius, min(imageSizeInView.width, imageSizeInView.height) / 2)
+            }
         }
     }
+    private let maskShape: MaskShape
+    
     @Published var maskRadius: CGFloat
 
     @Published var scale: CGFloat = 1.0
@@ -19,10 +26,12 @@ class CropViewModel: ObservableObject {
 
     init(
         maskRadius: CGFloat,
-        maxMagnificationScale: CGFloat
+        maxMagnificationScale: CGFloat,
+        maskShape: MaskShape
     ) {
         self.maskRadius = maskRadius
         self.maxMagnificationScale = maxMagnificationScale
+        self.maskShape = maskShape
     }
 
     /**
@@ -34,6 +43,17 @@ class CropViewModel: ObservableObject {
         let xLimit = ((imageSizeInView.width / 2) * scale) - maskRadius
         return CGPoint(x: xLimit, y: yLimit)
     }
+    func calculateDragGestureMaxRectangle() -> CGPoint {
+        // Calculate the width and height limits for 4:3 aspect ratio
+        let aspectRatio: CGFloat = 4 / 3
+        
+        // Calculate the limits based on the imageSizeInView
+        let yLimit = ((imageSizeInView.height / 2) * scale) - (maskRadius * aspectRatio)
+        let xLimit = ((imageSizeInView.width / 2) * scale) - maskRadius
+
+        return CGPoint(x: xLimit, y: yLimit)
+    }
+
 
     /**
      Calculates the maximum magnification values that are applied when zooming the image,
@@ -45,6 +65,27 @@ class CropViewModel: ObservableObject {
     func calculateMagnificationGestureMaxValues() -> (CGFloat, CGFloat) {
         let minScale = (maskRadius * 2) / min(imageSizeInView.width, imageSizeInView.height)
         return (minScale, maxMagnificationScale)
+    }
+    
+    /**
+     Crops the image to the part that is dragged/zoomed inside the view. Cropped image will be a square.
+     - Parameters:
+        - image: The UIImage to crop
+     - Returns: A cropped UIImage if the cropping operation is successful; otherwise nil.
+     */
+    func cropToRectangle(_ image: UIImage) -> UIImage? {
+        guard let orientedImage = image.correctlyOriented else {
+            return nil
+        }
+
+        let cropRect = calculateCropRectRectangle(orientedImage)
+
+        guard let cgImage = orientedImage.cgImage,
+              let result = cgImage.cropping(to: cropRect) else {
+            return nil
+        }
+
+        return UIImage(cgImage: result)
     }
 
     /**
@@ -165,6 +206,48 @@ class CropViewModel: ObservableObject {
         }
 
         return UIImage(cgImage: result)
+    }
+    
+    /**
+     Calculates the rectangle to crop.
+     - Parameters:
+        - image: The UIImage to calculate the rectangle to crop for
+     - Returns: A CGRect representing the rectangle to crop.
+     */
+    private func calculateCropRectRectangle(_ orientedImage: UIImage) -> CGRect {
+        // Aspect ratio 4:3
+        let aspectRatio: CGFloat = 4 / 3
+        // The ratio factor of the original image to the displayed one
+        let factor = min(
+            (orientedImage.size.width / imageSizeInView.width),
+            (orientedImage.size.height / imageSizeInView.height)
+        )
+        let centerInOriginalImage = CGPoint(
+            x: orientedImage.size.width / 2,
+            y: orientedImage.size.height / 2
+        )
+        // Calculating the cropping radius for the width, taking into account the aspect ratio
+        let cropWidthRadiusInOriginalImage = (maskRadius * factor) / scale
+        let cropHeightRadiusInOriginalImage = cropWidthRadiusInOriginalImage * aspectRatio
+        // Image offsets along the x and y axes when dragging
+        let offsetX = offset.width * factor
+        let offsetY = offset.height * factor
+        // Calculating the coordinates of the cropping rectangle inside the original image
+        let cropRectX = (centerInOriginalImage.x - cropWidthRadiusInOriginalImage) - (offsetX / scale)
+        let cropRectY = (centerInOriginalImage.y - cropHeightRadiusInOriginalImage) - (offsetY / scale)
+        let cropRectCoordinate = CGPoint(x: cropRectX, y: cropRectY)
+        // Dimensions of the cropping rectangle, taking into account the aspect ratio
+        let cropRectWidth = cropWidthRadiusInOriginalImage * 2
+        let cropRectHeight = cropHeightRadiusInOriginalImage * 2
+        
+        let cropRect = CGRect(
+            x: cropRectCoordinate.x,
+            y: cropRectCoordinate.y,
+            width: cropRectWidth,
+            height: cropRectHeight
+        )
+        
+        return cropRect
     }
 
     /**

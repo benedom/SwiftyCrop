@@ -138,6 +138,7 @@ If you want to display `SwiftyCrop` inside a sheet, use `NavigationView` instead
 SwiftyCrop supports two different mask shapes for cropping:
 - `circle`
 - `square`
+- `rectangle`
 
 This is only the shape of the mask the user will see when cropping the image. The resulting, cropped image will always be a square by default. You can override this using a configuration.
 

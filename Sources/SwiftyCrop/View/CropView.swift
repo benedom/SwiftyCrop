@@ -23,7 +23,8 @@ struct CropView: View {
         _viewModel = StateObject(
             wrappedValue: CropViewModel(
                 maskRadius: configuration.maskRadius,
-                maxMagnificationScale: configuration.maxMagnificationScale
+                maxMagnificationScale: configuration.maxMagnificationScale,
+                maskShape: maskShape
             )
         )
         localizableTableName = "Localizable"
@@ -50,7 +51,7 @@ struct CropView: View {
 
         let dragGesture = DragGesture()
             .onChanged { value in
-                let maxOffsetPoint = viewModel.calculateDragGestureMax()
+                let maxOffsetPoint = maskShape == .rectangle ? viewModel.calculateDragGestureMaxRectangle() : viewModel.calculateDragGestureMax()
                 let newX = min(
                     max(value.translation.width + viewModel.lastOffset.width, -maxOffsetPoint.x),
                     maxOffsetPoint.x
@@ -149,6 +150,8 @@ struct CropView: View {
         }
         if configuration.cropImageCircular && maskShape == .circle {
             return viewModel.cropToCircle(editedImage)
+        } else if maskShape == .rectangle {
+            return viewModel.cropToRectangle(editedImage)
         } else {
             return viewModel.cropToSquare(editedImage)
         }
@@ -165,6 +168,10 @@ struct CropView: View {
 
                 case .square:
                     Rectangle()
+                
+                case .rectangle:
+                    Rectangle()
+                        .aspectRatio(3/4, contentMode: .fill)
                 }
             }
         }
