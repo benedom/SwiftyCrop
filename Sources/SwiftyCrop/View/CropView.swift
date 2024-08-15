@@ -51,7 +51,7 @@ struct CropView: View {
 
         let dragGesture = DragGesture()
             .onChanged { value in
-                let maxOffsetPoint = maskShape == .rectangle ? viewModel.calculateDragGestureMaxRectangle() : viewModel.calculateDragGestureMax()
+                let maxOffsetPoint = viewModel.calculateDragGestureMax()
                 let newX = min(
                     max(value.translation.width + viewModel.lastOffset.width, -maxOffsetPoint.x),
                     maxOffsetPoint.x

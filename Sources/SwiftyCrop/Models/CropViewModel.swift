@@ -39,18 +39,16 @@ class CropViewModel: ObservableObject {
      - Returns: A CGPoint representing the maximum points to which the image can be dragged.
      */
     func calculateDragGestureMax() -> CGPoint {
-        let yLimit = ((imageSizeInView.height / 2) * scale) - maskRadius
         let xLimit = ((imageSizeInView.width / 2) * scale) - maskRadius
-        return CGPoint(x: xLimit, y: yLimit)
-    }
-    func calculateDragGestureMaxRectangle() -> CGPoint {
-        // Calculate the width and height limits for 4:3 aspect ratio
-        let aspectRatio: CGFloat = 4 / 3
+        let yLimit: CGFloat
         
-        // Calculate the limits based on the imageSizeInView
-        let yLimit = ((imageSizeInView.height / 2) * scale) - (maskRadius * aspectRatio)
-        let xLimit = ((imageSizeInView.width / 2) * scale) - maskRadius
-
+        if maskShape == .rectangle {
+            let aspectRatio: CGFloat = 4 / 3
+            yLimit = ((imageSizeInView.height / 2) * scale) - (maskRadius * aspectRatio)
+        } else {
+            yLimit = ((imageSizeInView.height / 2) * scale) - maskRadius
+        }
+        
         return CGPoint(x: xLimit, y: yLimit)
     }
 
