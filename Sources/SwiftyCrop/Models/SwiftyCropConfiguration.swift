@@ -7,6 +7,7 @@ public struct SwiftyCropConfiguration {
     public let cropImageCircular: Bool
     public let rotateImage: Bool
     public let zoomSensitivity: CGFloat
+    public let rectAspectRatio: CGFloat
 
     /// Creates a new instance of `SwiftyCropConfiguration`.
     ///
@@ -18,19 +19,23 @@ public struct SwiftyCropConfiguration {
     ///   - cropImageCircular: Option to enable circular crop.
     ///                            Defaults to `false`.
     ///   - rotateImage: Option to rotate image.
-    ///                            Defaults to `true`.
+    ///                            Defaults to `false`.
     ///   - zoomSensitivity: Sensitivity when zooming. Default is `1.0`. Decrease to increase sensitivity.
+    ///
+    ///   - rectAspectRatio: The aspect ratio to use when a `.rectangle` mask shape is used. Defaults to `4:3`.
     public init(
         maxMagnificationScale: CGFloat = 4.0,
         maskRadius: CGFloat = 130,
         cropImageCircular: Bool = false,
-        rotateImage: Bool = true,
-        zoomSensitivity: CGFloat = 1
+        rotateImage: Bool = false,
+        zoomSensitivity: CGFloat = 1,
+        rectAspectRatio: CGFloat = 4/3
     ) {
         self.maxMagnificationScale = maxMagnificationScale
         self.maskRadius = maskRadius
         self.cropImageCircular = cropImageCircular
         self.rotateImage = rotateImage
         self.zoomSensitivity = zoomSensitivity
+        self.rectAspectRatio = rectAspectRatio
     }
 }

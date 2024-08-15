@@ -5,12 +5,28 @@ struct ContentView: View {
     @State private var showImageCropper: Bool = false
     @State private var selectedImage: UIImage?
     @State private var selectedShape: MaskShape = .square
+    @State private var rectAspectRatio: PresetAspectRatios = .fourToThree
     @State private var cropImageCircular: Bool
     @State private var rotateImage: Bool
     @State private var maxMagnificationScale: CGFloat
     @State private var maskRadius: CGFloat
     @State private var zoomSensitivity: CGFloat
     @FocusState private var textFieldFocused: Bool
+    
+    enum PresetAspectRatios: String, CaseIterable {
+        case fourToThree = "4:3"
+        case sixteenToNine = "16:9"
+        
+        func getValue() -> CGFloat {
+            switch self {
+            case .fourToThree:
+                4/3
+                
+            case .sixteenToNine:
+                16/9
+            }
+        }
+    }
     
     init() {
         let defaultConfiguration = SwiftyCropConfiguration()
@@ -59,12 +75,27 @@ struct ContentView: View {
                         Text("Mask shape")
                             .frame(maxWidth: .infinity, alignment: .leading)
                         
-                        Picker("maskShape", selection: $selectedShape) {
+                        Picker("maskShape", selection: $selectedShape.animation()) {
                             ForEach(MaskShape.allCases, id: \.self) { mask in
                                 Text(String(describing: mask))
                             }
                         }
                         .pickerStyle(.segmented)
+                    }
+                    
+                    if selectedShape == .rectangle {
+                        HStack {
+                            Text("Rect aspect ratio")
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                            Picker("rectAspectRatio", selection: $rectAspectRatio) {
+                                ForEach(PresetAspectRatios.allCases, id: \.self) { aspectRatio in
+                                    Text(aspectRatio.rawValue)
+                                }
+                                
+                            }
+                            .pickerStyle(.segmented)
+                        }
                     }
                     
                     Toggle("Crop image to circle", isOn: $cropImageCircular)
@@ -129,7 +160,8 @@ struct ContentView: View {
                         maskRadius: maskRadius,
                         cropImageCircular: cropImageCircular,
                         rotateImage: rotateImage,
-                        zoomSensitivity: zoomSensitivity
+                        zoomSensitivity: zoomSensitivity,
+                        rectAspectRatio: rectAspectRatio.getValue()
                     )
                 ) { croppedImage in
                     // Do something with the returned, cropped image
