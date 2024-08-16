@@ -3,13 +3,13 @@ import SwiftUI
 struct CropView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel: CropViewModel
-
+    
     private let image: UIImage
     private let maskShape: MaskShape
     private let configuration: SwiftyCropConfiguration
     private let onComplete: (UIImage?) -> Void
     private let localizableTableName: String
-
+    
     init(
         image: UIImage,
         maskShape: MaskShape,
@@ -23,31 +23,30 @@ struct CropView: View {
         _viewModel = StateObject(
             wrappedValue: CropViewModel(
                 maskRadius: configuration.maskRadius,
-                maxMagnificationScale: configuration.maxMagnificationScale
+                maxMagnificationScale: configuration.maxMagnificationScale,
+                maskShape: maskShape,
+                rectAspectRatio: configuration.rectAspectRatio
             )
         )
         localizableTableName = "Localizable"
     }
-
+    
     var body: some View {
         let magnificationGesture = MagnificationGesture()
             .onChanged { value in
                 let sensitivity: CGFloat = 0.1 * configuration.zoomSensitivity
                 let scaledValue = (value.magnitude - 1) * sensitivity + 1
-
+                
                 let maxScaleValues = viewModel.calculateMagnificationGestureMaxValues()
-                viewModel.scale = min(max(scaledValue * viewModel.scale, maxScaleValues.0), maxScaleValues.1)
-
-                let maxOffsetPoint = viewModel.calculateDragGestureMax()
-                let newX = min(max(viewModel.lastOffset.width, -maxOffsetPoint.x), maxOffsetPoint.x)
-                let newY = min(max(viewModel.lastOffset.height, -maxOffsetPoint.y), maxOffsetPoint.y)
-                viewModel.offset = CGSize(width: newX, height: newY)
+                viewModel.scale = min(max(scaledValue * viewModel.lastScale, maxScaleValues.0), maxScaleValues.1)
+                
+                updateOffset()
             }
             .onEnded { _ in
                 viewModel.lastScale = viewModel.scale
                 viewModel.lastOffset = viewModel.offset
             }
-
+        
         let dragGesture = DragGesture()
             .onChanged { value in
                 let maxOffsetPoint = viewModel.calculateDragGestureMax()
@@ -64,7 +63,7 @@ struct CropView: View {
             .onEnded { _ in
                 viewModel.lastOffset = viewModel.offset
             }
-
+        
         let rotationGesture = RotationGesture()
             .onChanged { value in
                 viewModel.angle = value
@@ -72,14 +71,14 @@ struct CropView: View {
             .onEnded { _ in
                 viewModel.lastAngle = viewModel.angle
             }
-
+        
         VStack {
             Text("interaction_instructions", tableName: localizableTableName, bundle: .module)
                 .font(.system(size: 16, weight: .regular))
                 .foregroundColor(.white)
                 .padding(.top, 30)
                 .zIndex(1)
-
+            
             ZStack {
                 Image(uiImage: image)
                     .resizable()
@@ -92,11 +91,11 @@ struct CropView: View {
                         GeometryReader { geometry in
                             Color.clear
                                 .onAppear {
-                                    viewModel.imageSizeInView = geometry.size
+                                    viewModel.updateMaskDimensions(for: geometry.size)
                                 }
                         }
                     )
-
+                
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFit()
@@ -105,14 +104,14 @@ struct CropView: View {
                     .offset(viewModel.offset)
                     .mask(
                         MaskShapeView(maskShape: maskShape)
-                            .frame(width: viewModel.maskRadius * 2, height: viewModel.maskRadius * 2)
+                            .frame(width: viewModel.maskSize.width, height: viewModel.maskSize.height)
                     )
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .simultaneousGesture(magnificationGesture)
             .simultaneousGesture(dragGesture)
             .simultaneousGesture(configuration.rotateImage ? rotationGesture : nil)
-
+            
             HStack {
                 Button {
                     dismiss()
@@ -120,9 +119,9 @@ struct CropView: View {
                     Text("cancel_button", tableName: localizableTableName, bundle: .module)
                 }
                 .foregroundColor(.white)
-
+                
                 Spacer()
-
+                
                 Button {
                     onComplete(cropImage())
                     dismiss()
@@ -136,7 +135,15 @@ struct CropView: View {
         }
         .background(.black)
     }
-
+    
+    private func updateOffset() {
+        let maxOffsetPoint = viewModel.calculateDragGestureMax()
+        let newX = min(max(viewModel.offset.width, -maxOffsetPoint.x), maxOffsetPoint.x)
+        let newY = min(max(viewModel.offset.height, -maxOffsetPoint.y), maxOffsetPoint.y)
+        viewModel.offset = CGSize(width: newX, height: newY)
+        viewModel.lastOffset = viewModel.offset
+    }
+    
     private func cropImage() -> UIImage? {
         var editedImage: UIImage = image
         if configuration.rotateImage {
@@ -149,21 +156,22 @@ struct CropView: View {
         }
         if configuration.cropImageCircular && maskShape == .circle {
             return viewModel.cropToCircle(editedImage)
+        } else if maskShape == .rectangle {
+            return viewModel.cropToRectangle(editedImage)
         } else {
             return viewModel.cropToSquare(editedImage)
         }
     }
-
+    
     private struct MaskShapeView: View {
         let maskShape: MaskShape
-
+        
         var body: some View {
             Group {
                 switch maskShape {
                 case .circle:
                     Circle()
-
-                case .square:
+                case .square, .rectangle:
                     Rectangle()
                 }
             }

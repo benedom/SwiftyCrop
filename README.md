@@ -138,8 +138,9 @@ If you want to display `SwiftyCrop` inside a sheet, use `NavigationView` instead
 SwiftyCrop supports two different mask shapes for cropping:
 - `circle`
 - `square`
+- `rectangle`
 
-This is only the shape of the mask the user will see when cropping the image. The resulting, cropped image will always be a square by default. You can override this using a configuration.
+This is only the shape of the mask the user will see when cropping the image. The resulting, cropped image will always be a square by default when using `circle` or `square`. To get a circular cropped image, you can override this using a configuration.
 
 You can also configure `SwiftyCropView` by passing a `SwiftyCropConfiguration`. A configuration has the following properties:
 
@@ -148,8 +149,9 @@ You can also configure `SwiftyCropView` by passing a `SwiftyCropConfiguration`. 
 | `maxMagnificationScale` | `CGFloat`: The maximum scale factor that the image can be magnified while cropping. Defaults to `4.0`. |
 | `maskRadius` | `CGFloat`: The radius of the mask used for cropping. Defaults to `130`. A good way is to make it dependend on the screens size. |
 | `cropImageCircular` | `Bool`: When using the cropping mask `circle`, whether the resulting image should also be masked as circle. Defaults to `false`. |
-| `rotateImage` | `Bool`: Whether the image can be rotated when cropping using pinch gestures. Defaults to `true`. |
+| `rotateImage` | `Bool`: Whether the image can be rotated when cropping using pinch gestures. Defaults to `false`. |
 | `zoomSensitivity` | `CGFloat`: Zoom sensitivity when cropping. Increase to make zoom faster / less sensitive. Defaults to `1.0`. |
+| `rectAspectRatio` | `CGFloat`: The aspect ratio to use when a rectangular mask shape is used. Defaults to `4:3`. |
 
 Create a configuration like this:
 ```swift
@@ -158,7 +160,8 @@ let configuration = SwiftyCropConfiguration(
     maskRadius: 130,
     cropImageCircular: false,
     rotateImage: true,
-    zoomSensitivity = 1.0
+    zoomSensitivity = 1.0,
+    rectAspectRatio = 4/3
 )
 ```
 and use it like this:
@@ -184,6 +187,8 @@ All issue reports, feature requests, pull requests and GitHub stars are welcomed
 Thanks to [@leoz](https://github.com/leoz) for adding the circular crop mode, the demo app and the rotation functionality 🎉
 
 Thanks to [@kevin-hv](https://github.com/kevin-hv) for adding the hungarian localization 🇭🇺
+
+Thanks to [@Festanny](https://github.com/Festanny) for helping with the recangular cropping functionality 🎉
 
 ## ✍️ Author
 

@@ -2,207 +2,195 @@ import SwiftUI
 import UIKit
 
 class CropViewModel: ObservableObject {
-    private let maxMagnificationScale: CGFloat
-    var imageSizeInView: CGSize = .zero {
-        didSet {
-            maskRadius = min(maskRadius, min(imageSizeInView.width, imageSizeInView.height) / 2)
-        }
-    }
-    @Published var maskRadius: CGFloat
-
-    @Published var scale: CGFloat = 1.0
-    @Published var lastScale: CGFloat = 1.0
-    @Published var offset: CGSize = .zero
-    @Published var lastOffset: CGSize = .zero
-    @Published var angle: Angle = Angle(degrees: 0)
-    @Published var lastAngle: Angle = Angle(degrees: 0)
-
+    private let maskRadius: CGFloat
+    private let maxMagnificationScale: CGFloat // The maximum allowed scale factor for image magnification.
+    private let maskShape: MaskShape // The shape of the mask used for cropping.
+    private let rectAspectRatio: CGFloat // The aspect ratio for rectangular masks.
+    
+    var imageSizeInView: CGSize = .zero // The size of the image as displayed in the view.
+    @Published var maskSize: CGSize = .zero // The size of the mask used for cropping. This is updated based on the mask shape and available space.
+    @Published var scale: CGFloat = 1.0 // The current scale factor of the image.
+    @Published var lastScale: CGFloat = 1.0 // The previous scale factor of the image.
+    @Published var offset: CGSize = .zero // The current offset of the image.
+    @Published var lastOffset: CGSize = .zero // The previous offset of the image.
+    @Published var angle: Angle = Angle(degrees: 0) // The current rotation angle of the image.
+    @Published var lastAngle: Angle = Angle(degrees: 0) // The previous rotation angle of the image.
+    
     init(
         maskRadius: CGFloat,
-        maxMagnificationScale: CGFloat
+        maxMagnificationScale: CGFloat,
+        maskShape: MaskShape,
+        rectAspectRatio: CGFloat
     ) {
         self.maskRadius = maskRadius
         self.maxMagnificationScale = maxMagnificationScale
+        self.maskShape = maskShape
+        self.rectAspectRatio = rectAspectRatio
     }
-
+    
     /**
-     Calculates the max points that the image can be dragged to.
-     - Returns: A CGPoint representing the maximum points to which the image can be dragged.
+     Updates the mask size based on the given size and mask shape.
+     - Parameter size: The size to base the mask size calculations on.
+     */
+    private func updateMaskSize(for size: CGSize) {
+        switch maskShape {
+        case .circle, .square:
+            let diameter = min(maskRadius * 2, min(size.width, size.height))
+            maskSize = CGSize(width: diameter, height: diameter)
+        case .rectangle:
+            let maxWidth = min(size.width, maskRadius * 2)
+            let maxHeight = min(size.height, maskRadius * 2)
+            if maxWidth / maxHeight > rectAspectRatio {
+                maskSize = CGSize(width: maxHeight * rectAspectRatio, height: maxHeight)
+            } else {
+                maskSize = CGSize(width: maxWidth, height: maxWidth / rectAspectRatio)
+            }
+        }
+    }
+    
+    /**
+     Updates the mask dimensions based on the size of the image in the view.
+     - Parameter imageSizeInView: The size of the image as displayed in the view.
+     */
+    func updateMaskDimensions(for imageSizeInView: CGSize) {
+        self.imageSizeInView = imageSizeInView
+        updateMaskSize(for: imageSizeInView)
+    }
+    
+    /**
+     Calculates the maximum allowed offset for dragging the image.
+     - Returns: A CGPoint representing the maximum x and y offsets.
      */
     func calculateDragGestureMax() -> CGPoint {
-        let yLimit = ((imageSizeInView.height / 2) * scale) - maskRadius
-        let xLimit = ((imageSizeInView.width / 2) * scale) - maskRadius
+        let xLimit = max(0, ((imageSizeInView.width / 2) * scale) - (maskSize.width / 2))
+        let yLimit = max(0, ((imageSizeInView.height / 2) * scale) - (maskSize.height / 2))
         return CGPoint(x: xLimit, y: yLimit)
     }
-
+    
     /**
-     Calculates the maximum magnification values that are applied when zooming the image,
-     so that the image can not be zoomed out of its own size.
-     - Returns: A tuple (CGFloat, CGFloat) representing the minimum and maximum magnification scale values.
-       The first value is the minimum scale at which the image can be displayed without being smaller than its own size.
-       The second value is the preset maximum magnification scale.
+     Calculates the minimum and maximum allowed scale values for image magnification.
+     - Returns: A tuple containing the minimum and maximum scale values.
      */
     func calculateMagnificationGestureMaxValues() -> (CGFloat, CGFloat) {
-        let minScale = (maskRadius * 2) / min(imageSizeInView.width, imageSizeInView.height)
+        let minScale = max(maskSize.width / imageSizeInView.width, maskSize.height / imageSizeInView.height)
         return (minScale, maxMagnificationScale)
     }
-
+    
     /**
-     Crops the image to the part that is dragged/zoomed inside the view. Cropped image will be a square.
-     - Parameters:
-        - image: The UIImage to crop
-     - Returns: A cropped UIImage if the cropping operation is successful; otherwise nil.
+     Crops the given image to a rectangle based on the current mask size and position.
+     - Parameter image: The UIImage to crop.
+     - Returns: A cropped UIImage, or nil if cropping fails.
      */
-    func cropToSquare(_ image: UIImage) -> UIImage? {
-        guard let orientedImage = image.correctlyOriented else {
-            return nil
-        }
-
+    func cropToRectangle(_ image: UIImage) -> UIImage? {
+        guard let orientedImage = image.correctlyOriented else { return nil }
+        
         let cropRect = calculateCropRect(orientedImage)
-
+        
         guard let cgImage = orientedImage.cgImage,
               let result = cgImage.cropping(to: cropRect) else {
             return nil
         }
-
+        
         return UIImage(cgImage: result)
     }
-
+    
     /**
-     Crops the image to the part that is dragged/zoomed inside the view. Cropped image will be a circle.
-     - Parameters:
-        - image: The UIImage to crop
-     - Returns: A cropped UIImage if the cropping operation is successful; otherwise nil.
+     Crops the given image to a square based on the current mask size and position.
+     - Parameter image: The UIImage to crop.
+     - Returns: A cropped UIImage, or nil if cropping fails.
+     */
+    func cropToSquare(_ image: UIImage) -> UIImage? {
+        guard let orientedImage = image.correctlyOriented else { return nil }
+        
+        let cropRect = calculateCropRect(orientedImage)
+        
+        guard let cgImage = orientedImage.cgImage,
+              let result = cgImage.cropping(to: cropRect) else {
+            return nil
+        }
+        
+        return UIImage(cgImage: result)
+    }
+    
+    /**
+     Crops the given image to a circle based on the current mask size and position.
+     - Parameter image: The UIImage to crop.
+     - Returns: A cropped UIImage, or nil if cropping fails.
      */
     func cropToCircle(_ image: UIImage) -> UIImage? {
-        guard let orientedImage = image.correctlyOriented else {
-            return nil
-        }
-
+        guard let orientedImage = image.correctlyOriented else { return nil }
+        
         let cropRect = calculateCropRect(orientedImage)
-
-        // A circular crop results in some transparency in the
-        // cropped image, so set opaque to false to ensure the
-        // cropped image does not include a background fill
+        
         let imageRendererFormat = orientedImage.imageRendererFormat
         imageRendererFormat.opaque = false
-
-        // UIGraphicsImageRenderer().image provides a block
-        // interface to draw into in a new UIImage
+        
         let circleCroppedImage = UIGraphicsImageRenderer(
-            // The cropRect.size is the size of
-            // the resulting circleCroppedImage
             size: cropRect.size,
             format: imageRendererFormat).image { _ in
-
-            // The drawRect is the cropRect starting at (0,0)
-            let drawRect = CGRect(
-                origin: .zero,
-                size: cropRect.size
-            )
-
-            // addClip on a UIBezierPath will clip all contents
-            // outside of the UIBezierPath drawn after addClip
-            // is called, in this case, drawRect is a circle so
-            // the UIBezierPath clips drawing to the circle
-            UIBezierPath(ovalIn: drawRect).addClip()
-
-            // The drawImageRect is offsets the image’s bounds
-            // such that the circular clip is at the center of
-            // the image
-            let drawImageRect = CGRect(
-                origin: CGPoint(
-                    x: -cropRect.origin.x,
-                    y: -cropRect.origin.y
-                ),
-                size: orientedImage.size
-            )
-
-            // Draws the orientedImage inside of the
-            // circular clip
-            orientedImage.draw(in: drawImageRect)
-        }
-
+                let drawRect = CGRect(origin: .zero, size: cropRect.size)
+                UIBezierPath(ovalIn: drawRect).addClip()
+                let drawImageRect = CGRect(
+                    origin: CGPoint(x: -cropRect.origin.x, y: -cropRect.origin.y),
+                    size: orientedImage.size
+                )
+                orientedImage.draw(in: drawImageRect)
+            }
+        
         return circleCroppedImage
     }
-
+    
     /**
-     Rotates the image to the angle that is rotated inside the view.
-     - Parameters:
-        - image: The UIImage to rotate
-        - angle: The Angle to rotate to
-     - Returns: A rotated UIImage if the rotating operation is successful; otherwise nil.
+     Rotates the given image by the specified angle.
+     - Parameter image: The UIImage to rotate.
+     - Parameter angle: The Angle to rotate the image by.
+     - Returns: A rotated UIImage, or nil if rotation fails.
      */
     func rotate(_ image: UIImage, _ angle: Angle) -> UIImage? {
-        guard let orientedImage = image.correctlyOriented else {
-            return nil
-        }
-
-        guard let cgImage = orientedImage.cgImage else {
-            return nil
-        }
-
+        guard let orientedImage = image.correctlyOriented,
+              let cgImage = orientedImage.cgImage else { return nil }
+        
         let ciImage = CIImage(cgImage: cgImage)
-
-        // Prepare filter
-        let filter = CIFilter.straightenFilter(
-            image: ciImage,
-            radians: angle.radians
-        )
-
-        // Get output image
-        guard let output = filter?.outputImage else {
-            return nil
-        }
-
-        // Create resulting image
+        
+        guard let filter = CIFilter.straightenFilter(image: ciImage, radians: angle.radians),
+              let output = filter.outputImage else { return nil }
+        
         let context = CIContext()
-        guard let result = context.createCGImage(
-            output,
-            from: output.extent
-        ) else {
-            return nil
-        }
-
+        guard let result = context.createCGImage(output, from: output.extent) else { return nil }
+        
         return UIImage(cgImage: result)
     }
-
+    
     /**
-     Calculates the rectangle to crop.
-     - Parameters:
-        - image: The UIImage to calculate the rectangle to crop for
-     - Returns: A CGRect representing the rectangle to crop.
+     Calculates the rectangle to use for cropping the image based on the current mask size, scale, and offset.
+     - Parameter orientedImage: The correctly oriented UIImage to calculate the crop rect for.
+     - Returns: A CGRect representing the area to crop from the original image.
      */
     private func calculateCropRect(_ orientedImage: UIImage) -> CGRect {
-        // The relation factor of the originals image width/height
-        // and the width/height of the image displayed in the view (initial)
         let factor = min(
-            (orientedImage.size.width / imageSizeInView.width), (orientedImage.size.height / imageSizeInView.height)
+            (orientedImage.size.width / imageSizeInView.width),
+            (orientedImage.size.height / imageSizeInView.height)
         )
-        let centerInOriginalImage = CGPoint(x: orientedImage.size.width / 2, y: orientedImage.size.height / 2)
-        // Calculate the crop radius inside the original image which based on the mask radius
-        let cropRadiusInOriginalImage = (maskRadius * factor) / scale
-        // The x offset the image has by dragging
-        let offsetX = offset.width * factor
-        // The y offset the image has by dragging
-        let offsetY = offset.height * factor
-        // Calculates the x coordinate of the crop rectangle inside the original image
-        let cropRectX = (centerInOriginalImage.x - cropRadiusInOriginalImage) - (offsetX / scale)
-        // Calculates the y coordinate of the crop rectangle inside the original image
-        let cropRectY = (centerInOriginalImage.y - cropRadiusInOriginalImage) - (offsetY / scale)
-        let cropRectCoordinate = CGPoint(x: cropRectX, y: cropRectY)
-        // Cropped rects dimension is twice its radius (diameter),
-        // since it's always a square it's used both for width and height
-        let cropRectDimension = cropRadiusInOriginalImage * 2
-
-        let cropRect = CGRect(
-            x: cropRectCoordinate.x,
-            y: cropRectCoordinate.y,
-            width: cropRectDimension,
-            height: cropRectDimension
+        let centerInOriginalImage = CGPoint(
+            x: orientedImage.size.width / 2,
+            y: orientedImage.size.height / 2
         )
-
-        return cropRect
+        
+        let cropSizeInOriginalImage = CGSize(
+            width: (maskSize.width * factor) / scale,
+            height: (maskSize.height * factor) / scale
+        )
+        
+        let offsetX = offset.width * factor / scale
+        let offsetY = offset.height * factor / scale
+        
+        let cropRectX = (centerInOriginalImage.x - cropSizeInOriginalImage.width / 2) - offsetX
+        let cropRectY = (centerInOriginalImage.y - cropSizeInOriginalImage.height / 2) - offsetY
+        
+        return CGRect(
+            origin: CGPoint(x: cropRectX, y: cropRectY),
+            size: cropSizeInOriginalImage
+        )
     }
 }
 
@@ -214,12 +202,12 @@ private extension UIImage {
      */
     var correctlyOriented: UIImage? {
         if imageOrientation == .up { return self }
-
+        
         UIGraphicsBeginImageContextWithOptions(size, false, scale)
         draw(in: CGRect(origin: .zero, size: size))
         let normalizedImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-
+        
         return normalizedImage
     }
 }
@@ -228,8 +216,8 @@ private extension CIFilter {
     /**
      Creates the straighten filter.
      - Parameters:
-        - inputImage: The CIImage to use as an input image
-        - radians: An angle in radians
+     - inputImage: The CIImage to use as an input image
+     - radians: An angle in radians
      - Returns: A generated CIFilter.
      */
     static func straightenFilter(image: CIImage, radians: Double) -> CIFilter? {
