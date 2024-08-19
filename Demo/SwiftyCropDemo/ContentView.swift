@@ -115,7 +115,11 @@ struct ContentView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                         
                         Button {
+                            #if canImport(UIKit)
                             maskRadius = min(UIScreen.main.bounds.width, UIScreen.main.bounds.height) / 2
+                            #elseif canImport(AppKit)
+                            maskRadius = 130
+                            #endif
                         } label: {
                             Image(systemName: "arrow.up.left.and.arrow.down.right")
                                 .font(.footnote)
@@ -150,7 +154,19 @@ struct ContentView: View {
         .onAppear {
             loadImage()
         }
+        #if os(iOS)
         .fullScreenCover(isPresented: $showImageCropper) {
+            cropView
+        }
+        #else
+        .sheet(isPresented: $showImageCropper) {
+            cropView
+        }
+        #endif
+    }
+        
+    private var cropView: some View {
+        Group {
             if let selectedImage = selectedImage {
                 SwiftyCropView(
                     imageToCrop: selectedImage,

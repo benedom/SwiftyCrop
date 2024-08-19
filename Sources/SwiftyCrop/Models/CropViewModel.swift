@@ -1,5 +1,4 @@
 import SwiftUI
-import UIKit
 
 class CropViewModel: ObservableObject {
     private let maskRadius: CGFloat
@@ -86,12 +85,22 @@ class CropViewModel: ObservableObject {
         
         let cropRect = calculateCropRect(orientedImage)
         
+        #if canImport(UIKit)
         guard let cgImage = orientedImage.cgImage,
               let result = cgImage.cropping(to: cropRect) else {
             return nil
         }
         
         return PlatformImage(cgImage: result)
+        #elseif canImport(AppKit)
+        guard let cgImage = orientedImage.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
+            return nil
+        }
+        guard let croppedCGImage = cgImage.cropping(to: cropRect) else {
+            return nil
+        }
+        return NSImage(cgImage: croppedCGImage, size: cropRect.size)
+        #endif
     }
     
     /**
@@ -104,12 +113,22 @@ class CropViewModel: ObservableObject {
         
         let cropRect = calculateCropRect(orientedImage)
         
+        #if canImport(UIKit)
         guard let cgImage = orientedImage.cgImage,
               let result = cgImage.cropping(to: cropRect) else {
             return nil
         }
         
-        return PlatformImage(cgImage: result)
+        return UIImage(cgImage: result)
+        #elseif canImport(AppKit)
+        guard let cgImage = orientedImage.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
+            return nil
+        }
+        guard let croppedCGImage = cgImage.cropping(to: cropRect) else {
+            return nil
+        }
+        return NSImage(cgImage: croppedCGImage, size: cropRect.size)
+        #endif
     }
     
     /**
@@ -122,6 +141,7 @@ class CropViewModel: ObservableObject {
         
         let cropRect = calculateCropRect(orientedImage)
         
+        #if canImport(UIKit)
         let imageRendererFormat = orientedImage.imageRendererFormat
         imageRendererFormat.opaque = false
         
@@ -138,6 +158,19 @@ class CropViewModel: ObservableObject {
             }
         
         return circleCroppedImage
+        #elseif canImport(AppKit)
+        let circleCroppedImage = NSImage(size: cropRect.size)
+        circleCroppedImage.lockFocus()
+        let drawRect = NSRect(origin: .zero, size: cropRect.size)
+        NSBezierPath(ovalIn: drawRect).addClip()
+        let drawImageRect = NSRect(
+            origin: NSPoint(x: -cropRect.origin.x, y: -cropRect.origin.y),
+            size: orientedImage.size
+        )
+        orientedImage.draw(in: drawImageRect)
+        circleCroppedImage.unlockFocus()
+        return circleCroppedImage
+        #endif
     }
     
     /**
@@ -147,8 +180,15 @@ class CropViewModel: ObservableObject {
      - Returns: A rotated PlatformImage, or nil if rotation fails.
      */
     func rotate(_ image: PlatformImage, _ angle: Angle) -> PlatformImage? {
-        guard let orientedImage = image.correctlyOriented,
-              let cgImage = orientedImage.cgImage else { return nil }
+        guard let orientedImage = image.correctlyOriented else { return nil }
+        
+        #if canImport(UIKit)
+        guard let cgImage = orientedImage.cgImage else { return nil }
+        #elseif canImport(AppKit)
+        guard let cgImage = orientedImage.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
+            return nil
+        }
+        #endif
         
         let ciImage = CIImage(cgImage: cgImage)
         
@@ -158,7 +198,11 @@ class CropViewModel: ObservableObject {
         let context = CIContext()
         guard let result = context.createCGImage(output, from: output.extent) else { return nil }
         
-        return PlatformImage(cgImage: result)
+        #if canImport(UIKit)
+        return UIImage(cgImage: result)
+        #elseif canImport(AppKit)
+        return NSImage(cgImage: result, size: NSSize(width: result.width, height: result.height))
+        #endif
     }
     
     /**
@@ -201,6 +245,7 @@ private extension PlatformImage {
      - Returns: An optional PlatformImage that represents the correctly oriented image.
      */
     var correctlyOriented: PlatformImage? {
+        #if canImport(UIKit)
         if imageOrientation == .up { return self }
         
         UIGraphicsBeginImageContextWithOptions(size, false, scale)
@@ -209,6 +254,9 @@ private extension PlatformImage {
         UIGraphicsEndImageContext()
         
         return normalizedImage
+        #elseif canImport(AppKit)
+        return self
+        #endif
     }
 }
 

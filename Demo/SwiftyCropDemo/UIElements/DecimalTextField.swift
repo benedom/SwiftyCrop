@@ -15,6 +15,8 @@ struct DecimalTextField: View {
         TextField("maxMagnification", value: $value, formatter: decimalFormatter)
             .textFieldStyle(RoundedBorderTextFieldStyle())
             .multilineTextAlignment(.trailing)
+            #if os(iOS)
             .keyboardType(.decimalPad)
+            #endif
     }
 }
