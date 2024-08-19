@@ -84,7 +84,7 @@ import SwiftyCrop
 
 struct ExampleView: View {
     @State private var showImageCropper: Bool = false
-    @State private var selectedImage: UIImage?
+    @State private var selectedImage: PlatformImage?
 
     var body: some View {
         VStack {
@@ -118,11 +118,11 @@ struct ExampleView: View {
     }
 
     // Example function for downloading an image
-    private func downloadExampleImage() async -> UIImage? {
+    private func downloadExampleImage() async -> PlatformImage? {
         let urlString = "https://picsum.photos/1000/1200"
         guard let url = URL(string: urlString),
               let (data, _) = try? await URLSession.shared.data(from: url),
-              let image = UIImage(data: data)
+              let image = PlatformImage(data: data)
         else { return nil }
 
         return image

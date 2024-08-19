@@ -78,10 +78,10 @@ class CropViewModel: ObservableObject {
     
     /**
      Crops the given image to a rectangle based on the current mask size and position.
-     - Parameter image: The UIImage to crop.
-     - Returns: A cropped UIImage, or nil if cropping fails.
+     - Parameter image: The PlatformImage to crop.
+     - Returns: A cropped PlatformImage, or nil if cropping fails.
      */
-    func cropToRectangle(_ image: UIImage) -> UIImage? {
+    func cropToRectangle(_ image: PlatformImage) -> PlatformImage? {
         guard let orientedImage = image.correctlyOriented else { return nil }
         
         let cropRect = calculateCropRect(orientedImage)
@@ -91,15 +91,15 @@ class CropViewModel: ObservableObject {
             return nil
         }
         
-        return UIImage(cgImage: result)
+        return PlatformImage(cgImage: result)
     }
     
     /**
      Crops the given image to a square based on the current mask size and position.
-     - Parameter image: The UIImage to crop.
-     - Returns: A cropped UIImage, or nil if cropping fails.
+     - Parameter image: The PlatformImage to crop.
+     - Returns: A cropped PlatformImage, or nil if cropping fails.
      */
-    func cropToSquare(_ image: UIImage) -> UIImage? {
+    func cropToSquare(_ image: PlatformImage) -> PlatformImage? {
         guard let orientedImage = image.correctlyOriented else { return nil }
         
         let cropRect = calculateCropRect(orientedImage)
@@ -109,15 +109,15 @@ class CropViewModel: ObservableObject {
             return nil
         }
         
-        return UIImage(cgImage: result)
+        return PlatformImage(cgImage: result)
     }
     
     /**
      Crops the given image to a circle based on the current mask size and position.
-     - Parameter image: The UIImage to crop.
-     - Returns: A cropped UIImage, or nil if cropping fails.
+     - Parameter image: The PlatformImage to crop.
+     - Returns: A cropped PlatformImage, or nil if cropping fails.
      */
-    func cropToCircle(_ image: UIImage) -> UIImage? {
+    func cropToCircle(_ image: PlatformImage) -> PlatformImage? {
         guard let orientedImage = image.correctlyOriented else { return nil }
         
         let cropRect = calculateCropRect(orientedImage)
@@ -142,11 +142,11 @@ class CropViewModel: ObservableObject {
     
     /**
      Rotates the given image by the specified angle.
-     - Parameter image: The UIImage to rotate.
+     - Parameter image: The PlatformImage to rotate.
      - Parameter angle: The Angle to rotate the image by.
-     - Returns: A rotated UIImage, or nil if rotation fails.
+     - Returns: A rotated PlatformImage, or nil if rotation fails.
      */
-    func rotate(_ image: UIImage, _ angle: Angle) -> UIImage? {
+    func rotate(_ image: PlatformImage, _ angle: Angle) -> PlatformImage? {
         guard let orientedImage = image.correctlyOriented,
               let cgImage = orientedImage.cgImage else { return nil }
         
@@ -158,15 +158,15 @@ class CropViewModel: ObservableObject {
         let context = CIContext()
         guard let result = context.createCGImage(output, from: output.extent) else { return nil }
         
-        return UIImage(cgImage: result)
+        return PlatformImage(cgImage: result)
     }
     
     /**
      Calculates the rectangle to use for cropping the image based on the current mask size, scale, and offset.
-     - Parameter orientedImage: The correctly oriented UIImage to calculate the crop rect for.
+     - Parameter orientedImage: The correctly oriented PlatformImage to calculate the crop rect for.
      - Returns: A CGRect representing the area to crop from the original image.
      */
-    private func calculateCropRect(_ orientedImage: UIImage) -> CGRect {
+    private func calculateCropRect(_ orientedImage: PlatformImage) -> CGRect {
         let factor = min(
             (orientedImage.size.width / imageSizeInView.width),
             (orientedImage.size.height / imageSizeInView.height)
@@ -194,13 +194,13 @@ class CropViewModel: ObservableObject {
     }
 }
 
-private extension UIImage {
+private extension PlatformImage {
     /**
-     A UIImage instance with corrected orientation.
+     A PlatformImage instance with corrected orientation.
      If the instance's orientation is already `.up`, it simply returns the original.
-     - Returns: An optional UIImage that represents the correctly oriented image.
+     - Returns: An optional PlatformImage that represents the correctly oriented image.
      */
-    var correctlyOriented: UIImage? {
+    var correctlyOriented: PlatformImage? {
         if imageOrientation == .up { return self }
         
         UIGraphicsBeginImageContextWithOptions(size, false, scale)

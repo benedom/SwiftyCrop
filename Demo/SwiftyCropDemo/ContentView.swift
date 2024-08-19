@@ -3,7 +3,7 @@ import SwiftyCrop
 
 struct ContentView: View {
     @State private var showImageCropper: Bool = false
-    @State private var selectedImage: UIImage?
+    @State private var selectedImage: PlatformImage?
     @State private var selectedShape: MaskShape = .square
     @State private var rectAspectRatio: PresetAspectRatios = .fourToThree
     @State private var cropImageCircular: Bool
@@ -43,7 +43,7 @@ struct ContentView: View {
             
             Group {
                 if let selectedImage = selectedImage {
-                    Image(uiImage: selectedImage)
+                    Image(platformImage: selectedImage)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .cornerRadius(8)
@@ -178,13 +178,13 @@ struct ContentView: View {
     }
     
     // Example function for downloading an image
-    private func downloadExampleImage() async -> UIImage? {
+    private func downloadExampleImage() async -> PlatformImage? {
         let portraitUrlString = "https://picsum.photos/1000/1200"
         let landscapeUrlString = "https://picsum.photos/2000/1000"
         let urlString = Int.random(in: 0...1) == 0 ? portraitUrlString : landscapeUrlString
         guard let url = URL(string: urlString),
               let (data, _) = try? await URLSession.shared.data(from: url),
-              let image = UIImage(data: data)
+              let image = PlatformImage(data: data)
         else { return nil }
         
         return image
