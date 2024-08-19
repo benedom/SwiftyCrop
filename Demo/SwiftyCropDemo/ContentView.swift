@@ -115,11 +115,7 @@ struct ContentView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                         
                         Button {
-                            #if canImport(UIKit)
-                            maskRadius = min(UIScreen.main.bounds.width, UIScreen.main.bounds.height) / 2
-                            #elseif canImport(AppKit)
-                            maskRadius = 130
-                            #endif
+                            maskRadius = defaultMaskRadius
                         } label: {
                             Image(systemName: "arrow.up.left.and.arrow.down.right")
                                 .font(.footnote)
@@ -164,7 +160,19 @@ struct ContentView: View {
         }
         #endif
     }
-        
+
+    var defaultMaskRadius: CGFloat {
+        #if canImport(UIKit)
+        return min(UIScreen.main.bounds.width, UIScreen.main.bounds.height) / 2
+        #elseif canImport(AppKit)
+        if let screen = NSScreen.main {
+            return min(screen.frame.width, screen.frame.height) / 2
+        } else {
+            return 130
+        }
+        #endif
+    }
+
     private var cropView: some View {
         Group {
             if let selectedImage = selectedImage {
