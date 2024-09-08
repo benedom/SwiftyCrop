@@ -31,6 +31,7 @@ The following languages are supported & localized:
 - 🇹🇷 Turkish
 - 🇺🇦 Ukrainian
 - 🇭🇺 Hungarian
+- 🇧🇷 Brazilian Portuguese
 
 The localization file can be found in `Sources/SwiftyCrop/Resources`.
 

@@ -40,6 +40,12 @@
             "value" : "Annullamento"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelar"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -99,6 +105,12 @@
             "value" : "Muoversi e scalare"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mover e dimensionar"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -156,6 +168,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Risparmiare"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salvar"
           }
         },
         "ru" : {
