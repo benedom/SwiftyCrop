@@ -194,6 +194,8 @@ Thanks to [@Festanny](https://github.com/Festanny) for helping with the recangul
 
 Thanks to [@lipej](https://github.com/lipej) for adding the brazilian portugese localization 🇧🇷🇵🇹
 
+Thanks to [@insub](https://github.com/insub4067) for adding the korean localization 🇰🇷
+
 ## ✍️ Author
 
 Benedikt Betz & CHECK24
