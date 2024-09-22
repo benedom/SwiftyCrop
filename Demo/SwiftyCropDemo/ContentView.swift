@@ -1,9 +1,11 @@
 import SwiftUI
 import SwiftyCrop
+import PhotosUI
 
 struct ContentView: View {
     @State private var showImageCropper: Bool = false
     @State private var selectedImage: UIImage?
+    @State private var pickedImage: PhotosPickerItem?
     @State private var selectedShape: MaskShape = .square
     @State private var rectAspectRatio: PresetAspectRatios = .fourToThree
     @State private var cropImageCircular: Bool
@@ -64,10 +66,16 @@ struct ContentView: View {
                         } label: {
                             LongText(title: "Load image")
                         }
+                        PhotosPicker(
+                            selection: $pickedImage,
+                            matching: .images
+                        ) {
+                            LongText(title: "Pick")
+                        }
                         Button {
                             showImageCropper.toggle()
                         } label: {
-                            LongText(title: "Crop image")
+                            LongText(title: "Crop")
                         }
                     }
                     
@@ -166,6 +174,19 @@ struct ContentView: View {
                 ) { croppedImage in
                     // Do something with the returned, cropped image
                     self.selectedImage = croppedImage
+                }
+            }
+        }
+        .onChange(of: pickedImage) {
+            if let pickedImage {
+                Task {
+                    if let data = try? await pickedImage.loadTransferable(type: Data.self) {
+                        if let uiImage = UIImage(data: data) {
+                            await MainActor.run {
+                                selectedImage = uiImage
+                            }
+                        }
+                    }
                 }
             }
         }
