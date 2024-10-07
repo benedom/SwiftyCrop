@@ -40,6 +40,12 @@
             "value" : "Annullamento"
           }
         },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "キャンセル"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -111,6 +117,12 @@
             "value" : "Muoversi e scalare"
           }
         },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "移動・拡大縮小"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
@@ -180,6 +192,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Risparmiare"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存"
           }
         },
         "ko" : {
