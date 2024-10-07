@@ -33,6 +33,7 @@ The following languages are supported & localized:
 - 🇭🇺 Hungarian
 - 🇧🇷 Brazilian Portuguese
 - 🇰🇷 Korean
+- 🇯🇵 Japanese
 
 The localization file can be found in `Sources/SwiftyCrop/Resources`.
 
@@ -195,6 +196,8 @@ Thanks to [@Festanny](https://github.com/Festanny) for helping with the recangul
 Thanks to [@lipej](https://github.com/lipej) for adding the brazilian portugese localization 🇧🇷🇵🇹
 
 Thanks to [@insub](https://github.com/insub4067) for adding the korean localization 🇰🇷
+
+Thanks to [@yhirano](https://github.com/yhirano) for adding the japanese localization 🇯🇵
 
 ## ✍️ Author
 
