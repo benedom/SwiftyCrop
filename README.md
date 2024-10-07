@@ -197,6 +197,8 @@ Thanks to [@lipej](https://github.com/lipej) for adding the brazilian portugese 
 
 Thanks to [@insub](https://github.com/insub4067) for adding the korean localization 🇰🇷
 
+Thanks to [@yhirano](https://github.com/yhirano) for adding the japanese localization 🇯🇵
+
 ## ✍️ Author
 
 Benedikt Betz & CHECK24
