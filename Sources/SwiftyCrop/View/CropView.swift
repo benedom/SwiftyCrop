@@ -73,7 +73,10 @@ struct CropView: View {
             }
         
         VStack {
-            Text("interaction_instructions", tableName: localizableTableName, bundle: .module)
+            Text(
+                configuration.customTexts?.interactionInstructionsText ??
+                NSLocalizedString("interaction_instructions", tableName: localizableTableName, bundle: .module, comment: "")
+            )
                 .font(.system(size: 16, weight: .regular))
                 .foregroundColor(.white)
                 .padding(.top, 30)
@@ -116,7 +119,10 @@ struct CropView: View {
                 Button {
                     dismiss()
                 } label: {
-                    Text("cancel_button", tableName: localizableTableName, bundle: .module)
+                    Text(
+                        configuration.customTexts?.cancelButtonText ??
+                        NSLocalizedString("cancel_button", tableName: localizableTableName, bundle: .module, comment: "")
+                        )
                 }
                 .foregroundColor(.white)
                 
@@ -126,7 +132,10 @@ struct CropView: View {
                     onComplete(cropImage())
                     dismiss()
                 } label: {
-                    Text("save_button", tableName: localizableTableName, bundle: .module)
+                    Text(
+                        configuration.customTexts?.saveButtonText ??
+                        NSLocalizedString("save_button", tableName: localizableTableName, bundle: .module, comment: "")
+                        )
                 }
                 .foregroundColor(.white)
             }

@@ -155,6 +155,7 @@ You can also configure `SwiftyCropView` by passing a `SwiftyCropConfiguration`. 
 | `rotateImage` | `Bool`: Whether the image can be rotated when cropping using pinch gestures. Defaults to `false`. |
 | `zoomSensitivity` | `CGFloat`: Zoom sensitivity when cropping. Increase to make zoom faster / less sensitive. Defaults to `1.0`. |
 | `rectAspectRatio` | `CGFloat`: The aspect ratio to use when a rectangular mask shape is used. Defaults to `4:3`. |
+| `customTexts` | `Texts`: Defines custom texts for the buttons and instructions. Defaults to `nil` using localized strings from resources. |
 
 Create a configuration like this:
 ```swift
@@ -164,7 +165,12 @@ let configuration = SwiftyCropConfiguration(
     cropImageCircular: false,
     rotateImage: true,
     zoomSensitivity = 1.0,
-    rectAspectRatio = 4/3
+    rectAspectRatio = 4/3,
+    customTexts = SwiftyCropConfiguration.Texts(
+        cancelButtonText: "Cancel",
+        interactionInstructionsText: "Custom instruction text",
+        saveButtonText: "Save"
+    )
 )
 ```
 and use it like this:
@@ -201,7 +207,7 @@ Thanks to [@yhirano](https://github.com/yhirano) for adding the japanese localiz
 
 ## ✍️ Author
 
-Benedikt Betz & CHECK24
+Benedikt Betz
 
 ## 📃 License
 
