@@ -1,10 +1,3 @@
-//
-//  LongText.swift
-//  SwiftyCropDemo
-//
-//  Created by Leonid Zolotarev on 1/24/24.
-//
-
 import SwiftUI
 
 struct LongText: View {
