@@ -1,4 +1,5 @@
 import CoreGraphics
+import SwiftUI
 
 /// `SwiftyCropConfiguration` is a struct that defines the configuration for cropping behavior.
 public struct SwiftyCropConfiguration {
@@ -9,7 +10,9 @@ public struct SwiftyCropConfiguration {
     public let zoomSensitivity: CGFloat
     public let rectAspectRatio: CGFloat
     public let customTexts: Texts?
-    
+    public let fonts: Fonts
+    public let colors: Colors
+
     public struct Texts {
         public init(
             cancelButtonText: String,
@@ -24,6 +27,41 @@ public struct SwiftyCropConfiguration {
         public let cancelButtonText: String
         public let interactionInstructionsText: String
         public let saveButtonText: String
+    }
+
+    public struct Colors {
+        public init(
+            cancelButton: Color = .white,
+            interactionInstructions: Color = .white,
+            saveButton: Color = .white,
+            background: Color = .black
+        ) {
+            self.cancelButton = cancelButton
+            self.interactionInstructions = interactionInstructions
+            self.saveButton = saveButton
+            self.background = background
+        }
+
+        public let cancelButton: Color
+        public let interactionInstructions: Color
+        public let saveButton: Color
+        public let background: Color
+    }
+
+    public struct Fonts {
+        public init(
+            cancelButton: Font? = nil,
+            interactionInstructions: Font? = nil,
+            saveButton: Font? = nil
+        ) {
+            self.cancelButton = cancelButton
+            self.interactionInstructions = interactionInstructions ?? .system(size: 16, weight: .regular)
+            self.saveButton = saveButton
+        }
+
+        public let cancelButton: Font?
+        public let interactionInstructions: Font
+        public let saveButton: Font?
     }
 
     /// Creates a new instance of `SwiftyCropConfiguration`.
@@ -49,7 +87,9 @@ public struct SwiftyCropConfiguration {
         rotateImage: Bool = false,
         zoomSensitivity: CGFloat = 1,
         rectAspectRatio: CGFloat = 4/3,
-        customTexts: Texts? = nil
+        customTexts: Texts? = nil,
+        fonts: Fonts = .init(),
+        colors: Colors = .init()
     ) {
         self.maxMagnificationScale = maxMagnificationScale
         self.maskRadius = maskRadius
@@ -58,5 +98,7 @@ public struct SwiftyCropConfiguration {
         self.zoomSensitivity = zoomSensitivity
         self.rectAspectRatio = rectAspectRatio
         self.customTexts = customTexts
+        self.fonts = fonts
+        self.colors = colors
     }
 }

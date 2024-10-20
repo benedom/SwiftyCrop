@@ -3,13 +3,13 @@ import SwiftUI
 struct CropView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel: CropViewModel
-    
+
     private let image: UIImage
     private let maskShape: MaskShape
     private let configuration: SwiftyCropConfiguration
     private let onComplete: (UIImage?) -> Void
     private let localizableTableName: String
-    
+
     init(
         image: UIImage,
         maskShape: MaskShape,
@@ -30,23 +30,23 @@ struct CropView: View {
         )
         localizableTableName = "Localizable"
     }
-    
+
     var body: some View {
         let magnificationGesture = MagnificationGesture()
             .onChanged { value in
                 let sensitivity: CGFloat = 0.1 * configuration.zoomSensitivity
                 let scaledValue = (value.magnitude - 1) * sensitivity + 1
-                
+
                 let maxScaleValues = viewModel.calculateMagnificationGestureMaxValues()
                 viewModel.scale = min(max(scaledValue * viewModel.lastScale, maxScaleValues.0), maxScaleValues.1)
-                
+
                 updateOffset()
             }
             .onEnded { _ in
                 viewModel.lastScale = viewModel.scale
                 viewModel.lastOffset = viewModel.offset
             }
-        
+
         let dragGesture = DragGesture()
             .onChanged { value in
                 let maxOffsetPoint = viewModel.calculateDragGestureMax()
@@ -63,7 +63,7 @@ struct CropView: View {
             .onEnded { _ in
                 viewModel.lastOffset = viewModel.offset
             }
-        
+
         let rotationGesture = RotationGesture()
             .onChanged { value in
                 viewModel.angle = value
@@ -71,17 +71,17 @@ struct CropView: View {
             .onEnded { _ in
                 viewModel.lastAngle = viewModel.angle
             }
-        
+
         VStack {
             Text(
                 configuration.customTexts?.interactionInstructionsText ??
                 NSLocalizedString("interaction_instructions", tableName: localizableTableName, bundle: .module, comment: "")
             )
-                .font(.system(size: 16, weight: .regular))
-                .foregroundColor(.white)
-                .padding(.top, 30)
-                .zIndex(1)
-            
+            .font(configuration.fonts.interactionInstructions)
+            .foregroundColor(configuration.colors.interactionInstructions)
+            .padding(.top, 30)
+            .zIndex(1)
+
             ZStack {
                 Image(uiImage: image)
                     .resizable()
@@ -98,7 +98,7 @@ struct CropView: View {
                                 }
                         }
                     )
-                
+
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFit()
@@ -114,7 +114,7 @@ struct CropView: View {
             .simultaneousGesture(magnificationGesture)
             .simultaneousGesture(dragGesture)
             .simultaneousGesture(configuration.rotateImage ? rotationGesture : nil)
-            
+
             HStack {
                 Button {
                     dismiss()
@@ -122,12 +122,13 @@ struct CropView: View {
                     Text(
                         configuration.customTexts?.cancelButtonText ??
                         NSLocalizedString("cancel_button", tableName: localizableTableName, bundle: .module, comment: "")
-                        )
+                    )
                 }
-                .foregroundColor(.white)
-                
+                .font(configuration.fonts.cancelButton)
+                .foregroundColor(configuration.colors.cancelButton)
+
                 Spacer()
-                
+
                 Button {
                     onComplete(cropImage())
                     dismiss()
@@ -135,16 +136,17 @@ struct CropView: View {
                     Text(
                         configuration.customTexts?.saveButtonText ??
                         NSLocalizedString("save_button", tableName: localizableTableName, bundle: .module, comment: "")
-                        )
+                    )
+                    .font(configuration.fonts.saveButton)
                 }
-                .foregroundColor(.white)
+                .foregroundColor(configuration.colors.saveButton)
             }
             .frame(maxWidth: .infinity, alignment: .bottom)
             .padding()
         }
-        .background(.black)
+        .background(configuration.colors.background)
     }
-    
+
     private func updateOffset() {
         let maxOffsetPoint = viewModel.calculateDragGestureMax()
         let newX = min(max(viewModel.offset.width, -maxOffsetPoint.x), maxOffsetPoint.x)
@@ -152,7 +154,7 @@ struct CropView: View {
         viewModel.offset = CGSize(width: newX, height: newY)
         viewModel.lastOffset = viewModel.offset
     }
-    
+
     private func cropImage() -> UIImage? {
         var editedImage: UIImage = image
         if configuration.rotateImage {
@@ -171,10 +173,10 @@ struct CropView: View {
             return viewModel.cropToSquare(editedImage)
         }
     }
-    
+
     private struct MaskShapeView: View {
         let maskShape: MaskShape
-        
+
         var body: some View {
             Group {
                 switch maskShape {
