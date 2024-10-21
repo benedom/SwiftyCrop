@@ -155,21 +155,34 @@ You can also configure `SwiftyCropView` by passing a `SwiftyCropConfiguration`. 
 | `rotateImage` | `Bool`: Whether the image can be rotated when cropping using pinch gestures. Defaults to `false`. |
 | `zoomSensitivity` | `CGFloat`: Zoom sensitivity when cropping. Increase to make zoom faster / less sensitive. Defaults to `1.0`. |
 | `rectAspectRatio` | `CGFloat`: The aspect ratio to use when a rectangular mask shape is used. Defaults to `4:3`. |
-| `customTexts` | `Texts`: Defines custom texts for the buttons and instructions. Defaults to `nil` using localized strings from resources. |
+| `texts` | `Texts`: Defines custom texts for the buttons and instructions. Defaults to using localized strings from resources. |
+| `fonts` | `Fonts`: Defines custom fonts for the buttons and instructions. Defaults to using system font. |
+| `colors` | `Colors`: Defines custom colors for the texts and background. Defaults to white text and black background. |
 
 Create a configuration like this:
 ```swift
 let configuration = SwiftyCropConfiguration(
-    maxMagnificationScale = 4.0,
+    maxMagnificationScale: 4.0,
     maskRadius: 130,
     cropImageCircular: false,
     rotateImage: true,
-    zoomSensitivity = 1.0,
-    rectAspectRatio = 4/3,
-    customTexts = SwiftyCropConfiguration.Texts(
-        cancelButtonText: "Cancel",
-        interactionInstructionsText: "Custom instruction text",
-        saveButtonText: "Save"
+    zoomSensitivity: 1.0,
+    rectAspectRatio: 4/3,
+    texts: SwiftyCropConfiguration.Texts(
+        cancelButton: "Cancel",
+        interactionInstructions: "Custom instruction text",
+        saveButton: "Save"
+    ),
+    fonts: SwiftyCropConfiguration.Fonts(
+        cancelButton: Font.system(size: 12),
+        interactionInstructions: Font.system(size: 14),
+        saveButton: Font.system(size: 12)
+    ),
+    colors: SwiftyCropConfiguration.Colors(
+        cancelButton: Color.red,
+        interactionInstructions: Color.white,
+        saveButton: Color.blue,
+        background: Color.gray
     )
 )
 ```
@@ -204,6 +217,8 @@ Thanks to [@lipej](https://github.com/lipej) for adding the brazilian portugese 
 Thanks to [@insub](https://github.com/insub4067) for adding the korean localization 🇰🇷
 
 Thanks to [@yhirano](https://github.com/yhirano) for adding the japanese localization 🇯🇵
+
+Thanks to [@yefimtsev](https://github.com/yefimtsev) for adding the ability to customize fonts and colors 🖼️
 
 ## ✍️ Author
 
