@@ -74,7 +74,7 @@ struct CropView: View {
 
         VStack {
             Text(
-                configuration.customTexts?.interactionInstructionsText ??
+                configuration.texts.interactionInstructions ??
                 NSLocalizedString("interaction_instructions", tableName: localizableTableName, bundle: .module, comment: "")
             )
             .font(configuration.fonts.interactionInstructions)
@@ -120,7 +120,7 @@ struct CropView: View {
                     dismiss()
                 } label: {
                     Text(
-                        configuration.customTexts?.cancelButtonText ??
+                        configuration.texts.cancelButton ??
                         NSLocalizedString("cancel_button", tableName: localizableTableName, bundle: .module, comment: "")
                     )
                 }
@@ -134,7 +134,7 @@ struct CropView: View {
                     dismiss()
                 } label: {
                     Text(
-                        configuration.customTexts?.saveButtonText ??
+                        configuration.texts.saveButton ??
                         NSLocalizedString("save_button", tableName: localizableTableName, bundle: .module, comment: "")
                     )
                     .font(configuration.fonts.saveButton)
