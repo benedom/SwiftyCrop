@@ -1,4 +1,5 @@
 import XCTest
+import SwiftUI
 @testable import SwiftyCrop
 
 final class SwiftyCropTests: XCTestCase {
@@ -9,14 +10,14 @@ final class SwiftyCropTests: XCTestCase {
             cropImageCircular: true,
             rectAspectRatio: 4/3,
             texts: SwiftyCropConfiguration.Texts(
-                cancelButtonText: "Test 1",
-                interactionInstructionsText: "Test 2",
-                saveButtonText: "Test 3"
+                cancelButton: "Test 1",
+                interactionInstructions: "Test 2",
+                saveButton: "Test 3"
             ),
             fonts: SwiftyCropConfiguration.Fonts(
                 cancelButton: Font.system(size: 12),
-                interactionInstructions: .systemFont(ofSize: 13),
-                saveButton: .systemFont(ofSize: 14)
+                interactionInstructions: Font.system(size: 13),
+                saveButton: Font.system(size: 14)
             ),
             colors: SwiftyCropConfiguration.Colors(
                 cancelButton: .red,
