@@ -221,6 +221,8 @@ Thanks to [@yhirano](https://github.com/yhirano) for adding the japanese localiz
 
 Thanks to [@yefimtsev](https://github.com/yefimtsev) for adding the ability to customize fonts and colors 🖼️
 
+Thanks to [@SuperY](https://github.com/SuperY) for adding the chinese localization 🇨🇳
+
 ## ✍️ Author
 
 Benedikt Betz
