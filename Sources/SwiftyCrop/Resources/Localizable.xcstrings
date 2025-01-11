@@ -75,6 +75,12 @@
             "state" : "translated",
             "value" : "Скасувати"
           }
+        },
+        "zh" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消"
+          }
         }
       }
     },
@@ -152,6 +158,12 @@
             "state" : "translated",
             "value" : "Переміщення та масштабування"
           }
+        },
+        "zh" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "移动·缩放"
+          }
         }
       }
     },
@@ -228,6 +240,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Зберегти"
+          }
+        },
+        "zh" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存"
           }
         }
       }
