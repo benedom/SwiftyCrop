@@ -21,7 +21,7 @@ let package = Package(
             path: "Sources",
             resources: [
                 .copy("PrivacyInfo.xcprivacy"),
-                .process("SwiftyCrop/Resources/*.xcstrings"),
+                .process("SwiftyCrop/Resources/Localizable.xcstrings"),
             ]
         ),
         .testTarget(
