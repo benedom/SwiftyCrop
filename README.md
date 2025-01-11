@@ -34,6 +34,7 @@ The following languages are supported & localized:
 - 🇧🇷 Brazilian Portuguese
 - 🇰🇷 Korean
 - 🇯🇵 Japanese
+- 🇨🇳 Chinese
 
 The localization file can be found in `Sources/SwiftyCrop/Resources`.
 
