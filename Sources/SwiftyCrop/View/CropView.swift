@@ -109,43 +109,46 @@ struct CropView: View {
                         MaskShapeView(maskShape: maskShape)
                             .frame(width: viewModel.maskSize.width, height: viewModel.maskSize.height)
                     )
+                
+                VStack {
+                    Spacer()
+                    HStack {
+                        Button {
+                            dismiss()
+                        } label: {
+                            Text(
+                                configuration.texts.cancelButton ??
+                                NSLocalizedString("cancel_button", tableName: localizableTableName, bundle: .module, comment: "")
+                            )
+                            .padding()
+                            .font(configuration.fonts.cancelButton)
+                            .foregroundColor(configuration.colors.cancelButton)
+                        }
+                        .padding()
+                        
+                        Spacer()
+
+                        Button {
+                            onComplete(cropImage())
+                            dismiss()
+                        } label: {
+                            Text(
+                                configuration.texts.saveButton ??
+                                NSLocalizedString("save_button", tableName: localizableTableName, bundle: .module, comment: "")
+                            )
+                            .padding()
+                            .font(configuration.fonts.saveButton)
+                            .foregroundColor(configuration.colors.saveButton)
+                        }
+                        .padding()
+                    }
+                    .frame(maxWidth: .infinity, alignment: .bottom)
+                }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .simultaneousGesture(magnificationGesture)
             .simultaneousGesture(dragGesture)
             .simultaneousGesture(configuration.rotateImage ? rotationGesture : nil)
-
-            HStack {
-                Button {
-                    dismiss()
-                } label: {
-                    Text(
-                        configuration.texts.cancelButton ??
-                        NSLocalizedString("cancel_button", tableName: localizableTableName, bundle: .module, comment: "")
-                    )
-                    .padding()
-                    .font(configuration.fonts.cancelButton)
-                    .foregroundColor(configuration.colors.cancelButton)
-                }
-                .padding()
-                
-                Spacer()
-
-                Button {
-                    onComplete(cropImage())
-                    dismiss()
-                } label: {
-                    Text(
-                        configuration.texts.saveButton ??
-                        NSLocalizedString("save_button", tableName: localizableTableName, bundle: .module, comment: "")
-                    )
-                    .padding()
-                    .font(configuration.fonts.saveButton)
-                    .foregroundColor(configuration.colors.saveButton)
-                }
-                .padding()
-            }
-            .frame(maxWidth: .infinity, alignment: .bottom)
         }
         .background(configuration.colors.background)
     }
