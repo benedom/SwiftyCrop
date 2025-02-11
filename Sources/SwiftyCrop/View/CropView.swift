@@ -123,10 +123,12 @@ struct CropView: View {
                         configuration.texts.cancelButton ??
                         NSLocalizedString("cancel_button", tableName: localizableTableName, bundle: .module, comment: "")
                     )
+                    .padding()
+                    .font(configuration.fonts.cancelButton)
+                    .foregroundColor(configuration.colors.cancelButton)
                 }
-                .font(configuration.fonts.cancelButton)
-                .foregroundColor(configuration.colors.cancelButton)
-
+                .padding()
+                
                 Spacer()
 
                 Button {
@@ -137,12 +139,13 @@ struct CropView: View {
                         configuration.texts.saveButton ??
                         NSLocalizedString("save_button", tableName: localizableTableName, bundle: .module, comment: "")
                     )
+                    .padding()
                     .font(configuration.fonts.saveButton)
+                    .foregroundColor(configuration.colors.saveButton)
                 }
-                .foregroundColor(configuration.colors.saveButton)
+                .padding()
             }
             .frame(maxWidth: .infinity, alignment: .bottom)
-            .padding()
         }
         .background(configuration.colors.background)
     }
