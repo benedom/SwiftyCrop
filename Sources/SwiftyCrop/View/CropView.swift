@@ -66,7 +66,7 @@ struct CropView: View {
 
         let rotationGesture = RotationGesture()
             .onChanged { value in
-                viewModel.angle = value
+                viewModel.angle = viewModel.lastAngle + value
             }
             .onEnded { _ in
                 viewModel.lastAngle = viewModel.angle
