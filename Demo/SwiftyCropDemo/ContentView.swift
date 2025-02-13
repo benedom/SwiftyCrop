@@ -166,7 +166,8 @@ struct ContentView: View {
                 ) { croppedImage in
                     // Do something with the returned, cropped image
                     self.selectedImage = croppedImage
-                }
+                }.clipped(antialiased: false)
+                .ignoresSafeArea(edges: .all)
             }
         }
     }
