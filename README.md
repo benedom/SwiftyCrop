@@ -154,6 +154,7 @@ You can also configure `SwiftyCropView` by passing a `SwiftyCropConfiguration`. 
 | `maskRadius` | `CGFloat`: The radius of the mask used for cropping. Defaults to `130`. A good way is to make it dependend on the screens size. |
 | `cropImageCircular` | `Bool`: When using the cropping mask `circle`, whether the resulting image should also be masked as circle. Defaults to `false`. |
 | `rotateImage` | `Bool`: Whether the image can be rotated when cropping using pinch gestures. Defaults to `false`. |
+| `showRotationButtons` | `Bool`: Option to show rotation buttons when `rotateImage` is `true`. Defaults to `false`. |
 | `zoomSensitivity` | `CGFloat`: Zoom sensitivity when cropping. Increase to make zoom faster / less sensitive. Defaults to `1.0`. |
 | `rectAspectRatio` | `CGFloat`: The aspect ratio to use when a rectangular mask shape is used. Defaults to `4:3`. |
 | `texts` | `Texts`: Defines custom texts for the buttons and instructions. Defaults to using localized strings from resources. |
@@ -166,7 +167,8 @@ let configuration = SwiftyCropConfiguration(
     maxMagnificationScale: 4.0,
     maskRadius: 130,
     cropImageCircular: false,
-    rotateImage: true,
+    rotateImage: false,
+    showRotationButtons: false,
     zoomSensitivity: 1.0,
     rectAspectRatio: 4/3,
     texts: SwiftyCropConfiguration.Texts(

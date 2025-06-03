@@ -18,14 +18,16 @@ let package = Package(
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "SwiftyCrop",
-            path: "Sources",
+            dependencies: [],
+            path: "Sources/SwiftyCrop",
             resources: [
-                .copy("PrivacyInfo.xcprivacy"),
-                .process("SwiftyCrop/Resources/Localizable.xcstrings"),
+                .process("Resources")
             ]
         ),
         .testTarget(
             name: "SwiftyCropTests",
-            dependencies: ["SwiftyCrop"])
+            dependencies: ["SwiftyCrop"],
+            path: "Tests/SwiftyCropTests"
+        ),
     ]
 )
