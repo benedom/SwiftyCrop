@@ -9,6 +9,7 @@ struct ButtonsView: View {
   var body: some View {
     VStack {
       Spacer()
+        
       HStack {
         Button {
           dismiss()

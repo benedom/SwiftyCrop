@@ -7,7 +7,7 @@ public struct SwiftyCropConfiguration {
   public let maskRadius: CGFloat
   public let cropImageCircular: Bool
   public let rotateImage: Bool
-  public let showRotationButtons: Bool
+  public let rotateImageWithButtons: Bool
   public let zoomSensitivity: CGFloat
   public let rectAspectRatio: CGFloat
   public let texts: Texts
@@ -80,7 +80,7 @@ public struct SwiftyCropConfiguration {
   ///
   ///   - rotateImage: Option to rotate image. Defaults to `false`.
   ///
-  ///   - showRotationButtons: Option to show rotation buttons when `rotateImage` is `true`. Defaults to `false`.
+  ///   - rotateImageWithButtons: Option to show rotation buttons. Defaults to `false`.
   ///
   ///   - zoomSensitivity: Sensitivity when zooming. Default is `1.0`. Decrease to increase sensitivity.
   ///
@@ -96,7 +96,7 @@ public struct SwiftyCropConfiguration {
     maskRadius: CGFloat = 130,
     cropImageCircular: Bool = false,
     rotateImage: Bool = false,
-    showRotationButtons: Bool = false,
+    rotateImageWithButtons: Bool = false,
     zoomSensitivity: CGFloat = 1,
     rectAspectRatio: CGFloat = 4/3,
     texts: Texts = Texts(),
@@ -107,7 +107,7 @@ public struct SwiftyCropConfiguration {
     self.maskRadius = maskRadius
     self.cropImageCircular = cropImageCircular
     self.rotateImage = rotateImage
-    self.showRotationButtons = showRotationButtons
+    self.rotateImageWithButtons = rotateImageWithButtons
     self.zoomSensitivity = zoomSensitivity
     self.rectAspectRatio = rectAspectRatio
     self.texts = texts

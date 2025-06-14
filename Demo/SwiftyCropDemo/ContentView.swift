@@ -8,6 +8,7 @@ struct ContentView: View {
     @State private var rectAspectRatio: PresetAspectRatios = .fourToThree
     @State private var cropImageCircular: Bool
     @State private var rotateImage: Bool
+    @State private var rotateImageWithButtons: Bool
     @State private var maxMagnificationScale: CGFloat
     @State private var maskRadius: CGFloat
     @State private var zoomSensitivity: CGFloat
@@ -32,6 +33,7 @@ struct ContentView: View {
         let defaultConfiguration = SwiftyCropConfiguration()
         _cropImageCircular = State(initialValue: defaultConfiguration.cropImageCircular)
         _rotateImage = State(initialValue: defaultConfiguration.rotateImage)
+        _rotateImageWithButtons = State(initialValue: defaultConfiguration.rotateImageWithButtons)
         _maxMagnificationScale = State(initialValue: defaultConfiguration.maxMagnificationScale)
         _maskRadius = State(initialValue: defaultConfiguration.maskRadius)
         _zoomSensitivity = State(initialValue: defaultConfiguration.zoomSensitivity)
@@ -100,7 +102,9 @@ struct ContentView: View {
                     
                     Toggle("Crop image to circle", isOn: $cropImageCircular)
                     
-                    Toggle("Rotate image", isOn: $rotateImage)
+                    Toggle("Rotate image (gestures)", isOn: $rotateImage)
+                    
+                    Toggle("Rotate image (buttons)", isOn: $rotateImageWithButtons)
                     
                     HStack {
                         Text("Max magnification")
@@ -160,6 +164,7 @@ struct ContentView: View {
                         maskRadius: maskRadius,
                         cropImageCircular: cropImageCircular,
                         rotateImage: rotateImage,
+                        rotateImageWithButtons: rotateImageWithButtons,
                         zoomSensitivity: zoomSensitivity,
                         rectAspectRatio: rectAspectRatio.getValue()
                     )
