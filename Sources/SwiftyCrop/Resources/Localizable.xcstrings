@@ -167,6 +167,17 @@
         }
       }
     },
+    "processing_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Processing"
+          }
+        }
+      }
+    },
     "save_button" : {
       "extractionState" : "manual",
       "localizations" : {
