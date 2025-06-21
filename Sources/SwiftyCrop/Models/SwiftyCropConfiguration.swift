@@ -18,16 +18,19 @@ public struct SwiftyCropConfiguration {
             // We cannot use the localized values here because module access is not given in init
             cancelButton: String? = nil,
             interactionInstructions: String? = nil,
-            saveButton: String? = nil
+            saveButton: String? = nil,
+            progressLayerText: String? = nil
         ) {
             self.cancelButton = cancelButton
             self.interactionInstructions = interactionInstructions
             self.saveButton = saveButton
+            self.progressLayerText = progressLayerText
         }
         
         public let cancelButton: String?
         public let interactionInstructions: String?
         public let saveButton: String?
+        public let progressLayerText: String?
     }
 
     public struct Fonts {

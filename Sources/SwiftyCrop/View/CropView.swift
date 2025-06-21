@@ -1,4 +1,5 @@
 import SwiftUI
+import PhotosUI
 
 struct CropView: View {
     @Environment(\.dismiss) private var dismiss
@@ -38,22 +39,13 @@ struct CropView: View {
         ZStack {
             VStack {
                 instructionText
+                    .padding(.top, 16)
+                Spacer()
                 cropImageView
+                Spacer()
                 cropToolbar
             }
             .background(configuration.colors.background)
-            .onChange(of: isCropping) { value in
-                if value {
-                    DispatchQueue.global(qos: .background).async { // do cropping process in the background
-                        let result = cropImage()
-                        
-                        DispatchQueue.main.async {
-                            onComplete(result)
-                            dismiss()
-                        }
-                    }
-                }
-            }
             
             if isCropping {
                 progressLayer
@@ -156,39 +148,77 @@ struct CropView: View {
     }
 
     private var cropToolbar: some View {
-        VStack {
-            Spacer()
-            HStack {
-                Button {
-                    dismiss()
-                } label: {
-                    Text(
-                        configuration.texts.cancelButton ??
-                        NSLocalizedString("cancel_button", tableName: localizableTableName, bundle: .module, comment: "")
-                    )
-                    .padding()
-                    .font(configuration.fonts.cancelButton)
-                    .foregroundColor(configuration.colors.cancelButton)
-                }
+        HStack {
+            Button {
+                dismiss()
+            } label: {
+                Text(
+                    configuration.texts.cancelButton ??
+                    NSLocalizedString("cancel_button", tableName: localizableTableName, bundle: .module, comment: "")
+                )
                 .padding()
+                .font(configuration.fonts.cancelButton)
+                .foregroundColor(configuration.colors.cancelButton)
+            }
+            .padding()
+            
+            Spacer()
+            
+            Button {
+                Task {
+                    isCropping = true
+                    let result = cropImage()
+                    await MainActor.run {
+                        onComplete(result)
+                        dismiss()
+                    }
+                }
+            } label: {
+                Text(
+                    configuration.texts.saveButton ??
+                    NSLocalizedString("save_button", tableName: localizableTableName, bundle: .module, comment: "")
+                )
+                .padding()
+                .font(configuration.fonts.saveButton)
+                .foregroundColor(configuration.colors.saveButton)
+            }
+            .padding()
+            .disabled(isCropping)
+        }
+        .frame(maxWidth: .infinity, alignment: .bottom)
+    }
+
+    private var progressLayer: some View {
+        ZStack {
+            configuration.colors.background.opacity(0.4)
+                .ignoresSafeArea()
+            
+            VStack(alignment: .center, spacing: 5) {
+                
+                Spacer(minLength: 35)
+                
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle(tint: configuration.colors.interactionInstructions))
+                    .scaleEffect(1.2)
                 
                 Spacer()
-
-                Button {
-                    isCropping = true
-                } label: {
-                    Text(
-                        configuration.texts.saveButton ??
-                        NSLocalizedString("save_button", tableName: localizableTableName, bundle: .module, comment: "")
-                    )
-                    .padding()
-                    .font(configuration.fonts.saveButton)
-                    .foregroundColor(configuration.colors.saveButton)
-                }
-                .padding()
+                
+                Text(
+                    configuration.texts.progressLayerText ??
+                    NSLocalizedString("processing_label", tableName: localizableTableName, bundle: .module, comment: "")
+                )
+                .font(.body)
+                .foregroundColor(configuration.colors.interactionInstructions)
+                .padding(.bottom, 12)
+                
             }
-            .frame(maxWidth: .infinity, alignment: .bottom)
+            .frame(width: 120, height: 110)
+            .background(configuration.colors.background.opacity(0.8))
+            .cornerRadius(12)
+            .padding(.vertical, 5)
+            .padding(.horizontal, 15)
         }
+        .transition(.opacity)
     }
 
     // MARK: - Helpers
@@ -198,36 +228,6 @@ struct CropView: View {
         let newY = min(max(viewModel.offset.height, -maxOffsetPoint.y), maxOffsetPoint.y)
         viewModel.offset = CGSize(width: newX, height: newY)
         viewModel.lastOffset = viewModel.offset
-    }
-
-    private var progressLayer: some View {
-        ZStack {
-            Color.black.opacity(0.4)
-                .ignoresSafeArea()
-            
-            VStack(alignment: .center, spacing: 5) {
-                
-                Spacer(minLength: 35)
-                
-                ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                    .scaleEffect(1.2)
-                
-                Spacer()
-                
-                Text(NSLocalizedString("processing_label", tableName: localizableTableName, bundle: .module, comment: ""))
-                    .font(.body)
-                    .foregroundColor(.white)
-                    .padding(.bottom, 12)
-                
-            }
-            .frame(width: 120, height: 110)
-            .background(Color.gray)
-            .cornerRadius(12)
-            .padding(.vertical, 5)
-            .padding(.horizontal, 15)
-        }
-        .transition(.opacity)
     }
 
     private func cropImage() -> UIImage? {
