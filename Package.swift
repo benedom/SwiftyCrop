@@ -19,16 +19,15 @@ let package = Package(
         .target(
             name: "SwiftyCrop",
             dependencies: [],
-            path: "Sources/SwiftyCrop",
+            path: "Sources",
             resources: [
-                .copy("../PrivacyInfo.xcprivacy"),
-                .process("Resources")
+                .copy("PrivacyInfo.xcprivacy"),
+                .process("SwiftyCrop/Resources")
             ]
         ),
         .testTarget(
             name: "SwiftyCropTests",
-            dependencies: ["SwiftyCrop"],
-            path: "Tests/SwiftyCropTests"
+            dependencies: ["SwiftyCrop"]
         ),
     ]
 )

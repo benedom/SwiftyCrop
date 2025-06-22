@@ -57,13 +57,14 @@ struct CropView: View {
                     localizableTableName: localizableTableName,
                     dismiss: { dismiss() }
                 ) {
-                    Task {
+                    await MainActor.run {
                         isCropping = true
-                        let result = cropImage()
-                        await MainActor.run {
-                            onComplete(result)
-                            dismiss()
-                        }
+                    }
+                    let result = cropImage()
+                    await MainActor.run {
+                        onComplete(result)
+                        dismiss()
+                        isCropping = false
                     }
                 }
             }
@@ -158,47 +159,6 @@ struct CropView: View {
         .simultaneousGesture(configuration.rotateImage ? rotationGesture : nil)
     }
 
-    private var cropToolbar: some View {
-        HStack {
-            Button {
-                dismiss()
-            } label: {
-                Text(
-                    configuration.texts.cancelButton ??
-                    NSLocalizedString("cancel_button", tableName: localizableTableName, bundle: .module, comment: "")
-                )
-                .padding()
-                .font(configuration.fonts.cancelButton)
-                .foregroundColor(configuration.colors.cancelButton)
-            }
-            .padding()
-            
-            Spacer()
-            
-            Button {
-                Task {
-                    isCropping = true
-                    let result = cropImage()
-                    await MainActor.run {
-                        onComplete(result)
-                        dismiss()
-                    }
-                }
-            } label: {
-                Text(
-                    configuration.texts.saveButton ??
-                    NSLocalizedString("save_button", tableName: localizableTableName, bundle: .module, comment: "")
-                )
-                .padding()
-                .font(configuration.fonts.saveButton)
-                .foregroundColor(configuration.colors.saveButton)
-            }
-            .padding()
-            .disabled(isCropping)
-        }
-        .frame(maxWidth: .infinity, alignment: .bottom)
-    }
-
     private var progressLayer: some View {
         ZStack {
             configuration.colors.background.opacity(0.4)
@@ -243,7 +203,7 @@ struct CropView: View {
 
     private func cropImage() -> UIImage? {
         var editedImage: UIImage = image
-        if configuration.rotateImage {
+        if configuration.rotateImage || configuration.rotateImageWithButtons {
             if let rotatedImage: UIImage = viewModel.rotate(
                 editedImage,
                 viewModel.lastAngle
