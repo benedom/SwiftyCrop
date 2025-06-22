@@ -38,12 +38,35 @@ struct CropView: View {
     var body: some View {
         ZStack {
             VStack {
-                instructionText
-                    .padding(.top, 16)
+                InteractionInstructionsView(configuration: configuration, localizableTableName: localizableTableName)
+                    .padding(.top, 50)
+                    .zIndex(1)
+                
+                if configuration.rotateImageWithButtons {
+                    RotateButtonsView(viewModel: viewModel, configuration: configuration)
+                }
+                
                 Spacer()
+                
                 cropImageView
+                
                 Spacer()
-                cropToolbar
+                
+                ButtonsView(
+                    configuration: configuration,
+                    localizableTableName: localizableTableName,
+                    dismiss: { dismiss() }
+                ) {
+                    await MainActor.run {
+                        isCropping = true
+                    }
+                    let result = cropImage()
+                    await MainActor.run {
+                        onComplete(result)
+                        dismiss()
+                        isCropping = false
+                    }
+                }
             }
             .background(configuration.colors.background)
             
@@ -101,17 +124,6 @@ struct CropView: View {
     }
 
     // MARK: - UI Components
-    private var instructionText: some View {
-        Text(
-            configuration.texts.interactionInstructions ??
-            NSLocalizedString("interaction_instructions", tableName: localizableTableName, bundle: .module, comment: "")
-        )
-        .font(configuration.fonts.interactionInstructions)
-        .foregroundColor(configuration.colors.interactionInstructions)
-        .padding(.top, 30)
-        .zIndex(1)
-    }
-
     private var cropImageView: some View {
         ZStack {
             Image(uiImage: image)
@@ -145,47 +157,6 @@ struct CropView: View {
         .simultaneousGesture(magnificationGesture)
         .simultaneousGesture(dragGesture)
         .simultaneousGesture(configuration.rotateImage ? rotationGesture : nil)
-    }
-
-    private var cropToolbar: some View {
-        HStack {
-            Button {
-                dismiss()
-            } label: {
-                Text(
-                    configuration.texts.cancelButton ??
-                    NSLocalizedString("cancel_button", tableName: localizableTableName, bundle: .module, comment: "")
-                )
-                .padding()
-                .font(configuration.fonts.cancelButton)
-                .foregroundColor(configuration.colors.cancelButton)
-            }
-            .padding()
-            
-            Spacer()
-            
-            Button {
-                Task {
-                    isCropping = true
-                    let result = cropImage()
-                    await MainActor.run {
-                        onComplete(result)
-                        dismiss()
-                    }
-                }
-            } label: {
-                Text(
-                    configuration.texts.saveButton ??
-                    NSLocalizedString("save_button", tableName: localizableTableName, bundle: .module, comment: "")
-                )
-                .padding()
-                .font(configuration.fonts.saveButton)
-                .foregroundColor(configuration.colors.saveButton)
-            }
-            .padding()
-            .disabled(isCropping)
-        }
-        .frame(maxWidth: .infinity, alignment: .bottom)
     }
 
     private var progressLayer: some View {
@@ -232,7 +203,7 @@ struct CropView: View {
 
     private func cropImage() -> UIImage? {
         var editedImage: UIImage = image
-        if configuration.rotateImage {
+        if configuration.rotateImage || configuration.rotateImageWithButtons {
             if let rotatedImage: UIImage = viewModel.rotate(
                 editedImage,
                 viewModel.lastAngle
