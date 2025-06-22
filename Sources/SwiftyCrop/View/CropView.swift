@@ -79,7 +79,6 @@ struct CropView: View {
             
             if configuration.rotateImageWithButtons {
                 RotateButtonsView(viewModel: viewModel, configuration: configuration)
-                    .border(.red)
             }
             
             ZStack {
