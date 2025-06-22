@@ -38,12 +38,34 @@ struct CropView: View {
     var body: some View {
         ZStack {
             VStack {
-                instructionText
-                    .padding(.top, 16)
+                InteractionInstructionsView(configuration: configuration, localizableTableName: localizableTableName)
+                    .padding(.top, 50)
+                    .zIndex(1)
+                
+                if configuration.rotateImageWithButtons {
+                    RotateButtonsView(viewModel: viewModel, configuration: configuration)
+                }
+                
                 Spacer()
+                
                 cropImageView
+                
                 Spacer()
-                cropToolbar
+                
+                ButtonsView(
+                    configuration: configuration,
+                    localizableTableName: localizableTableName,
+                    dismiss: { dismiss() }
+                ) {
+                    Task {
+                        isCropping = true
+                        let result = cropImage()
+                        await MainActor.run {
+                            onComplete(result)
+                            dismiss()
+                        }
+                    }
+                }
             }
             .background(configuration.colors.background)
             
@@ -101,17 +123,6 @@ struct CropView: View {
     }
 
     // MARK: - UI Components
-    private var instructionText: some View {
-        Text(
-            configuration.texts.interactionInstructions ??
-            NSLocalizedString("interaction_instructions", tableName: localizableTableName, bundle: .module, comment: "")
-        )
-        .font(configuration.fonts.interactionInstructions)
-        .foregroundColor(configuration.colors.interactionInstructions)
-        .padding(.top, 30)
-        .zIndex(1)
-    }
-
     private var cropImageView: some View {
         ZStack {
             Image(uiImage: image)

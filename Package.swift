@@ -21,6 +21,7 @@ let package = Package(
             dependencies: [],
             path: "Sources/SwiftyCrop",
             resources: [
+                .copy("../PrivacyInfo.xcprivacy"),
                 .process("Resources")
             ]
         ),
