@@ -225,6 +225,8 @@ Thanks to [@yefimtsev](https://github.com/yefimtsev) for adding the ability to c
 
 Thanks to [@SuperY](https://github.com/SuperY) for adding the chinese localization 🇨🇳
 
+Thanks to [@mosliem](https://github.com/mosliem) for adding the cropping in background thread 🧵
+
 ## ✍️ Author
 
 Benedikt Betz
