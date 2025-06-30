@@ -7,15 +7,24 @@
   <img src="https://img.shields.io/badge/License%20-%20MIT%20-%20blue" alt="License - MIT">
 </a>
 
-<p align="center">
-    <img src="Assets/demo.gif" style="margin: auto; width: 250px"/>
-</p>
+<figure align="center">
+    <img src="Assets/demo.gif" style="margin: auto; width: 200px"/>
+</figure>
 
-<p align="center">
-    <img src="Assets/crop_circle.png" style="margin: auto; width: 250px"/>
-    <img src="Assets/crop_square.png" style="margin: auto; width: 250px"/>
-    <img src="Assets/liquid_glass.png" style="margin: auto; width: 250px"/>
-</p>
+<div style="display: flex; justify-content: center;">
+<figure>
+    <img src="Assets/crop_circle.png" style="margin: auto; width: 200px"/>
+    <figcaption>Circle mask shape</figcaption>
+</figure>
+<figure>
+    <img src="Assets/crop_square.png" style="margin: auto; width: 200px"/>
+    <figcaption>Square mask shape</figcaption>
+</figure>
+<figure>
+    <img src="Assets/liquid_glass.png" style="margin: auto; width: 200px"/>
+    <figcaption>Liquid glass UI</figcaption>
+</figure>
+</div>
 
 ## 🔭 Overview
 SwiftyCrop allows users to seamlessly crop images within their SwiftUI applications. It provides a user-friendly interface that makes cropping an image as simple as selecting the desired area.
