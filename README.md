@@ -13,7 +13,7 @@
 
 | | | |
 |:-----------------:|:-----------------:|:---------------:|
-| ![Circle mask shape](Assets/crop_circle.png) | ![Square mask shape](Assets/crop_square.png) | ![Liquid glass UI](Assets/liquid_glass.png) |
+| <img src="Assets/crop_circle.png" width="200px"/> | <img src="Assets/crop_square.png" width="200px"/> | <img src="Assets/liquid_glass.png" width="200px"/> |
 | Circle mask shape | Square mask shape | Liquid glass UI |
 
 ## 🔭 Overview
