@@ -11,7 +11,7 @@
   <img src="Assets/demo.gif" alt="SwiftyCrop example usage" width="250px"/>
 </p>
 
-<div style="text-align: center;">
+<div align="center">
 
 | Circle Mask Shape | Square Mask Shape | Liquid Glass UI |
 |:-----------------:|:-----------------:|:---------------:|
