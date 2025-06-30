@@ -14,6 +14,7 @@
 <p align="center">
     <img src="https://github.com/benedom/SwiftyCrop/blob/master/Assets/crop_circle.png" style="margin: auto; width: 250px"/>
     <img src="https://github.com/benedom/SwiftyCrop/blob/master/Assets/crop_square.png" style="margin: auto; width: 250px"/>
+    <img src="https://github.com/benedom/SwiftyCrop/blob/master/Assets/crop_square.png" style="margin: auto; width: 250px"/>
 </p>
 
 ## 🔭 Overview
@@ -44,6 +45,7 @@ The localization file can be found in `Sources/SwiftyCrop/Resources`.
 - [Installation](#-installation)
 - [Demo App](#📱-demo-app)
 - [Usage](#-usage)
+- [iOS 26 & Liquid Glass] (#🪟-iOS-26-&-Liquid-Glass)
 - [Contributors](#-contributors)
 - [Author](#-author)
 - [License](#-license)
@@ -155,6 +157,7 @@ You can also configure `SwiftyCropView` by passing a `SwiftyCropConfiguration`. 
 | `cropImageCircular` | `Bool`: When using the cropping mask `circle`, whether the resulting image should also be masked as circle. Defaults to `false`. |
 | `rotateImage` | `Bool`: Whether the image can be rotated when cropping using pinch gestures. Defaults to `false`. |
 | `rotateImageWithButtons` | `Bool`: Option to show rotation buttons for rotating. Defaults to `false`. |
+| `usesLiquidGlassDesign` | `Bool`: (Beta) apply the all new liquid glass design. Defaults to `false`. This might be changed in the future. |
 | `zoomSensitivity` | `CGFloat`: Zoom sensitivity when cropping. Increase to make zoom faster / less sensitive. Defaults to `1.0`. |
 | `rectAspectRatio` | `CGFloat`: The aspect ratio to use when a rectangular mask shape is used. Defaults to `4:3`. |
 | `texts` | `Texts`: Defines custom texts for the buttons and instructions. Defaults to using localized strings from resources. |
@@ -169,6 +172,7 @@ let configuration = SwiftyCropConfiguration(
     cropImageCircular: false,
     rotateImage: false,
     rotateImageWithButtons: false,
+    usesLiquidGlassDesign: false,
     zoomSensitivity: 1.0,
     rectAspectRatio: 4/3,
     texts: SwiftyCropConfiguration.Texts(
@@ -204,6 +208,19 @@ and use it like this:
             }
         }
 ```
+
+## 🪟 iOS 26 & Liquid Glass
+
+:bangbang: NOTE :bangbang:
+```
+This feature is currently in beta and might change, due to iOS 26 still being in beta and Apple changing design elements. This can only be used on iOS 26 and Xcode 26.
+```
+
+To adopt to the new Liquid Glass design Apple introduced with iOS 26, SwiftyCrop supplies a new UI which reflects this design. This will remove text buttons and replace them with icon buttons and much more. Try it!
+
+<p align="center">
+    <img src="https://github.com/benedom/SwiftyCrop/blob/master/Assets/liquid_glass.png" style="margin: auto; width: 250px"/>
+</p>
 
 ## 👨‍💻 Contributors
 

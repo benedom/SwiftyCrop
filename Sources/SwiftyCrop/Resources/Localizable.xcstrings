@@ -170,19 +170,84 @@
     "processing_label" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Processing" } },
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Verarbeitung" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Procesando" } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Traitement" } },
-        "hu" : { "stringUnit" : { "state" : "translated", "value" : "Feldolgozás" } },
-        "it" : { "stringUnit" : { "state" : "translated", "value" : "Elaborazione" } },
-        "ja" : { "stringUnit" : { "state" : "translated", "value" : "処理中" } },
-        "ko" : { "stringUnit" : { "state" : "translated", "value" : "처리 중" } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Processando" } },
-        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Обработка" } },
-        "tr" : { "stringUnit" : { "state" : "translated", "value" : "İşleniyor" } },
-        "uk" : { "stringUnit" : { "state" : "translated", "value" : "Обробка" } },
-        "zh" : { "stringUnit" : { "state" : "translated", "value" : "处理中" } }
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verarbeitung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Processing"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Procesando"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Traitement"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feldolgozás"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elaborazione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "処理中"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "처리 중"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Processando"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Обработка"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İşleniyor"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Обробка"
+          }
+        },
+        "zh" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "处理中"
+          }
+        }
       }
     },
     "save_button" : {
