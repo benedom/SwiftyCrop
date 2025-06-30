@@ -3,18 +3,18 @@
 ![Static Badge](https://img.shields.io/badge/Platform%20-%20iOS%20-%20light_green)
 ![Static Badge](https://img.shields.io/badge/iOS%20-%20%3E%2016.0%20-%20light_green)
 ![Static Badge](https://img.shields.io/badge/Swift%20-%20%3E%205.9%20-%20orange)
-<a href="https://github.com/benedom/SwiftyCrop/blob/master/LICENSE.md">
+<a href="LICENSE.md">
   <img src="https://img.shields.io/badge/License%20-%20MIT%20-%20blue" alt="License - MIT">
 </a>
 
 <p align="center">
-    <img src="https://github.com/benedom/SwiftyCrop/blob/master/Assets/demo.gif" style="margin: auto; width: 250px"/>
+    <img src="Assets/demo.gif" style="margin: auto; width: 250px"/>
 </p>
 
 <p align="center">
-    <img src="https://github.com/benedom/SwiftyCrop/blob/master/Assets/crop_circle.png" style="margin: auto; width: 250px"/>
-    <img src="https://github.com/benedom/SwiftyCrop/blob/master/Assets/crop_square.png" style="margin: auto; width: 250px"/>
-    <img src="https://github.com/benedom/SwiftyCrop/blob/master/Assets/liquid_glass.png" style="margin: auto; width: 250px"/>
+    <img src="Assets/crop_circle.png" style="margin: auto; width: 250px"/>
+    <img src="Assets/crop_square.png" style="margin: auto; width: 250px"/>
+    <img src="Assets/liquid_glass.png" style="margin: auto; width: 250px"/>
 </p>
 
 ## 🔭 Overview
