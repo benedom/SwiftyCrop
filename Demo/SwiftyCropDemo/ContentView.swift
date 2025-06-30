@@ -108,7 +108,9 @@ struct ContentView: View {
           
           Toggle("Rotate image (buttons)", isOn: $rotateImageWithButtons)
           
-          Toggle("Liquid Glass design", isOn: $usesLiquidGlassDesign)
+          if #available(iOS 26, *) {
+            Toggle("Liquid Glass design", isOn: $usesLiquidGlassDesign)
+          }
           
           HStack {
             Text("Max magnification")

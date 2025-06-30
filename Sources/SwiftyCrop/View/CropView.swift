@@ -36,11 +36,16 @@ struct CropView: View {
   
   // MARK: - Body
   var body: some View {
-    if configuration.usesLiquidGlassDesign, #available(iOS 26, *) {
+#if compiler(>=6.2) // Use this to prevent compiling of unavailable iOS 26 APIs
+    if configuration.usesLiquidGlassDesign,
+       #available(iOS 26, *) {
       buildLiquidGlassBody(configuration: configuration)
     } else {
       buildLegacyBody(configuration: configuration)
     }
+#else
+    buildLegacyBody(configuration: configuration)
+#endif
   }
   
   @available (iOS 26, *)
