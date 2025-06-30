@@ -217,7 +217,7 @@ This feature is currently in beta and might change, due to iOS 26 still being in
 To adopt to the new Liquid Glass design Apple introduced with iOS 26, SwiftyCrop supplies a new UI which reflects this design. This will remove text buttons and replace them with icon buttons and much more. Below is the current way it looks. Try it for yourself by enabling it in the configuration!
 
 <p align="center">
-    <img src="https://github.com/benedom/SwiftyCrop/blob/master/Assets/liquid_glass.png" style="margin: auto; width: 250px"/>
+    <img src="Assets/liquid_glass.png" style="margin: auto; width: 250px"/>
 </p>
 
 ## 👨‍💻 Contributors
