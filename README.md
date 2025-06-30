@@ -14,7 +14,7 @@
 <p align="center">
     <img src="https://github.com/benedom/SwiftyCrop/blob/master/Assets/crop_circle.png" style="margin: auto; width: 250px"/>
     <img src="https://github.com/benedom/SwiftyCrop/blob/master/Assets/crop_square.png" style="margin: auto; width: 250px"/>
-    <img src="https://github.com/benedom/SwiftyCrop/blob/master/Assets/crop_square.png" style="margin: auto; width: 250px"/>
+    <img src="https://github.com/benedom/SwiftyCrop/blob/master/Assets/liquid_glass.png" style="margin: auto; width: 250px"/>
 </p>
 
 ## 🔭 Overview
@@ -43,9 +43,9 @@ The localization file can be found in `Sources/SwiftyCrop/Resources`.
 
 - [Requirements](#-requirements)
 - [Installation](#-installation)
-- [Demo App](#📱-demo-app)
+- [Demo App](#-demo-app)
 - [Usage](#-usage)
-- [iOS 26 & Liquid Glass] (#🪟-iOS-26-&-Liquid-Glass)
+- [iOS 26 & Liquid Glass](#-ios-26--liquid-glass)
 - [Contributors](#-contributors)
 - [Author](#-author)
 - [License](#-license)
