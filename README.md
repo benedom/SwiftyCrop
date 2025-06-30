@@ -11,10 +11,13 @@
   <img src="Assets/demo.gif" alt="SwiftyCrop example usage" width="250px"/>
 </p>
 
-| | | |
+<div style="text-align: center;">
+
+| Circle Mask Shape | Square Mask Shape | Liquid Glass UI |
 |:-----------------:|:-----------------:|:---------------:|
 | <img src="Assets/crop_circle.png" width="200px"/> | <img src="Assets/crop_square.png" width="200px"/> | <img src="Assets/liquid_glass.png" width="200px"/> |
-| Circle mask shape | Square mask shape | Liquid glass UI |
+
+</div>
 
 ## 🔭 Overview
 SwiftyCrop allows users to seamlessly crop images within their SwiftUI applications. It provides a user-friendly interface that makes cropping an image as simple as selecting the desired area.
