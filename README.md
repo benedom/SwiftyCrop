@@ -22,7 +22,7 @@
 ## 🔭 Overview
 SwiftyCrop allows users to seamlessly crop images within their SwiftUI applications. It provides a user-friendly interface that makes cropping an image as simple as selecting the desired area.
 
-With SwiftyCrop, you can easily adjust the cropping area, maintain aspect ratio, zoom in and out for precise cropping. You can also specify the cropping mask to be a square or circle.
+With SwiftyCrop, you can easily adjust the cropping area, maintain aspect ratio, zoom in and out for precise cropping. You can also specify the cropping mask to be a square, circle or rectangle with custom aspect ratio. SwiftyCrop is highly customizable, you can adjust texts, fonts and colors that are used.
 
 The following languages are supported & localized:
 - 🇬🇧 English
@@ -49,7 +49,6 @@ The localization file can be found in `Sources/SwiftyCrop/Resources`.
 - [Usage](#-usage)
 - [iOS 26 & Liquid Glass](#-ios-26--liquid-glass)
 - [Contributors](#-contributors)
-- [Author](#-author)
 - [License](#-license)
 
 ## 🧳 Requirements
@@ -243,10 +242,6 @@ Thanks to [@yefimtsev](https://github.com/yefimtsev) for adding the ability to c
 Thanks to [@SuperY](https://github.com/SuperY) for adding the chinese localization 🇨🇳
 
 Thanks to [@mosliem](https://github.com/mosliem) for adding the cropping in background thread 🧵
-
-## ✍️ Author
-
-Benedikt Betz
 
 ## 📃 License
 
