@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct InteractionInstructionsView: View {
+struct Legacy_InteractionInstructionsView: View {
   let configuration: SwiftyCropConfiguration
   let localizableTableName: String
   

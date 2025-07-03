@@ -3,23 +3,26 @@
 ![Static Badge](https://img.shields.io/badge/Platform%20-%20iOS%20-%20light_green)
 ![Static Badge](https://img.shields.io/badge/iOS%20-%20%3E%2016.0%20-%20light_green)
 ![Static Badge](https://img.shields.io/badge/Swift%20-%20%3E%205.9%20-%20orange)
-<a href="https://github.com/benedom/SwiftyCrop/blob/master/LICENSE.md">
+<a href="LICENSE.md">
   <img src="https://img.shields.io/badge/License%20-%20MIT%20-%20blue" alt="License - MIT">
 </a>
 
 <p align="center">
-    <img src="https://github.com/benedom/SwiftyCrop/blob/master/Assets/demo.gif" style="margin: auto; width: 250px"/>
+  <img src="Assets/demo.gif" alt="SwiftyCrop example usage" width="250px"/>
 </p>
 
-<p align="center">
-    <img src="https://github.com/benedom/SwiftyCrop/blob/master/Assets/crop_circle.png" style="margin: auto; width: 250px"/>
-    <img src="https://github.com/benedom/SwiftyCrop/blob/master/Assets/crop_square.png" style="margin: auto; width: 250px"/>
-</p>
+<div align="center">
+
+| Circle Mask Shape | Square Mask Shape | Liquid Glass UI |
+|:-----------------:|:-----------------:|:---------------:|
+| <img src="Assets/crop_circle.png" width="200px"/> | <img src="Assets/crop_square.png" width="200px"/> | <img src="Assets/liquid_glass.png" width="200px"/> |
+
+</div>
 
 ## 🔭 Overview
 SwiftyCrop allows users to seamlessly crop images within their SwiftUI applications. It provides a user-friendly interface that makes cropping an image as simple as selecting the desired area.
 
-With SwiftyCrop, you can easily adjust the cropping area, maintain aspect ratio, zoom in and out for precise cropping. You can also specify the cropping mask to be a square or circle.
+With SwiftyCrop, you can easily adjust the cropping area, maintain aspect ratio, zoom in and out for precise cropping. You can also specify the cropping mask to be a square, circle or rectangle with custom aspect ratio. SwiftyCrop is highly customizable, you can adjust texts, fonts and colors that are used.
 
 The following languages are supported & localized:
 - 🇬🇧 English
@@ -42,10 +45,10 @@ The localization file can be found in `Sources/SwiftyCrop/Resources`.
 
 - [Requirements](#-requirements)
 - [Installation](#-installation)
-- [Demo App](#📱-demo-app)
+- [Demo App](#-demo-app)
 - [Usage](#-usage)
+- [iOS 26 & Liquid Glass](#-ios-26--liquid-glass)
 - [Contributors](#-contributors)
-- [Author](#-author)
 - [License](#-license)
 
 ## 🧳 Requirements
@@ -155,6 +158,7 @@ You can also configure `SwiftyCropView` by passing a `SwiftyCropConfiguration`. 
 | `cropImageCircular` | `Bool`: When using the cropping mask `circle`, whether the resulting image should also be masked as circle. Defaults to `false`. |
 | `rotateImage` | `Bool`: Whether the image can be rotated when cropping using pinch gestures. Defaults to `false`. |
 | `rotateImageWithButtons` | `Bool`: Option to show rotation buttons for rotating. Defaults to `false`. |
+| `usesLiquidGlassDesign` | `Bool`: (Beta) apply the all new liquid glass design. Defaults to `false`. This might be changed in the future. |
 | `zoomSensitivity` | `CGFloat`: Zoom sensitivity when cropping. Increase to make zoom faster / less sensitive. Defaults to `1.0`. |
 | `rectAspectRatio` | `CGFloat`: The aspect ratio to use when a rectangular mask shape is used. Defaults to `4:3`. |
 | `texts` | `Texts`: Defines custom texts for the buttons and instructions. Defaults to using localized strings from resources. |
@@ -169,6 +173,7 @@ let configuration = SwiftyCropConfiguration(
     cropImageCircular: false,
     rotateImage: false,
     rotateImageWithButtons: false,
+    usesLiquidGlassDesign: false,
     zoomSensitivity: 1.0,
     rectAspectRatio: 4/3,
     texts: SwiftyCropConfiguration.Texts(
@@ -205,6 +210,17 @@ and use it like this:
         }
 ```
 
+## 🪟 iOS 26 & Liquid Glass
+
+To adopt to the new Liquid Glass design Apple introduced with iOS 26, SwiftyCrop supplies a new UI which reflects this design. This will remove text buttons and replace them with icon buttons and much more. Below is the current way it looks. Try it for yourself by enabling it in the configuration!
+
+:bangbang: NOTE :bangbang:
+This feature is currently in beta and might change, due to iOS 26 still being in beta and Apple changing design elements. This can only be used on iOS 26 and Xcode 26.
+
+<p align="center">
+    <img src="Assets/liquid_glass.png" style="margin: auto; width: 250px"/>
+</p>
+
 ## 👨‍💻 Contributors
 
 All issue reports, feature requests, pull requests and GitHub stars are welcomed and much appreciated.
@@ -226,10 +242,6 @@ Thanks to [@yefimtsev](https://github.com/yefimtsev) for adding the ability to c
 Thanks to [@SuperY](https://github.com/SuperY) for adding the chinese localization 🇨🇳
 
 Thanks to [@mosliem](https://github.com/mosliem) for adding the cropping in background thread 🧵
-
-## ✍️ Author
-
-Benedikt Betz
 
 ## 📃 License
 

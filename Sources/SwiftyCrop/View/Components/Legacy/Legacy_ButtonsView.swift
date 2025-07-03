@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ButtonsView: View {
+struct Legacy_ButtonsView: View {
     let configuration: SwiftyCropConfiguration
     let localizableTableName: String
     let dismiss: () -> Void

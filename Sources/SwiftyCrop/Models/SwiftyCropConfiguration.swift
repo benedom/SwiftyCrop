@@ -8,6 +8,7 @@ public struct SwiftyCropConfiguration {
   public let cropImageCircular: Bool
   public let rotateImage: Bool
   public let rotateImageWithButtons: Bool
+  public let usesLiquidGlassDesign: Bool
   public let zoomSensitivity: CGFloat
   public let rectAspectRatio: CGFloat
   public let texts: Texts
@@ -85,6 +86,8 @@ public struct SwiftyCropConfiguration {
   ///
   ///   - rotateImageWithButtons: Option to show rotation buttons. Defaults to `false`.
   ///
+  ///   - usesLiquidGlassDesign: (Beta) apply the all new liquid glass design. Defaults to `false`. This might be changed in the future.
+  ///
   ///   - zoomSensitivity: Sensitivity when zooming. Default is `1.0`. Decrease to increase sensitivity.
   ///
   ///   - rectAspectRatio: The aspect ratio to use when a `.rectangle` mask shape is used. Defaults to `4:3`.
@@ -100,6 +103,7 @@ public struct SwiftyCropConfiguration {
     cropImageCircular: Bool = false,
     rotateImage: Bool = false,
     rotateImageWithButtons: Bool = false,
+    usesLiquidGlassDesign: Bool = false,
     zoomSensitivity: CGFloat = 1,
     rectAspectRatio: CGFloat = 4/3,
     texts: Texts = Texts(),
@@ -111,6 +115,7 @@ public struct SwiftyCropConfiguration {
     self.cropImageCircular = cropImageCircular
     self.rotateImage = rotateImage
     self.rotateImageWithButtons = rotateImageWithButtons
+    self.usesLiquidGlassDesign = usesLiquidGlassDesign
     self.zoomSensitivity = zoomSensitivity
     self.rectAspectRatio = rectAspectRatio
     self.texts = texts
