@@ -10,6 +10,7 @@ struct CropView: View {
   private let image: UIImage
   private let maskShape: MaskShape
   private let configuration: SwiftyCropConfiguration
+  private let onCancel: (() -> Void)?
   private let onComplete: (UIImage?) -> Void
   private let localizableTableName: String
   
@@ -17,11 +18,13 @@ struct CropView: View {
     image: UIImage,
     maskShape: MaskShape,
     configuration: SwiftyCropConfiguration,
+    onCancel: (() -> Void)? = nil,
     onComplete: @escaping (UIImage?) -> Void
   ) {
     self.image = image
     self.maskShape = maskShape
     self.configuration = configuration
+    self.onCancel = onCancel
     self.onComplete = onComplete
     _viewModel = StateObject(
       wrappedValue: CropViewModel(
@@ -48,14 +51,17 @@ struct CropView: View {
 #endif
   }
   
-  @available (iOS 26, *)
+  @available(iOS 26, *)
   private func buildLiquidGlassBody(configuration: SwiftyCropConfiguration) -> some View {
     ZStack {
       VStack {
         ToolbarView(
           viewModel: viewModel,
           configuration: configuration,
-          dismiss: { dismiss() }
+          dismiss: {
+            onCancel?()
+            dismiss()
+          }
         ) {
           await MainActor.run {
             isCropping = true
@@ -105,7 +111,10 @@ struct CropView: View {
         Legacy_ButtonsView(
           configuration: configuration,
           localizableTableName: localizableTableName,
-          dismiss: { dismiss() }
+          dismiss: {
+            onCancel?()
+            dismiss()
+          }
         ) {
           await MainActor.run {
             isCropping = true
