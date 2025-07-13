@@ -142,7 +142,7 @@ struct ExampleView: View {
 If you want to display `SwiftyCrop` inside a sheet, use `NavigationView` instead of `NavigationStack` in case you want to wrap it.
 ```
 
-SwiftyCrop supports two different mask shapes for cropping:
+SwiftyCrop supports three different mask shapes for cropping:
 - `circle`
 - `square`
 - `rectangle`

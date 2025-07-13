@@ -174,7 +174,10 @@ struct ContentView: View {
             usesLiquidGlassDesign: usesLiquidGlassDesign,
             zoomSensitivity: zoomSensitivity,
             rectAspectRatio: rectAspectRatio.getValue()
-          )
+          ),
+          onCancel: {
+            print("Operation cancelled")
+          }
         ) { croppedImage in
           // Do something with the returned, cropped image
           self.selectedImage = croppedImage
