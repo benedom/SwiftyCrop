@@ -1,6 +1,6 @@
 import SwiftUI
 
-@available(iOS 26, *)
+@available(iOS 26, visionOS 26.0, *)
 struct ProgressLayer: View {
   let configuration: SwiftyCropConfiguration
   let localizableTableName: String
@@ -25,10 +25,12 @@ struct ProgressLayer: View {
         .foregroundColor(configuration.colors.interactionInstructions)
       }
       .padding(25)
+#if !os(visionOS)
       .glassEffect(
         .regular.tint(configuration.colors.background.opacity(0.8)),
         in: .rect(cornerRadius: 12)
       )
+#endif
       .padding(.vertical, 5)
       .padding(.horizontal, 20)
     }
@@ -42,7 +44,7 @@ struct ProgressLayer: View {
   }
 }
 
-@available(iOS 26, *)
+@available(iOS 26, visionOS 26.0, *)
 #Preview {
   ProgressLayer(configuration: .init(), localizableTableName: "Localizable")
 }

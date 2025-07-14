@@ -123,14 +123,16 @@ struct ContentView: View {
           HStack {
             Text("Mask radius")
               .frame(maxWidth: .infinity, alignment: .leading)
-            
+
+#if os(iOS)
             Button {
               maskRadius = min(UIScreen.main.bounds.width, UIScreen.main.bounds.height) / 2
             } label: {
               Image(systemName: "arrow.up.left.and.arrow.down.right")
                 .font(.footnote)
             }
-            
+#endif
+
             DecimalTextField(value: $maskRadius)
               .focused($textFieldFocused)
           }
@@ -146,6 +148,13 @@ struct ContentView: View {
         }
       }
       .toolbar {
+#if os(visionOS)
+        ToolbarItemGroup(placement: .bottomOrnament) {
+          Button("Done") {
+            textFieldFocused = false
+          }
+        }
+#else
         ToolbarItemGroup(placement: .keyboard) {
           Spacer()
           
@@ -153,6 +162,7 @@ struct ContentView: View {
             textFieldFocused = false
           }
         }
+#endif
       }
       .buttonStyle(.bordered)
       .padding()
