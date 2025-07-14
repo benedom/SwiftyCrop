@@ -245,6 +245,8 @@ Thanks to [@SuperY](https://github.com/SuperY) for adding the chinese localizati
 
 Thanks to [@mosliem](https://github.com/mosliem) for adding the cropping in background thread 🧵
 
+Thanks to [@krayc425](https://github.com/krayc425) for adding visionOS support 🕶️
+
 ## 📃 License
 
 `SwiftyCrop` is available under the MIT license. See the [LICENSE](https://github.com/benedom/SwiftyCrop/blob/master/LICENSE.md) file for more info.
