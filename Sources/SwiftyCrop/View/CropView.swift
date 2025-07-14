@@ -41,7 +41,7 @@ struct CropView: View {
   var body: some View {
 #if compiler(>=6.2) // Use this to prevent compiling of unavailable iOS 26 APIs
     if configuration.usesLiquidGlassDesign,
-       #available(iOS 26, *) {
+       #available(iOS 26, visionOS 26.0, *) {
       buildLiquidGlassBody(configuration: configuration)
     } else {
       buildLegacyBody(configuration: configuration)
@@ -51,7 +51,7 @@ struct CropView: View {
 #endif
   }
   
-  @available(iOS 26, *)
+  @available(iOS 26, visionOS 26.0, *)
   private func buildLiquidGlassBody(configuration: SwiftyCropConfiguration) -> some View {
     ZStack {
       VStack {

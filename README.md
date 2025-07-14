@@ -2,6 +2,8 @@
 [![Build](https://github.com/benedom/SwiftyCrop/actions/workflows/build-swift.yml/badge.svg?branch=master)](https://github.com/benedom/SwiftyCrop/actions/workflows/build-swift.yml)
 ![Static Badge](https://img.shields.io/badge/Platform%20-%20iOS%20-%20light_green)
 ![Static Badge](https://img.shields.io/badge/iOS%20-%20%3E%2016.0%20-%20light_green)
+![Static Badge](https://img.shields.io/badge/Platform%20-%20visionOS%20-%20light_green)
+![Static Badge](https://img.shields.io/badge/visionOS%20-%20%3E%201.0%20-%20light_green)
 ![Static Badge](https://img.shields.io/badge/Swift%20-%20%3E%205.9%20-%20orange)
 <a href="LICENSE.md">
   <img src="https://img.shields.io/badge/License%20-%20MIT%20-%20blue" alt="License - MIT">
@@ -242,6 +244,8 @@ Thanks to [@yefimtsev](https://github.com/yefimtsev) for adding the ability to c
 Thanks to [@SuperY](https://github.com/SuperY) for adding the chinese localization 🇨🇳
 
 Thanks to [@mosliem](https://github.com/mosliem) for adding the cropping in background thread 🧵
+
+Thanks to [@krayc425](https://github.com/krayc425) for adding visionOS support 🕶️
 
 ## 📃 License
 

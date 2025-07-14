@@ -1,6 +1,6 @@
 import SwiftUI
 
-@available(iOS 26, *)
+@available(iOS 26, visionOS 26.0, *)
 struct ToolbarView: View {
   @ObservedObject var viewModel: CropViewModel
   let configuration: SwiftyCropConfiguration
@@ -19,8 +19,10 @@ struct ToolbarView: View {
           .fontWeight(.semibold)
       }
       .padding()
+#if !os(visionOS)
       .glassEffect()
-      
+#endif
+
       Spacer()
       
       if configuration.rotateImageWithButtons {
@@ -38,7 +40,9 @@ struct ToolbarView: View {
             .fontWeight(.semibold)
         }
         .padding()
+#if !os(visionOS)
         .glassEffect()
+#endif
         .opacity(viewModel.angle.degrees.truncatingRemainder(dividingBy: 360) == 0 ? 0.7 : 1)
         .disabled(viewModel.angle.degrees.truncatingRemainder(dividingBy: 360) == 0)
         
@@ -67,7 +71,9 @@ struct ToolbarView: View {
           }
           .padding()
         }
+#if !os(visionOS)
         .glassEffect()
+#endif
       }
       
       Spacer()
@@ -85,7 +91,9 @@ struct ToolbarView: View {
       }
       .padding()
       .disabled(isCropping)
+#if !os(visionOS)
       .glassEffect(.regular.tint(Color.yellow))
+#endif
     }
     .frame(maxWidth: .infinity)
 #else
