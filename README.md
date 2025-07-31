@@ -247,6 +247,8 @@ Thanks to [@mosliem](https://github.com/mosliem) for adding the cropping in back
 
 Thanks to [@krayc425](https://github.com/krayc425) for adding visionOS support 🕶️
 
+Thanks to [@KuuttiProductions](https://github.com/KuuttiProductions) for adding the finnish localization 🇫🇮
+
 ## 📃 License
 
 `SwiftyCrop` is available under the MIT license. See the [LICENSE](https://github.com/benedom/SwiftyCrop/blob/master/LICENSE.md) file for more info.
