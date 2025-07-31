@@ -30,7 +30,7 @@ struct Legacy_RotateButtonsView: View {
         }
       } label: {
         Image(systemName: "arrow.uturn.backward.circle")
-          .foregroundStyle(configuration.colors.rotateButton)
+          .foregroundStyle(configuration.colors.resetRotationButton)
           .opacity(viewModel.angle.degrees.truncatingRemainder(dividingBy: 360) == 0 ? 0.3 : 1)
           .padding()
       }

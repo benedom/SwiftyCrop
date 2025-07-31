@@ -16,11 +16,12 @@ struct ToolbarView: View {
       } label: {
         Image(systemName: "xmark")
           .foregroundStyle(configuration.colors.cancelButton)
+        
           .fontWeight(.semibold)
       }
       .padding()
 #if !os(visionOS)
-      .glassEffect()
+      .glassEffect(.regular.tint(configuration.colors.cancelButtonBackground))
 #endif
 
       Spacer()
@@ -36,12 +37,12 @@ struct ToolbarView: View {
           }
         } label: {
           Image(systemName: "arrow.uturn.backward.circle")
-            .foregroundStyle(configuration.colors.rotateButton)
+            .foregroundStyle(configuration.colors.resetRotationButton)
             .fontWeight(.semibold)
         }
         .padding()
 #if !os(visionOS)
-        .glassEffect()
+        .glassEffect(.regular.tint(configuration.colors.resetRotationButtonBackground))
 #endif
         .opacity(viewModel.angle.degrees.truncatingRemainder(dividingBy: 360) == 0 ? 0.7 : 1)
         .disabled(viewModel.angle.degrees.truncatingRemainder(dividingBy: 360) == 0)
@@ -72,7 +73,7 @@ struct ToolbarView: View {
           .padding()
         }
 #if !os(visionOS)
-        .glassEffect()
+        .glassEffect(.regular.tint(configuration.colors.rotateButtonBackground))
 #endif
       }
       
@@ -86,13 +87,13 @@ struct ToolbarView: View {
         }
       } label: {
         Image(systemName: "checkmark")
-          .foregroundStyle(configuration.colors.saveButton)
           .fontWeight(.semibold)
+          .foregroundStyle(configuration.colors.saveButton)
       }
       .padding()
       .disabled(isCropping)
 #if !os(visionOS)
-      .glassEffect(.regular.tint(Color.yellow))
+      .glassEffect(.regular.tint(configuration.colors.saveButtonBackground))
 #endif
     }
     .frame(maxWidth: .infinity)

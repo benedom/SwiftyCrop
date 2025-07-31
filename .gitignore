@@ -49,6 +49,7 @@ build
 !*.xcworkspace/contents.xcworkspacedata
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
+.swiftpm/
 
 ### Visual Studio Code ###
 .build

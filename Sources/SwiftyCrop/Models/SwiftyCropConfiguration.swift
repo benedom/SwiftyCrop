@@ -1,7 +1,7 @@
 import CoreGraphics
 import SwiftUI
 
-/// `SwiftyCropConfiguration` is a struct that defines the configuration for cropping behavior.
+/// `SwiftyCropConfiguration` is a struct that defines the configuration for cropping behavior and the UI.
 public struct SwiftyCropConfiguration {
   public let maxMagnificationScale: CGFloat
   public let maskRadius: CGFloat
@@ -15,6 +15,14 @@ public struct SwiftyCropConfiguration {
   public let fonts: Fonts
   public let colors: Colors
   
+  /// Creates a new instance of `Texts` that are used in the cropping view.
+  /// - Note: The new LiquidGlass design does not use texts anymore but icon buttons. Setting this when Liquid Glass is enabled will not have any effect.
+  ///
+  /// - Parameters:
+  ///   - cancelButton: The text for the cancel button. Defaults to `nil`, using localized values from the app.
+  ///   - interactionInstructions: The text for the interaction instructions. Defaults to `nil`, using localized values from the app.
+  ///   - saveButton: The text for the save button. Defaults to `nil`, using localized values from the app.
+  ///   - progressLayerText: The text for the progress view indicating that cropping occurs. Defaults to `nil`, using localized values from the app.
   public struct Texts {
     public init(
       // We cannot use the localized values here because module access is not given in init
@@ -35,6 +43,13 @@ public struct SwiftyCropConfiguration {
         public let progressLayerText: String?
   }
   
+  /// Creates a new instance of `Fonts` that are used in the cropping view texts.
+  /// - Note: The new LiquidGlass design does not use texts anymore but icon buttons. Setting this when Liquid Glass is enabled will not have any effect.
+  ///
+  /// - Parameters:
+  ///   - cancelButton: The font for the cancel button text. Defaults to `nil`, using default values.
+  ///   - interactionInstruction: The font for the interaction instruction text. Defaults to `nil`, using default values.
+  ///   - saveButton: The font for the save button text. Defaults to `nil`, using default values.
   public struct Fonts {
     public init(
       cancelButton: Font? = nil,
@@ -51,25 +66,54 @@ public struct SwiftyCropConfiguration {
     public let saveButton: Font?
   }
   
+  /// Creates a new instance of `Colors` that are used in the cropping view.
+  /// - Note: Certain properties have different effects whether Liquid Glass is enabled or not.
+  ///
+  /// - Parameters:
+  ///   - cancelButton: The color for the cancel button text. If Liquid Glass is enabled, will be the color of the icon. Defaults to `.white`.
+  ///   - cancelButtonBackground: If Liquid Glass is enabled, will be the background color of the button. Otherwise has no effect. Defaults to `.clear`.
+  ///   - interactionInstructions: The color for the interaction instructions text. Defaults to `.white`.
+  ///   - rotateButton: The color for the rotate button text. If Liquid Glass is enabled, will be the color of the icon. Defaults to `.white`.
+  ///   - rotateButtonBackground: If Liquid Glass is enabled, will be the background color of the button. Otherwise has no effect. Defaults to `.clear`.
+  ///   - resetRotationButton: The color for the reset rotation button text. If Liquid Glass is enabled, will be the color of the icon. Defaults to `.white`.
+  ///   - resetRotationButtonBackground: If Liquid Glass is enabled, will be the background color of the button. Otherwise has no effect. Defaults to `.clear`.
+  ///   - saveButton: The color for the save button text. If Liquid Glass is enabled, will be the color of the icon. Defaults to `.white`.
+  ///   - saveButtonBackground: If Liquid Glass is enabled, will be the background color of the button. Otherwise has no effect. Defaults to `.yellow`.
+  ///   - background: The background color of the entire cropping view. Defaults to `.black`.
   public struct Colors {
     public init(
       cancelButton: Color = .white,
+      cancelButtonBackground: Color = .clear,
       interactionInstructions: Color = .white,
       rotateButton: Color = .white,
+      rotateButtonBackground: Color = .clear,
+      resetRotationButton: Color = .white,
+      resetRotationButtonBackground: Color = .clear,
       saveButton: Color = .white,
+      saveButtonBackground: Color = .yellow,
       background: Color = .black
     ) {
       self.cancelButton = cancelButton
+      self.cancelButtonBackground = cancelButtonBackground
       self.interactionInstructions = interactionInstructions
       self.rotateButton = rotateButton
+      self.rotateButtonBackground = rotateButtonBackground
+      self.resetRotationButton = resetRotationButton
+      self.resetRotationButtonBackground = resetRotationButtonBackground
       self.saveButton = saveButton
+      self.saveButtonBackground = saveButtonBackground
       self.background = background
     }
     
     public let cancelButton: Color
+    public let cancelButtonBackground: Color
     public let interactionInstructions: Color
     public let rotateButton: Color
+    public let rotateButtonBackground: Color
+    public let resetRotationButton: Color
+    public let resetRotationButtonBackground: Color
     public let saveButton: Color
+    public let saveButtonBackground: Color
     public let background: Color
   }
   
@@ -96,7 +140,7 @@ public struct SwiftyCropConfiguration {
   ///
   ///   - fonts: `Fonts` object when using custom fonts for the cropping view. Defaults to system.
   ///
-  ///   - colors: `Colors` object when using custom colors for the cropping view. Defaults to white text and black background.
+  ///   - colors: `Colors` object when using custom colors for the cropping view.
   public init(
     maxMagnificationScale: CGFloat = 4.0,
     maskRadius: CGFloat = 130,
