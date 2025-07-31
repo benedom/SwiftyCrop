@@ -49,6 +49,7 @@ build
 !*.xcworkspace/contents.xcworkspacedata
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
+*.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
 
 ### Visual Studio Code ###
 .build
