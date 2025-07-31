@@ -86,13 +86,12 @@ struct ToolbarView: View {
         }
       } label: {
         Image(systemName: "checkmark")
-          .foregroundStyle(configuration.colors.saveButton)
           .fontWeight(.semibold)
       }
       .padding()
       .disabled(isCropping)
 #if !os(visionOS)
-      .glassEffect(.regular.tint(Color.yellow))
+      .glassEffect(.regular.tint(configuration.colors.saveButton))
 #endif
     }
     .frame(maxWidth: .infinity)

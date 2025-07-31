@@ -22,6 +22,12 @@
             "value" : "Cancelar"
           }
         },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peru"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -105,6 +111,12 @@
             "value" : "Mover y escalar"
           }
         },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Siirrä ja skaalaa"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -168,7 +180,14 @@
       }
     },
     "iOS 26 is not supported. Adjust the simulator or your Xcode version." : {
-
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iOS 26 ei ole tuettu. Säädä simulaattoria tai Xcode versiotasi."
+          }
+        }
+      }
     },
     "processing_label" : {
       "extractionState" : "manual",
@@ -189,6 +208,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Procesando"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prosessoidaan"
           }
         },
         "fr" : {
@@ -272,6 +297,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Guardar"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tallenna"
           }
         },
         "fr" : {
