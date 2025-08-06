@@ -80,6 +80,7 @@ struct CropView: View {
         Spacer()
         
         cropImageView
+              .zIndex(0)
         
         Spacer()
       }
