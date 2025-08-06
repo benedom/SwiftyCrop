@@ -73,9 +73,9 @@ struct CropView: View {
             isCropping = false
           }
         }
+        .zIndex(1)
         .padding(.top, 60)
         .padding(.horizontal, 20)
-        .zIndex(1)
         
         Spacer()
         
@@ -101,6 +101,7 @@ struct CropView: View {
         
         if configuration.rotateImageWithButtons {
           Legacy_RotateButtonsView(viewModel: viewModel, configuration: configuration)
+            .zIndex(1)
         }
         
         Spacer()

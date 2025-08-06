@@ -98,6 +98,7 @@ struct ToolbarView: View {
 #endif
             }
         }
+            .contentShape(Capsule())
             .frame(maxWidth: .infinity)
 #else
             VStack {
