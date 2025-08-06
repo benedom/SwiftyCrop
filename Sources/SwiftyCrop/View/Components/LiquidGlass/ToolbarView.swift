@@ -22,7 +22,7 @@ struct ToolbarView: View {
                 }
                 .padding()
 #if !os(visionOS)
-                .glassEffect(.regular.tint(configuration.colors.cancelButtonBackground))
+                .glassEffect(.regular.tint(configuration.colors.cancelButtonBackground).interactive())
 #endif
                 
                 Spacer()
@@ -43,7 +43,7 @@ struct ToolbarView: View {
                     }
                     .padding()
 #if !os(visionOS)
-                    .glassEffect(.regular.tint(configuration.colors.resetRotationButtonBackground))
+                    .glassEffect(.regular.tint(configuration.colors.resetRotationButtonBackground).interactive())
 #endif
                     .opacity(viewModel.angle.degrees.truncatingRemainder(dividingBy: 360) == 0 ? 0.7 : 1)
                     .disabled(viewModel.angle.degrees.truncatingRemainder(dividingBy: 360) == 0)
@@ -74,7 +74,7 @@ struct ToolbarView: View {
                         .padding()
                     }
 #if !os(visionOS)
-                    .glassEffect(.regular.tint(configuration.colors.rotateButtonBackground))
+                    .glassEffect(.regular.tint(configuration.colors.rotateButtonBackground).interactive())
 #endif
                 }
                 
@@ -94,7 +94,7 @@ struct ToolbarView: View {
                 .padding()
                 .disabled(isCropping)
 #if !os(visionOS)
-                .glassEffect(.regular.tint(configuration.colors.saveButtonBackground))
+                .glassEffect(.regular.tint(configuration.colors.saveButtonBackground).interactive())
 #endif
             }
         }
