@@ -73,14 +73,13 @@ struct CropView: View {
             isCropping = false
           }
         }
-        .zIndex(1)
         .padding(.top, 60)
         .padding(.horizontal, 20)
+        .zIndex(1)
         
         Spacer()
         
         cropImageView
-              .zIndex(0)
         
         Spacer()
       }
