@@ -40,6 +40,8 @@ The following languages are supported & localized:
 - 🇰🇷 Korean
 - 🇯🇵 Japanese
 - 🇨🇳 Chinese
+- 🇫🇮 Finnish
+- 🌐 Traditional Chinese
 
 The localization file can be found in `Sources/SwiftyCrop/Resources`.
 
