@@ -251,6 +251,8 @@ Thanks to [@krayc425](https://github.com/krayc425) for adding visionOS support �
 
 Thanks to [@KuuttiProductions](https://github.com/KuuttiProductions) for adding the finnish localization 🇫🇮
 
+Thanks to [@puyanlin](https://github.com/puyanlin) for adding the traditional chinese localization 🌐
+
 ## 📃 License
 
 `SwiftyCrop` is available under the MIT license. See the [LICENSE](https://github.com/benedom/SwiftyCrop/blob/master/LICENSE.md) file for more info.
