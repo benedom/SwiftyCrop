@@ -40,7 +40,7 @@ public struct SwiftyCropConfiguration {
     public let cancelButton: String?
     public let interactionInstructions: String?
     public let saveButton: String?
-        public let progressLayerText: String?
+    public let progressLayerText: String?
   }
   
   /// Creates a new instance of `Fonts` that are used in the cropping view texts.
@@ -130,7 +130,7 @@ public struct SwiftyCropConfiguration {
   ///
   ///   - rotateImageWithButtons: Option to show rotation buttons. Defaults to `false`.
   ///
-  ///   - usesLiquidGlassDesign: (Beta) apply the all new liquid glass design. Defaults to `false`. This might be changed in the future.
+  ///   - usesLiquidGlassDesign: Apply the all new liquid glass design. Defaults to `#available(iOS 26,*)*`.
   ///
   ///   - zoomSensitivity: Sensitivity when zooming. Default is `1.0`. Decrease to increase sensitivity.
   ///
@@ -147,7 +147,7 @@ public struct SwiftyCropConfiguration {
     cropImageCircular: Bool = false,
     rotateImage: Bool = false,
     rotateImageWithButtons: Bool = false,
-    usesLiquidGlassDesign: Bool = false,
+    usesLiquidGlassDesign: Bool? = nil,
     zoomSensitivity: CGFloat = 1,
     rectAspectRatio: CGFloat = 4/3,
     texts: Texts = Texts(),
@@ -159,11 +159,21 @@ public struct SwiftyCropConfiguration {
     self.cropImageCircular = cropImageCircular
     self.rotateImage = rotateImage
     self.rotateImageWithButtons = rotateImageWithButtons
-    self.usesLiquidGlassDesign = usesLiquidGlassDesign
     self.zoomSensitivity = zoomSensitivity
     self.rectAspectRatio = rectAspectRatio
     self.texts = texts
     self.fonts = fonts
     self.colors = colors
+    
+    self.usesLiquidGlassDesign = {
+      guard let usesLiquidGlassDesign else {
+        if #available(iOS 26, *) {
+          return true
+        } else {
+          return false
+        }
+      }
+      return usesLiquidGlassDesign
+    }()
   }
 }
