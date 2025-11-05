@@ -201,6 +201,7 @@ struct CropView: View {
               }
           }
         )
+        .overlay(configuration.colors.cropOuterMask) // Adds color tint over outer mask if defined
       
       Image(uiImage: image)
         .resizable()

@@ -80,6 +80,7 @@ public struct SwiftyCropConfiguration {
   ///   - saveButton: The color for the save button text. If Liquid Glass is enabled, will be the color of the icon. Defaults to `.white`.
   ///   - saveButtonBackground: If Liquid Glass is enabled, will be the background color of the button. Otherwise has no effect. Defaults to `.yellow`.
   ///   - background: The background color of the entire cropping view. Defaults to `.black`.
+  ///   - cropOuterMask: The color of the crop outer mask. Can be used to tint it in case you are using very light/dark images which make the cropping view hard to see. Defaults to `.clear` since it is mostly not needed
   public struct Colors {
     public init(
       cancelButton: Color = .white,
@@ -91,7 +92,8 @@ public struct SwiftyCropConfiguration {
       resetRotationButtonBackground: Color = .clear,
       saveButton: Color = .white,
       saveButtonBackground: Color = .yellow,
-      background: Color = .black
+      background: Color = .black,
+      cropOuterMask: Color = .clear
     ) {
       self.cancelButton = cancelButton
       self.cancelButtonBackground = cancelButtonBackground
@@ -103,6 +105,7 @@ public struct SwiftyCropConfiguration {
       self.saveButton = saveButton
       self.saveButtonBackground = saveButtonBackground
       self.background = background
+      self.cropOuterMask = cropOuterMask
     }
     
     public let cancelButton: Color
@@ -115,6 +118,7 @@ public struct SwiftyCropConfiguration {
     public let saveButton: Color
     public let saveButtonBackground: Color
     public let background: Color
+    public let cropOuterMask: Color
   }
   
   /// Creates a new instance of `SwiftyCropConfiguration`.
