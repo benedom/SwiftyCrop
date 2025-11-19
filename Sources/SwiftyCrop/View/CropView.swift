@@ -1,30 +1,33 @@
-import SwiftUI
 import PhotosUI
+import SwiftUI
 
 struct CropView: View {
   @Environment(\.dismiss) private var dismiss
   @StateObject private var viewModel: CropViewModel
-  
+
   @State private var isCropping: Bool = false
-  
+
   private let image: UIImage
   private let maskShape: MaskShape
   private let configuration: SwiftyCropConfiguration
   private let onCancel: (() -> Void)?
+  private let onMaskGeometry: ((CGRect) -> Void)?
   private let onComplete: (UIImage?) -> Void
   private let localizableTableName: String
-  
+
   init(
     image: UIImage,
     maskShape: MaskShape,
     configuration: SwiftyCropConfiguration,
     onCancel: (() -> Void)? = nil,
+    onMaskGeometry: ((CGRect) -> Void)? = nil,
     onComplete: @escaping (UIImage?) -> Void
   ) {
     self.image = image
     self.maskShape = maskShape
     self.configuration = configuration
     self.onCancel = onCancel
+    self.onMaskGeometry = onMaskGeometry
     self.onComplete = onComplete
     _viewModel = StateObject(
       wrappedValue: CropViewModel(
@@ -36,23 +39,26 @@ struct CropView: View {
     )
     localizableTableName = "Localizable"
   }
-  
+
   // MARK: - Body
   var body: some View {
-#if compiler(>=6.2) // Use this to prevent compiling of unavailable iOS 26 APIs
-    if configuration.usesLiquidGlassDesign,
-       #available(iOS 26, visionOS 26.0, *) {
-      buildLiquidGlassBody(configuration: configuration)
-    } else {
+    #if compiler(>=6.2)  // Use this to prevent compiling of unavailable iOS 26 APIs
+      if configuration.usesLiquidGlassDesign,
+        #available(iOS 26, visionOS 26.0, *)
+      {
+        buildLiquidGlassBody(configuration: configuration)
+      } else {
+        buildLegacyBody(configuration: configuration)
+      }
+    #else
       buildLegacyBody(configuration: configuration)
-    }
-#else
-    buildLegacyBody(configuration: configuration)
-#endif
+    #endif
   }
-  
+
   @available(iOS 26, visionOS 26.0, *)
-  private func buildLiquidGlassBody(configuration: SwiftyCropConfiguration) -> some View {
+  private func buildLiquidGlassBody(configuration: SwiftyCropConfiguration)
+    -> some View
+  {
     ZStack {
       VStack {
         ToolbarView(
@@ -76,39 +82,50 @@ struct CropView: View {
         .padding(.top, 60)
         .padding(.horizontal, 20)
         .zIndex(1)
-        
+
         Spacer()
-        
+
         cropImageView
-        
+
         Spacer()
       }
       .background(configuration.colors.background)
-      
+
       if isCropping {
-        ProgressLayer(configuration: configuration, localizableTableName: localizableTableName)
+        ProgressLayer(
+          configuration: configuration,
+          localizableTableName: localizableTableName
+        )
       }
     }
   }
-  
-  private func buildLegacyBody(configuration: SwiftyCropConfiguration) -> some View {
+
+  private func buildLegacyBody(configuration: SwiftyCropConfiguration)
+    -> some View
+  {
     ZStack {
       VStack {
-        Legacy_InteractionInstructionsView(configuration: configuration, localizableTableName: localizableTableName)
-          .padding(.top, 50)
-          .zIndex(1)
-        
+        Legacy_InteractionInstructionsView(
+          configuration: configuration,
+          localizableTableName: localizableTableName
+        )
+        .padding(.top, 50)
+        .zIndex(1)
+
         if configuration.rotateImageWithButtons {
-          Legacy_RotateButtonsView(viewModel: viewModel, configuration: configuration)
-            .zIndex(1)
+          Legacy_RotateButtonsView(
+            viewModel: viewModel,
+            configuration: configuration
+          )
+          .zIndex(1)
         }
-        
+
         Spacer()
-        
+
         cropImageView
-        
+
         Spacer()
-        
+
         Legacy_ButtonsView(
           configuration: configuration,
           localizableTableName: localizableTableName,
@@ -129,23 +146,29 @@ struct CropView: View {
         }
       }
       .background(configuration.colors.background)
-      
+
       if isCropping {
-        Legacy_ProgressLayer(configuration: configuration, localizableTableName: localizableTableName)
+        Legacy_ProgressLayer(
+          configuration: configuration,
+          localizableTableName: localizableTableName
+        )
       }
     }
   }
-  
+
   // MARK: - Gestures
   private var magnificationGesture: some Gesture {
     MagnificationGesture()
       .onChanged { value in
         let sensitivity: CGFloat = 0.1 * configuration.zoomSensitivity
         let scaledValue = (value.magnitude - 1) * sensitivity + 1
-        
+
         let maxScaleValues = viewModel.calculateMagnificationGestureMaxValues()
-        viewModel.scale = min(max(scaledValue * viewModel.lastScale, maxScaleValues.0), maxScaleValues.1)
-        
+        viewModel.scale = min(
+          max(scaledValue * viewModel.lastScale, maxScaleValues.0),
+          maxScaleValues.1
+        )
+
         updateOffset()
       }
       .onEnded { _ in
@@ -153,17 +176,23 @@ struct CropView: View {
         viewModel.lastOffset = viewModel.offset
       }
   }
-  
+
   private var dragGesture: some Gesture {
     DragGesture()
       .onChanged { value in
         let maxOffsetPoint = viewModel.calculateDragGestureMax()
         let newX = min(
-          max(value.translation.width + viewModel.lastOffset.width, -maxOffsetPoint.x),
+          max(
+            value.translation.width + viewModel.lastOffset.width,
+            -maxOffsetPoint.x
+          ),
           maxOffsetPoint.x
         )
         let newY = min(
-          max(value.translation.height + viewModel.lastOffset.height, -maxOffsetPoint.y),
+          max(
+            value.translation.height + viewModel.lastOffset.height,
+            -maxOffsetPoint.y
+          ),
           maxOffsetPoint.y
         )
         viewModel.offset = CGSize(width: newX, height: newY)
@@ -172,7 +201,7 @@ struct CropView: View {
         viewModel.lastOffset = viewModel.offset
       }
   }
-  
+
   private var rotationGesture: some Gesture {
     RotationGesture()
       .onChanged { value in
@@ -182,7 +211,7 @@ struct CropView: View {
         viewModel.lastAngle = viewModel.angle
       }
   }
-  
+
   // MARK: - UI Components
   private var cropImageView: some View {
     ZStack {
@@ -201,7 +230,7 @@ struct CropView: View {
               }
           }
         )
-      
+
       Image(uiImage: image)
         .resizable()
         .scaledToFit()
@@ -210,7 +239,27 @@ struct CropView: View {
         .offset(viewModel.offset)
         .mask(
           MaskShapeView(maskShape: maskShape)
-            .frame(width: viewModel.maskSize.width, height: viewModel.maskSize.height)
+            .frame(
+              width: viewModel.maskSize.width,
+              height: viewModel.maskSize.height
+            )
+            .background( // Use this to measure the mask geometry for callback
+              GeometryReader { geo in
+                Color.clear
+                  .onAppear {
+                    if viewModel.maskSize != .zero {
+                      let frame = geo.frame(in: .global)
+                      onMaskGeometry?(frame)
+                    }
+                  }
+                  .onChange(of: viewModel.maskSize) { newSize in
+                    if newSize != .zero {
+                      let frame = geo.frame(in: .global)
+                      onMaskGeometry?(frame)
+                    }
+                  }
+              }
+            )
         )
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -218,16 +267,22 @@ struct CropView: View {
     .simultaneousGesture(dragGesture)
     .simultaneousGesture(configuration.rotateImage ? rotationGesture : nil)
   }
-  
+
   // MARK: - Helpers
   private func updateOffset() {
     let maxOffsetPoint = viewModel.calculateDragGestureMax()
-    let newX = min(max(viewModel.offset.width, -maxOffsetPoint.x), maxOffsetPoint.x)
-    let newY = min(max(viewModel.offset.height, -maxOffsetPoint.y), maxOffsetPoint.y)
+    let newX = min(
+      max(viewModel.offset.width, -maxOffsetPoint.x),
+      maxOffsetPoint.x
+    )
+    let newY = min(
+      max(viewModel.offset.height, -maxOffsetPoint.y),
+      maxOffsetPoint.y
+    )
     viewModel.offset = CGSize(width: newX, height: newY)
     viewModel.lastOffset = viewModel.offset
   }
-  
+
   private func cropImage() -> UIImage? {
     var editedImage: UIImage = image
     if configuration.rotateImage || configuration.rotateImageWithButtons {
@@ -246,11 +301,11 @@ struct CropView: View {
       return viewModel.cropToSquare(editedImage)
     }
   }
-  
+
   // MARK: - Mask Shape View
   private struct MaskShapeView: View {
     let maskShape: MaskShape
-    
+
     var body: some View {
       Group {
         switch maskShape {
