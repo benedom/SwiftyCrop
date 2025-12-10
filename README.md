@@ -140,6 +140,17 @@ struct ExampleView: View {
     }
 }
 ```
+you can also use the image directly with the binding pattern:
+```swift
+.fullScreenCover(isPresented: $showImageCropper) {
+  SwiftyCropView(
+    imageToCrop: $selectedImage,
+    maskShape: .square
+  ) { croppedImage in
+  // Do something with the returned, cropped image
+  }
+}
+```
 
 :bangbang: NOTE :bangbang:
 ```
@@ -200,18 +211,14 @@ let configuration = SwiftyCropConfiguration(
 ```
 and use it like this:
 ```swift
-.fullScreenCover(isPresented: $showImageCropper) {
-            if let selectedImage = selectedImage {
-                SwiftyCropView(
-                    imageToCrop: selectedImage,
-                    maskShape: .square,
-                    // Use the configuration
-                    configuration: configuration
-                ) { croppedImage in
-                    // Do something with the returned, cropped image
-                }
-            }
-        }
+SwiftyCropView(
+  imageToCrop: $selectedImage,
+  maskShape: .square,
+  // Use the configuration
+  configuration: configuration
+) { croppedImage in
+  // Do something with the returned, cropped image
+}
 ```
 
 ## 🪟 iOS 26 & Liquid Glass

@@ -171,7 +171,6 @@ struct ContentView: View {
       loadImage()
     }
     .fullScreenCover(isPresented: $showImageCropper) {
-      // Using Binding<UIImage?> initializer for proper fullScreenCover compatibility
       SwiftyCropView(
         imageToCrop: $selectedImage,
         maskShape: selectedShape,
