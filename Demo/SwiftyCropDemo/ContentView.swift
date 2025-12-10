@@ -171,29 +171,28 @@ struct ContentView: View {
       loadImage()
     }
     .fullScreenCover(isPresented: $showImageCropper) {
-      if let selectedImage = selectedImage {
-        SwiftyCropView(
-          imageToCrop: selectedImage,
-          maskShape: selectedShape,
-          configuration: SwiftyCropConfiguration(
-            maxMagnificationScale: maxMagnificationScale,
-            maskRadius: maskRadius,
-            cropImageCircular: cropImageCircular,
-            rotateImage: rotateImage,
-            rotateImageWithButtons: rotateImageWithButtons,
-            usesLiquidGlassDesign: usesLiquidGlassDesign,
-            zoomSensitivity: zoomSensitivity,
-            rectAspectRatio: rectAspectRatio.getValue()
-          ),
-          onCancel: {
-            print("Operation cancelled")
-          }
-        ) { croppedImage in
-          // Do something with the returned, cropped image
-          self.selectedImage = croppedImage
-        }.clipped(antialiased: false)
-          .ignoresSafeArea(edges: .all)
-      }
+      // Using Binding<UIImage?> initializer for proper fullScreenCover compatibility
+      SwiftyCropView(
+        imageToCrop: $selectedImage,
+        maskShape: selectedShape,
+        configuration: SwiftyCropConfiguration(
+          maxMagnificationScale: maxMagnificationScale,
+          maskRadius: maskRadius,
+          cropImageCircular: cropImageCircular,
+          rotateImage: rotateImage,
+          rotateImageWithButtons: rotateImageWithButtons,
+          usesLiquidGlassDesign: usesLiquidGlassDesign,
+          zoomSensitivity: zoomSensitivity,
+          rectAspectRatio: rectAspectRatio.getValue()
+        ),
+        onCancel: {
+          print("Operation cancelled")
+        }
+      ) { croppedImage in
+        // Do something with the returned, cropped image
+        self.selectedImage = croppedImage
+      }.clipped(antialiased: false)
+        .ignoresSafeArea(edges: .all)
     }
   }
   
