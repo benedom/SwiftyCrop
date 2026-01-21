@@ -1,6 +1,6 @@
 import SwiftUI
 
-@available(iOS 26, visionOS 26.0, *)
+@available(iOS 26, visionOS 26.0, macOS 26.0, *)
 struct ProgressLayer: View {
   let configuration: SwiftyCropConfiguration
   let localizableTableName: String
@@ -44,7 +44,7 @@ struct ProgressLayer: View {
   }
 }
 
-@available(iOS 26, visionOS 26.0, *)
+@available(iOS 26, visionOS 26.0, macOS 26.0, *)
 #Preview {
   ProgressLayer(configuration: .init(), localizableTableName: "Localizable")
 }

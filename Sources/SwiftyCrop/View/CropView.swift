@@ -1,25 +1,27 @@
 import SwiftUI
+#if canImport(UIKit)
 import PhotosUI
+#endif
 
 struct CropView: View {
   @Environment(\.dismiss) private var dismiss
   @StateObject private var viewModel: CropViewModel
-  
+
   @State private var isCropping: Bool = false
-  
-  private let image: UIImage
+
+  private let image: PlatformImage
   private let maskShape: MaskShape
   private let configuration: SwiftyCropConfiguration
   private let onCancel: (() -> Void)?
-  private let onComplete: (UIImage?) -> Void
+  private let onComplete: (PlatformImage?) -> Void
   private let localizableTableName: String
-  
+
   init(
-    image: UIImage,
+    image: PlatformImage,
     maskShape: MaskShape,
     configuration: SwiftyCropConfiguration,
     onCancel: (() -> Void)? = nil,
-    onComplete: @escaping (UIImage?) -> Void
+    onComplete: @escaping (PlatformImage?) -> Void
   ) {
     self.image = image
     self.maskShape = maskShape
@@ -39,9 +41,9 @@ struct CropView: View {
   
   // MARK: - Body
   var body: some View {
-#if compiler(>=6.2) // Use this to prevent compiling of unavailable iOS 26 APIs
+#if compiler(>=6.2) // Use this to prevent compiling of unavailable iOS 26 / macOS 26 APIs
     if configuration.usesLiquidGlassDesign,
-       #available(iOS 26, visionOS 26.0, *) {
+       #available(iOS 26, visionOS 26.0, macOS 26.0, *) {
       buildLiquidGlassBody(configuration: configuration)
     } else {
       buildLegacyBody(configuration: configuration)
@@ -50,8 +52,8 @@ struct CropView: View {
     buildLegacyBody(configuration: configuration)
 #endif
   }
-  
-  @available(iOS 26, visionOS 26.0, *)
+
+  @available(iOS 26, visionOS 26.0, macOS 26.0, *)
   private func buildLiquidGlassBody(configuration: SwiftyCropConfiguration) -> some View {
     ZStack {
       VStack {
@@ -186,9 +188,7 @@ struct CropView: View {
   // MARK: - UI Components
   private var cropImageView: some View {
     ZStack {
-      Image(uiImage: image)
-        .resizable()
-        .scaledToFit()
+      PlatformImageView(image: image)
         .rotationEffect(viewModel.angle)
         .scaleEffect(viewModel.scale)
         .offset(viewModel.offset)
@@ -201,10 +201,8 @@ struct CropView: View {
               }
           }
         )
-      
-      Image(uiImage: image)
-        .resizable()
-        .scaledToFit()
+
+      PlatformImageView(image: image)
         .rotationEffect(viewModel.angle)
         .scaleEffect(viewModel.scale)
         .offset(viewModel.offset)
@@ -228,10 +226,10 @@ struct CropView: View {
     viewModel.lastOffset = viewModel.offset
   }
   
-  private func cropImage() -> UIImage? {
-    var editedImage: UIImage = image
+  private func cropImage() -> PlatformImage? {
+    var editedImage: PlatformImage = image
     if configuration.rotateImage || configuration.rotateImageWithButtons {
-      if let rotatedImage: UIImage = viewModel.rotate(
+      if let rotatedImage: PlatformImage = viewModel.rotate(
         editedImage,
         viewModel.lastAngle
       ) {
@@ -250,7 +248,7 @@ struct CropView: View {
   // MARK: - Mask Shape View
   private struct MaskShapeView: View {
     let maskShape: MaskShape
-    
+
     var body: some View {
       Group {
         switch maskShape {
@@ -261,5 +259,22 @@ struct CropView: View {
         }
       }
     }
+  }
+}
+
+// MARK: - Platform Image View
+struct PlatformImageView: View {
+  let image: PlatformImage
+
+  var body: some View {
+    #if canImport(UIKit)
+    Image(uiImage: image)
+      .resizable()
+      .scaledToFit()
+    #elseif canImport(AppKit)
+    Image(nsImage: image)
+      .resizable()
+      .scaledToFit()
+    #endif
   }
 }

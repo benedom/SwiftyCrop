@@ -1,6 +1,6 @@
 import SwiftUI
 
-@available(iOS 26, visionOS 26.0, *)
+@available(iOS 26, visionOS 26.0, macOS 26.0, *)
 struct ToolbarView: View {
     @ObservedObject var viewModel: CropViewModel
     let configuration: SwiftyCropConfiguration
@@ -17,14 +17,13 @@ struct ToolbarView: View {
                 } label: {
                     Image(systemName: "xmark")
                         .foregroundStyle(configuration.colors.cancelButton)
-                    
                         .fontWeight(.semibold)
                 }
                 .padding()
 #if !os(visionOS)
                 .glassEffect(.regular.tint(configuration.colors.cancelButtonBackground).interactive())
 #endif
-                
+
                 Spacer()
                 
                 if configuration.rotateImageWithButtons {
@@ -47,7 +46,7 @@ struct ToolbarView: View {
 #endif
                     .opacity(viewModel.angle.degrees.truncatingRemainder(dividingBy: 360) == 0 ? 0.7 : 1)
                     .disabled(viewModel.angle.degrees.truncatingRemainder(dividingBy: 360) == 0)
-                    
+
                     HStack {
                         Button {
                             withAnimation {
@@ -77,7 +76,7 @@ struct ToolbarView: View {
                     .glassEffect(.regular.tint(configuration.colors.rotateButtonBackground).interactive())
 #endif
                 }
-                
+
                 Spacer()
                 
                 Button {
