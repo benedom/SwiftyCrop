@@ -1,5 +1,15 @@
 import SwiftUI
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
+
+#if canImport(UIKit)
+typealias PlatformImage = UIImage
+#elseif canImport(AppKit)
+typealias PlatformImage = NSImage
+#endif
 
 class CropViewModel: ObservableObject {
     private let maskRadius: CGFloat
@@ -78,53 +88,68 @@ class CropViewModel: ObservableObject {
     
     /**
      Crops the given image to a rectangle based on the current mask size and position.
-     - Parameter image: The UIImage to crop.
-     - Returns: A cropped UIImage, or nil if cropping fails.
+     - Parameter image: The PlatformImage to crop.
+     - Returns: A cropped PlatformImage, or nil if cropping fails.
      */
-    func cropToRectangle(_ image: UIImage) -> UIImage? {
+    func cropToRectangle(_ image: PlatformImage) -> PlatformImage? {
         guard let orientedImage = image.correctlyOriented else { return nil }
-        
+
         let cropRect = calculateCropRect(orientedImage)
-        
+
+        #if canImport(UIKit)
         guard let cgImage = orientedImage.cgImage,
               let result = cgImage.cropping(to: cropRect) else {
             return nil
         }
-        
         return UIImage(cgImage: result)
+        #elseif canImport(AppKit)
+        guard let cgImage = orientedImage.cgImage(forProposedRect: nil, context: nil, hints: nil),
+              let croppedCGImage = cgImage.cropping(to: cropRect) else {
+            return nil
+        }
+        return NSImage(cgImage: croppedCGImage, size: cropRect.size)
+        #endif
     }
     
     /**
      Crops the given image to a square based on the current mask size and position.
-     - Parameter image: The UIImage to crop.
-     - Returns: A cropped UIImage, or nil if cropping fails.
+     - Parameter image: The PlatformImage to crop.
+     - Returns: A cropped PlatformImage, or nil if cropping fails.
      */
-    func cropToSquare(_ image: UIImage) -> UIImage? {
+    func cropToSquare(_ image: PlatformImage) -> PlatformImage? {
         guard let orientedImage = image.correctlyOriented else { return nil }
-        
+
         let cropRect = calculateCropRect(orientedImage)
-        
+
+        #if canImport(UIKit)
         guard let cgImage = orientedImage.cgImage,
               let result = cgImage.cropping(to: cropRect) else {
             return nil
         }
-        
         return UIImage(cgImage: result)
+        #elseif canImport(AppKit)
+        guard let cgImage = orientedImage.cgImage(forProposedRect: nil, context: nil, hints: nil),
+              let croppedCGImage = cgImage.cropping(to: cropRect) else {
+            return nil
+        }
+        return NSImage(cgImage: croppedCGImage, size: cropRect.size)
+        #endif
     }
     
     /**
      Crops the given image to a circle based on the current mask size and position.
-     - Parameter image: The UIImage to crop.
-     - Returns: A cropped UIImage, or nil if cropping fails.
+     - Parameter image: The PlatformImage to crop.
+     - Returns: A cropped PlatformImage, or nil if cropping fails.
      */
-    func cropToCircle(_ image: UIImage) -> UIImage? {
+    func cropToCircle(_ image: PlatformImage) -> PlatformImage? {
         guard let orientedImage = image.correctlyOriented else { return nil }
-        
+
         let cropRect = calculateCropRect(orientedImage)
-        
+
+        #if canImport(UIKit)
         let imageRendererFormat = orientedImage.imageRendererFormat
         imageRendererFormat.opaque = false
-        
+
         let circleCroppedImage = UIGraphicsImageRenderer(
             size: cropRect.size,
             format: imageRendererFormat).image { _ in
@@ -136,37 +161,59 @@ class CropViewModel: ObservableObject {
                 )
                 orientedImage.draw(in: drawImageRect)
             }
-        
+
         return circleCroppedImage
+        #elseif canImport(AppKit)
+        let circleCroppedImage = NSImage(size: cropRect.size)
+        circleCroppedImage.lockFocus()
+        let drawRect = NSRect(origin: .zero, size: cropRect.size)
+        NSBezierPath(ovalIn: drawRect).addClip()
+        let drawImageRect = NSRect(
+            origin: NSPoint(x: -cropRect.origin.x, y: -cropRect.origin.y),
+            size: orientedImage.size
+        )
+        orientedImage.draw(in: drawImageRect)
+        circleCroppedImage.unlockFocus()
+        return circleCroppedImage
+        #endif
     }
     
     /**
      Rotates the given image by the specified angle.
-     - Parameter image: The UIImage to rotate.
+     - Parameter image: The PlatformImage to rotate.
      - Parameter angle: The Angle to rotate the image by.
-     - Returns: A rotated UIImage, or nil if rotation fails.
+     - Returns: A rotated PlatformImage, or nil if rotation fails.
      */
-    func rotate(_ image: UIImage, _ angle: Angle) -> UIImage? {
-        guard let orientedImage = image.correctlyOriented,
-              let cgImage = orientedImage.cgImage else { return nil }
-        
+    func rotate(_ image: PlatformImage, _ angle: Angle) -> PlatformImage? {
+        guard let orientedImage = image.correctlyOriented else { return nil }
+
+        #if canImport(UIKit)
+        guard let cgImage = orientedImage.cgImage else { return nil }
+        #elseif canImport(AppKit)
+        guard let cgImage = orientedImage.cgImage(forProposedRect: nil, context: nil, hints: nil) else { return nil }
+        #endif
+
         let ciImage = CIImage(cgImage: cgImage)
-        
+
         guard let filter = CIFilter.straightenFilter(image: ciImage, radians: angle.radians),
               let output = filter.outputImage else { return nil }
-        
+
         let context = CIContext()
         guard let result = context.createCGImage(output, from: output.extent) else { return nil }
-        
+
+        #if canImport(UIKit)
         return UIImage(cgImage: result)
+        #elseif canImport(AppKit)
+        return NSImage(cgImage: result, size: NSSize(width: result.width, height: result.height))
+        #endif
     }
     
     /**
      Calculates the rectangle to use for cropping the image based on the current mask size, scale, and offset.
-     - Parameter orientedImage: The correctly oriented UIImage to calculate the crop rect for.
+     - Parameter orientedImage: The correctly oriented PlatformImage to calculate the crop rect for.
      - Returns: A CGRect representing the area to crop from the original image.
      */
-    private func calculateCropRect(_ orientedImage: UIImage) -> CGRect {
+    private func calculateCropRect(_ orientedImage: PlatformImage) -> CGRect {
         let factor = min(
             (orientedImage.size.width / imageSizeInView.width),
             (orientedImage.size.height / imageSizeInView.height)
@@ -194,21 +241,26 @@ class CropViewModel: ObservableObject {
     }
 }
 
-private extension UIImage {
+extension PlatformImage {
     /**
-     A UIImage instance with corrected orientation.
-     If the instance's orientation is already `.up`, it simply returns the original.
-     - Returns: An optional UIImage that represents the correctly oriented image.
+     A PlatformImage instance with corrected orientation.
+     For UIImage, if the instance's orientation is already `.up`, it simply returns the original.
+     For NSImage, it returns self as macOS doesn't have orientation issues.
+     - Returns: An optional PlatformImage that represents the correctly oriented image.
      */
-    var correctlyOriented: UIImage? {
+    var correctlyOriented: PlatformImage? {
+        #if canImport(UIKit)
         if imageOrientation == .up { return self }
-        
+
         UIGraphicsBeginImageContextWithOptions(size, false, scale)
         draw(in: CGRect(origin: .zero, size: size))
         let normalizedImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        
+
         return normalizedImage
+        #elseif canImport(AppKit)
+        return self
+        #endif
     }
 }
 

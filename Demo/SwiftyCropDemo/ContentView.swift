@@ -1,9 +1,16 @@
 import SwiftUI
 import SwiftyCrop
 
+#if canImport(UIKit)
+typealias PlatformImage = UIImage
+#elseif canImport(AppKit)
+import AppKit
+typealias PlatformImage = NSImage
+#endif
+
 struct ContentView: View {
   @State private var showImageCropper: Bool = false
-  @State private var selectedImage: UIImage?
+  @State private var selectedImage: PlatformImage?
   @State private var selectedShape: MaskShape = .square
   @State private var rectAspectRatio: PresetAspectRatios = .fourToThree
   @State private var cropImageCircular: Bool
@@ -47,8 +54,7 @@ struct ContentView: View {
       
       Group {
         if let selectedImage = selectedImage {
-          Image(uiImage: selectedImage)
-            .resizable()
+          DemoPlatformImageView(image: selectedImage)
             .aspectRatio(contentMode: .fit)
             .cornerRadius(8)
         } else {
@@ -108,7 +114,7 @@ struct ContentView: View {
           
           Toggle("Rotate image (buttons)", isOn: $rotateImageWithButtons)
           
-          if #available(iOS 26, *) {
+          if #available(iOS 26, visionOS 26, macOS 26, *) {
             Toggle("Liquid Glass design", isOn: $usesLiquidGlassDesign)
           }
           
@@ -124,14 +130,25 @@ struct ContentView: View {
             Text("Mask radius")
               .frame(maxWidth: .infinity, alignment: .leading)
 
-#if os(iOS)
+            #if os(iOS)
             Button {
               maskRadius = min(UIScreen.main.bounds.width, UIScreen.main.bounds.height) / 2
             } label: {
               Image(systemName: "arrow.up.left.and.arrow.down.right")
                 .font(.footnote)
             }
-#endif
+            #elseif os(macOS)
+            Button {
+              if let screen = NSScreen.main {
+                maskRadius = min(screen.frame.width, screen.frame.height) / 2
+              } else {
+                maskRadius = 200
+              }
+            } label: {
+              Image(systemName: "arrow.up.left.and.arrow.down.right")
+                .font(.footnote)
+            }
+            #endif
 
             DecimalTextField(value: $maskRadius)
               .focused($textFieldFocused)
@@ -170,30 +187,47 @@ struct ContentView: View {
     .onAppear {
       loadImage()
     }
+    #if os(macOS)
+    .frame(minWidth: 600, minHeight: 700)
+    .sheet(isPresented: $showImageCropper) {
+      imageCropperView
+    }
+    #else
     .fullScreenCover(isPresented: $showImageCropper) {
-      if let selectedImage = selectedImage {
-        SwiftyCropView(
-          imageToCrop: selectedImage,
-          maskShape: selectedShape,
-          configuration: SwiftyCropConfiguration(
-            maxMagnificationScale: maxMagnificationScale,
-            maskRadius: maskRadius,
-            cropImageCircular: cropImageCircular,
-            rotateImage: rotateImage,
-            rotateImageWithButtons: rotateImageWithButtons,
-            usesLiquidGlassDesign: usesLiquidGlassDesign,
-            zoomSensitivity: zoomSensitivity,
-            rectAspectRatio: rectAspectRatio.getValue()
-          ),
-          onCancel: {
-            print("Operation cancelled")
-          }
-        ) { croppedImage in
-          // Do something with the returned, cropped image
-          self.selectedImage = croppedImage
-        }.clipped(antialiased: false)
-          .ignoresSafeArea(edges: .all)
+      imageCropperView
+    }
+    #endif
+  }
+
+  @ViewBuilder
+  private var imageCropperView: some View {
+    if let selectedImage = selectedImage {
+      SwiftyCropView(
+        imageToCrop: selectedImage,
+        maskShape: selectedShape,
+        configuration: SwiftyCropConfiguration(
+          maxMagnificationScale: maxMagnificationScale,
+          maskRadius: maskRadius,
+          cropImageCircular: cropImageCircular,
+          rotateImage: rotateImage,
+          rotateImageWithButtons: rotateImageWithButtons,
+          usesLiquidGlassDesign: usesLiquidGlassDesign,
+          zoomSensitivity: zoomSensitivity,
+          rectAspectRatio: rectAspectRatio.getValue()
+        ),
+        onCancel: {
+          print("Operation cancelled")
+        }
+      ) { croppedImage in
+        // Do something with the returned, cropped image
+        self.selectedImage = croppedImage
       }
+      .clipped(antialiased: false)
+      #if os(macOS)
+      .frame(width: 600, height: 600)
+      #else
+      .ignoresSafeArea(edges: .all)
+      #endif
     }
   }
   
@@ -204,16 +238,30 @@ struct ContentView: View {
   }
   
   // Example function for downloading an image
-  private func downloadExampleImage() async -> UIImage? {
+  private func downloadExampleImage() async -> PlatformImage? {
     let portraitUrlString = "https://picsum.photos/1000/1200"
     let landscapeUrlString = "https://picsum.photos/2000/1000"
     let urlString = Int.random(in: 0...1) == 0 ? portraitUrlString : landscapeUrlString
     guard let url = URL(string: urlString),
           let (data, _) = try? await URLSession.shared.data(from: url),
-          let image = UIImage(data: data)
+          let image = PlatformImage(data: data)
     else { return nil }
-    
+
     return image
+  }
+}
+
+struct DemoPlatformImageView: View {
+  let image: PlatformImage
+
+  var body: some View {
+    #if canImport(UIKit)
+    Image(uiImage: image)
+      .resizable()
+    #elseif canImport(AppKit)
+    Image(nsImage: image)
+      .resizable()
+    #endif
   }
 }
 
