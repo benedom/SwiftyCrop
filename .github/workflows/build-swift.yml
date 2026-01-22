@@ -19,7 +19,7 @@ jobs:
         platform:
           - iOS
         xcode:
-          - ^15
+          - ^26
 
     runs-on: macos-15
 
