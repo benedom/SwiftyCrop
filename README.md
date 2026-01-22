@@ -4,6 +4,8 @@
 ![Static Badge](https://img.shields.io/badge/iOS%20-%20%3E%2016.0%20-%20light_green)
 ![Static Badge](https://img.shields.io/badge/Platform%20-%20visionOS%20-%20light_green)
 ![Static Badge](https://img.shields.io/badge/visionOS%20-%20%3E%201.0%20-%20light_green)
+![Static Badge](https://img.shields.io/badge/Platform%20-%20macOS%20-%20light_green)
+![Static Badge](https://img.shields.io/badge/macOS%20-%20%3E%2013.0%20-%20light_green)
 ![Static Badge](https://img.shields.io/badge/Swift%20-%20%3E%205.9%20-%20orange)
 <a href="LICENSE.md">
   <img src="https://img.shields.io/badge/License%20-%20MIT%20-%20blue" alt="License - MIT">
@@ -25,6 +27,8 @@
 SwiftyCrop allows users to seamlessly crop images within their SwiftUI applications. It provides a user-friendly interface that makes cropping an image as simple as selecting the desired area.
 
 With SwiftyCrop, you can easily adjust the cropping area, maintain aspect ratio, zoom in and out for precise cropping. You can also specify the cropping mask to be a square, circle or rectangle with custom aspect ratio. SwiftyCrop is highly customizable, you can adjust texts, fonts and colors that are used.
+
+SwiftyCrop currently supports iOS, iPadOS, visionOS and macOS natively.
 
 The following languages are supported & localized:
 - 🇬🇧 English
@@ -58,6 +62,8 @@ The localization file can be found in `Sources/SwiftyCrop/Resources`.
 ## 🧳 Requirements
 
 - iOS 16.0 or later
+- visionOS 1.0 or later
+- macOS 13.0 or later
 - Xcode 15.0 or later
 - Swift 5.9 or later
 
@@ -216,7 +222,7 @@ and use it like this:
 
 ## 🪟 iOS 26 & Liquid Glass
 
-To adopt to the new Liquid Glass design Apple introduced with iOS 26, SwiftyCrop supplies a new UI which reflects this design. This will remove text buttons and replace them with icon buttons and much more. Below is the current way it looks. By default, this is active if iOS 26 is available. You can change this by overriding the `SwiftyCropConfiguration`.
+To adopt to the new Liquid Glass design Apple introduced with iOS 26, SwiftyCrop supplies a new UI which reflects this design. This will remove text buttons and replace them with icon buttons and much more. Below is the current way it looks. By default, this is active if iOS 26 or macOS 26 is available. You can change this by overriding the `SwiftyCropConfiguration`.
 
 <p align="center">
     <img src="Assets/liquid_glass.png" style="margin: auto; width: 250px"/>
@@ -249,6 +255,8 @@ Thanks to [@krayc425](https://github.com/krayc425) for adding visionOS support �
 Thanks to [@KuuttiProductions](https://github.com/KuuttiProductions) for adding the finnish localization 🇫🇮
 
 Thanks to [@puyanlin](https://github.com/puyanlin) for adding the traditional chinese localization 🌐
+
+Thanks to [@navanchauhan](https://github.com/navanchauhan) for adding native macOS support 🖥️
 
 ## 📃 License
 
