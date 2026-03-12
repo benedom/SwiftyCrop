@@ -79,6 +79,7 @@ struct ContentView: View {
             } label: {
               LongText(title: "Crop image")
             }
+            .accessibilityIdentifier("cropImageButton")
           }
           
           HStack {
@@ -232,11 +233,32 @@ struct ContentView: View {
   }
   
   private func loadImage() {
+    if CommandLine.arguments.contains("--uitesting") {
+      selectedImage = makeUITestImage()
+      return
+    }
     Task {
       selectedImage = await downloadExampleImage()
     }
   }
-  
+
+  private func makeUITestImage() -> PlatformImage? {
+    let size = CGSize(width: 200, height: 200)
+    #if canImport(UIKit)
+    return UIGraphicsImageRenderer(size: size).image { ctx in
+      UIColor.systemBlue.setFill()
+      ctx.fill(CGRect(origin: .zero, size: size))
+    }
+    #elseif canImport(AppKit)
+    let image = NSImage(size: NSSize(width: size.width, height: size.height))
+    image.lockFocus()
+    NSColor.systemBlue.setFill()
+    NSBezierPath.fill(NSRect(origin: .zero, size: NSSize(width: size.width, height: size.height)))
+    image.unlockFocus()
+    return image
+    #endif
+  }
+
   // Example function for downloading an image
   private func downloadExampleImage() async -> PlatformImage? {
     let portraitUrlString = "https://picsum.photos/1000/1200"

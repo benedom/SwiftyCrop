@@ -20,6 +20,7 @@ struct Legacy_ButtonsView: View {
               .font(configuration.fonts.cancelButton)
               .foregroundColor(configuration.colors.cancelButton)
           }
+          .accessibilityIdentifier("cancelButton")
           .padding()
           .disabled(isCropping)
           
@@ -40,6 +41,7 @@ struct Legacy_ButtonsView: View {
               .font(configuration.fonts.saveButton)
               .foregroundColor(configuration.colors.saveButton)
           }
+          .accessibilityIdentifier("saveButton")
           .padding()
           .disabled(isCropping)
       }

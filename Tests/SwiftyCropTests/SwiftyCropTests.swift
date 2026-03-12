@@ -3,6 +3,19 @@ import SwiftUI
 @testable import SwiftyCrop
 
 final class SwiftyCropTests: XCTestCase {
+  func testConfigurationDefaults() {
+    let configuration = SwiftyCropConfiguration()
+    XCTAssertEqual(configuration.maxMagnificationScale, 4.0)
+    XCTAssertEqual(configuration.maskRadius, 130)
+    XCTAssertEqual(configuration.cropImageCircular, false)
+    XCTAssertEqual(configuration.rotateImage, false)
+    XCTAssertEqual(configuration.rotateImageWithButtons, false)
+    XCTAssertEqual(configuration.zoomSensitivity, 1.0)
+    XCTAssertEqual(configuration.rectAspectRatio, 4/3)
+    XCTAssertNil(configuration.texts.cancelButton)
+    XCTAssertNil(configuration.texts.saveButton)
+  }
+
   func testConfigurationInit() {
     let configuration = SwiftyCropConfiguration(
       maxMagnificationScale: 1.0,
