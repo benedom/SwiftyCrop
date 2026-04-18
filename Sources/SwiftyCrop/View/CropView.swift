@@ -8,6 +8,9 @@ struct CropView: View {
   @StateObject private var viewModel: CropViewModel
 
   @State private var isCropping: Bool = false
+  @State private var containerSize: CGSize = .zero
+  @State private var activeDragStart: CGPoint? = nil
+  @State private var activeHandleEdge: HandleEdge? = nil
 
   private let image: PlatformImage
   private let maskShape: MaskShape
@@ -33,7 +36,9 @@ struct CropView: View {
         maskRadius: configuration.maskRadius,
         maxMagnificationScale: configuration.maxMagnificationScale,
         maskShape: maskShape,
-        rectAspectRatio: configuration.rectAspectRatio
+        rectAspectRatio: configuration.rectAspectRatio,
+        minAspectRatio: configuration.minAspectRatio,
+        maxAspectRatio: configuration.maxAspectRatio
       )
     )
     localizableTableName = "Localizable"
@@ -159,6 +164,31 @@ struct CropView: View {
   private var dragGesture: some Gesture {
     DragGesture()
       .onChanged { value in
+        // Determine edge once per gesture, at first touch-down.
+        if activeDragStart != value.startLocation {
+          activeDragStart = value.startLocation
+          activeHandleEdge = handleEdge(for: value.startLocation)
+        }
+        switch activeHandleEdge {
+        case .top:
+          viewModel.resizeMaskByHeightDelta(-2 * value.translation.height)
+          updateOffset()
+          return
+        case .bottom:
+          viewModel.resizeMaskByHeightDelta(2 * value.translation.height)
+          updateOffset()
+          return
+        case .left:
+          viewModel.resizeMaskByWidthDelta(-2 * value.translation.width)
+          updateOffset()
+          return
+        case .right:
+          viewModel.resizeMaskByWidthDelta(2 * value.translation.width)
+          updateOffset()
+          return
+        case nil:
+          break
+        }
         let maxOffsetPoint = viewModel.calculateDragGestureMax()
         let newX = min(
           max(value.translation.width + viewModel.lastOffset.width, -maxOffsetPoint.x),
@@ -171,7 +201,11 @@ struct CropView: View {
         viewModel.offset = CGSize(width: newX, height: newY)
       }
       .onEnded { _ in
+        activeDragStart = nil
+        activeHandleEdge = nil
         viewModel.lastOffset = viewModel.offset
+        viewModel.lastMaskHeight = viewModel.maskSize.height
+        viewModel.lastMaskWidth = viewModel.maskSize.width
       }
   }
   
@@ -210,14 +244,98 @@ struct CropView: View {
           MaskShapeView(maskShape: maskShape)
             .frame(width: viewModel.maskSize.width, height: viewModel.maskSize.height)
         )
+
+      if maskShape == .rectangle && configuration.allowAspectRatioResizing {
+        maskHandlesOverlay
+      }
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .background(
+      GeometryReader { geo in
+        Color.clear.onAppear { containerSize = geo.size }
+      }
+    )
     .simultaneousGesture(magnificationGesture)
     .simultaneousGesture(dragGesture)
     .simultaneousGesture(configuration.rotateImage ? rotationGesture : nil)
   }
   
+  private var maskHandlesOverlay: some View {
+    Group {
+      ZStack {
+        Rectangle()
+          .stroke(
+            configuration.colors.cropHandle.opacity(0.8),
+            style: StrokeStyle(lineWidth: 1.5, dash: [6, 3])
+          )
+          .frame(width: viewModel.maskSize.width, height: viewModel.maskSize.height)
+
+        // Top handle
+        Capsule()
+          .fill(configuration.colors.cropHandle)
+          .frame(width: 40, height: 8)
+          .shadow(radius: 2)
+          .offset(y: -viewModel.maskSize.height / 2)
+
+        // Bottom handle
+        Capsule()
+          .fill(configuration.colors.cropHandle)
+          .frame(width: 40, height: 8)
+          .shadow(radius: 2)
+          .offset(y: viewModel.maskSize.height / 2)
+
+        // Left handle
+        Capsule()
+          .fill(configuration.colors.cropHandle)
+          .frame(width: 8, height: 40)
+          .shadow(radius: 2)
+          .offset(x: -viewModel.maskSize.width / 2)
+
+        // Right handle
+        Capsule()
+          .fill(configuration.colors.cropHandle)
+          .frame(width: 8, height: 40)
+          .shadow(radius: 2)
+          .offset(x: viewModel.maskSize.width / 2)
+      }
+      .allowsHitTesting(false)
+    }
+  }
+
   // MARK: - Helpers
+
+  private enum HandleEdge {
+    case top, bottom, left, right
+  }
+
+  private func handleEdge(for point: CGPoint) -> HandleEdge? {
+    guard maskShape == .rectangle && configuration.allowAspectRatioResizing else {
+      return nil
+    }
+    let centerX = containerSize.width / 2
+    let centerY = containerSize.height / 2
+    let halfW = viewModel.maskSize.width / 2
+    let halfH = viewModel.maskSize.height / 2
+
+    // Top edge: 80pt wide × 44pt tall hit zone
+    if abs(point.x - centerX) <= 40, abs(point.y - (centerY - halfH)) <= 22 {
+      return .top
+    }
+    // Bottom edge: 80pt wide × 44pt tall hit zone
+    if abs(point.x - centerX) <= 40, abs(point.y - (centerY + halfH)) <= 22 {
+      return .bottom
+    }
+    // Left edge: 44pt wide × 80pt tall hit zone
+    if abs(point.x - (centerX - halfW)) <= 22, abs(point.y - centerY) <= 40 {
+      return .left
+    }
+    // Right edge: 44pt wide × 80pt tall hit zone
+    if abs(point.x - (centerX + halfW)) <= 22, abs(point.y - centerY) <= 40 {
+      return .right
+    }
+    return nil
+  }
+
   private func updateOffset() {
     let maxOffsetPoint = viewModel.calculateDragGestureMax()
     let newX = min(max(viewModel.offset.width, -maxOffsetPoint.x), maxOffsetPoint.x)

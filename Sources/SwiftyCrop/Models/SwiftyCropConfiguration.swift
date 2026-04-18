@@ -11,6 +11,9 @@ public struct SwiftyCropConfiguration {
   public let usesLiquidGlassDesign: Bool
   public let zoomSensitivity: CGFloat
   public let rectAspectRatio: CGFloat
+  public let allowAspectRatioResizing: Bool
+  public let minAspectRatio: CGFloat
+  public let maxAspectRatio: CGFloat
   public let texts: Texts
   public let fonts: Fonts
   public let colors: Colors
@@ -80,6 +83,7 @@ public struct SwiftyCropConfiguration {
   ///   - saveButton: The color for the save button text. If Liquid Glass is enabled, will be the color of the icon. Defaults to `.white`.
   ///   - saveButtonBackground: If Liquid Glass is enabled, will be the background color of the button. Otherwise has no effect. Defaults to `.yellow`.
   ///   - background: The background color of the entire cropping view. Defaults to `.black`.
+  ///   - cropHandle: The color of the aspect ratio resize handles shown on rectangle masks (if allowAspectRatioResizing is enabled). Defaults to `.white`.
   public struct Colors {
     public init(
       cancelButton: Color = .white,
@@ -91,7 +95,8 @@ public struct SwiftyCropConfiguration {
       resetRotationButtonBackground: Color = .clear,
       saveButton: Color = .white,
       saveButtonBackground: Color = .yellow,
-      background: Color = .black
+      background: Color = .black,
+      cropHandle: Color = .white
     ) {
       self.cancelButton = cancelButton
       self.cancelButtonBackground = cancelButtonBackground
@@ -103,6 +108,7 @@ public struct SwiftyCropConfiguration {
       self.saveButton = saveButton
       self.saveButtonBackground = saveButtonBackground
       self.background = background
+      self.cropHandle = cropHandle
     }
     
     public let cancelButton: Color
@@ -115,6 +121,7 @@ public struct SwiftyCropConfiguration {
     public let saveButton: Color
     public let saveButtonBackground: Color
     public let background: Color
+    public let cropHandle: Color
   }
   
   /// Creates a new instance of `SwiftyCropConfiguration`.
@@ -136,6 +143,12 @@ public struct SwiftyCropConfiguration {
   ///
   ///   - rectAspectRatio: The aspect ratio to use when a `.rectangle` mask shape is used. Defaults to `4:3`.
   ///
+  ///   - allowAspectRatioResizing: Whether grab handles are shown on rectangle masks to adjust the aspect ratio on the fly. Defaults to `false`.
+  ///
+  ///   - minAspectRatio: The minimum allowed aspect ratio (width/height) when resizing a rectangle mask. Defaults to `0.1`.
+  ///
+  ///   - maxAspectRatio: The maximum allowed aspect ratio (width/height) when resizing a rectangle mask. Defaults to `10.0`.
+  ///
   ///   - texts: `Texts` object when using custom texts for the cropping view.
   ///
   ///   - fonts: `Fonts` object when using custom fonts for the cropping view. Defaults to system.
@@ -150,6 +163,9 @@ public struct SwiftyCropConfiguration {
     usesLiquidGlassDesign: Bool? = nil,
     zoomSensitivity: CGFloat = 1,
     rectAspectRatio: CGFloat = 4/3,
+    allowAspectRatioResizing: Bool = false,
+    minAspectRatio: CGFloat = 0.1,
+    maxAspectRatio: CGFloat = 10.0,
     texts: Texts = Texts(),
     fonts: Fonts = Fonts(),
     colors: Colors = Colors()
@@ -161,6 +177,9 @@ public struct SwiftyCropConfiguration {
     self.rotateImageWithButtons = rotateImageWithButtons
     self.zoomSensitivity = zoomSensitivity
     self.rectAspectRatio = rectAspectRatio
+    self.allowAspectRatioResizing = allowAspectRatioResizing
+    self.minAspectRatio = minAspectRatio
+    self.maxAspectRatio = maxAspectRatio
     self.texts = texts
     self.fonts = fonts
     self.colors = colors
