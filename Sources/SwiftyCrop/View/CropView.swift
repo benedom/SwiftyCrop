@@ -233,6 +233,9 @@ struct CropView: View {
               .onAppear {
                 viewModel.updateMaskDimensions(for: geometry.size)
               }
+              .onSizeChange { newSize in
+                viewModel.updateMaskDimensions(for: newSize)
+              }
           }
         )
 
@@ -252,14 +255,16 @@ struct CropView: View {
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .background(
       GeometryReader { geo in
-        Color.clear.onAppear { containerSize = geo.size }
+        Color.clear
+          .onAppear { containerSize = geo.size }
+          .onSizeChange { newSize in containerSize = newSize }
       }
     )
     .simultaneousGesture(magnificationGesture)
     .simultaneousGesture(dragGesture)
     .simultaneousGesture(configuration.rotateImage ? rotationGesture : nil)
   }
-  
+
   private var maskHandlesOverlay: some View {
     Group {
       ZStack {
