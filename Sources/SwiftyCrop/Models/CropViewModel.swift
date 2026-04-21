@@ -15,7 +15,9 @@ class CropViewModel: ObservableObject {
     private let maskRadius: CGFloat
     private let maxMagnificationScale: CGFloat // The maximum allowed scale factor for image magnification.
     private let maskShape: MaskShape // The shape of the mask used for cropping.
-    private let rectAspectRatio: CGFloat // The aspect ratio for rectangular masks.
+    var rectAspectRatio: CGFloat // The aspect ratio for rectangular masks.
+    private let minAspectRatio: CGFloat // The minimum allowed aspect ratio when resizing a rectangle mask.
+    private let maxAspectRatio: CGFloat // The maximum allowed aspect ratio when resizing a rectangle mask.
     
     var imageSizeInView: CGSize = .zero // The size of the image as displayed in the view.
     @Published var maskSize: CGSize = .zero // The size of the mask used for cropping. This is updated based on the mask shape and available space.
@@ -25,17 +27,24 @@ class CropViewModel: ObservableObject {
     @Published var lastOffset: CGSize = .zero // The previous offset of the image.
     @Published var angle: Angle = Angle(degrees: 0) // The current rotation angle of the image.
     @Published var lastAngle: Angle = Angle(degrees: 0) // The previous rotation angle of the image.
+    var lastMaskHeight: CGFloat = 0 // The mask height at the start of a resize gesture.
+    var lastMaskWidth: CGFloat = 0 // The mask width at the start of a resize gesture.
     
     init(
         maskRadius: CGFloat,
         maxMagnificationScale: CGFloat,
         maskShape: MaskShape,
-        rectAspectRatio: CGFloat
+        rectAspectRatio: CGFloat,
+        minAspectRatio: CGFloat,
+        maxAspectRatio: CGFloat
     ) {
         self.maskRadius = maskRadius
         self.maxMagnificationScale = maxMagnificationScale
         self.maskShape = maskShape
         self.rectAspectRatio = rectAspectRatio
+        let clampedMin = max(minAspectRatio, 0.01) // enforce a reasonable minimum aspect ratio to prevent extreme distortion
+        self.minAspectRatio = clampedMin
+        self.maxAspectRatio = max(maxAspectRatio, clampedMin) // if maxAspectRatio is less than minAspectRatio, set it to minAspectRatio to avoid invalid aspect ratio range
     }
     
     /**
@@ -65,6 +74,34 @@ class CropViewModel: ObservableObject {
     func updateMaskDimensions(for imageSizeInView: CGSize) {
         self.imageSizeInView = imageSizeInView
         updateMaskSize(for: imageSizeInView)
+        lastMaskHeight = maskSize.height
+        lastMaskWidth = maskSize.width
+    }
+
+    /**
+     Adjusts the mask height by `delta` symmetrically, clamped by view bounds and aspect ratio limits.
+     - Parameter delta: The change in height (positive = taller).
+     */
+    func resizeMaskByHeightDelta(_ delta: CGFloat) {
+        let desired = lastMaskHeight + delta
+        let maxH = min(imageSizeInView.height, maskSize.width / minAspectRatio)
+        let minH = max(50, maskSize.width / maxAspectRatio)
+        let clamped = min(max(desired, minH), maxH)
+        maskSize = CGSize(width: maskSize.width, height: clamped)
+        rectAspectRatio = maskSize.width / clamped
+    }
+
+    /**
+     Adjusts the mask width by `delta` symmetrically, clamped by view bounds and aspect ratio limits.
+     - Parameter delta: The change in width (positive = wider).
+     */
+    func resizeMaskByWidthDelta(_ delta: CGFloat) {
+        let desired = lastMaskWidth + delta
+        let maxW = min(imageSizeInView.width, maskSize.height * maxAspectRatio)
+        let minW = max(50, maskSize.height * minAspectRatio)
+        let clamped = min(max(desired, minW), maxW)
+        maskSize = CGSize(width: clamped, height: maskSize.height)
+        rectAspectRatio = clamped / maskSize.height
     }
     
     /**

@@ -20,6 +20,9 @@ struct ContentView: View {
   @State private var maxMagnificationScale: CGFloat
   @State private var maskRadius: CGFloat
   @State private var zoomSensitivity: CGFloat
+  @State private var allowAspectRatioResizing: Bool
+  @State private var minAspectRatio: CGFloat
+  @State private var maxAspectRatio: CGFloat
   @FocusState private var textFieldFocused: Bool
   
   enum PresetAspectRatios: String, CaseIterable {
@@ -46,6 +49,9 @@ struct ContentView: View {
     _maxMagnificationScale = State(initialValue: defaultConfiguration.maxMagnificationScale)
     _maskRadius = State(initialValue: defaultConfiguration.maskRadius)
     _zoomSensitivity = State(initialValue: defaultConfiguration.zoomSensitivity)
+    _allowAspectRatioResizing = State(initialValue: defaultConfiguration.allowAspectRatioResizing)
+    _minAspectRatio = State(initialValue: defaultConfiguration.minAspectRatio)
+    _maxAspectRatio = State(initialValue: defaultConfiguration.maxAspectRatio)
   }
   
   var body: some View {
@@ -106,8 +112,25 @@ struct ContentView: View {
               }
               .pickerStyle(.segmented)
             }
+
+            Toggle("Allow aspect ratio resizing", isOn: $allowAspectRatioResizing)
+
+            if allowAspectRatioResizing {
+              HStack {
+                Text("Min aspect ratio")
+                  .frame(maxWidth: .infinity, alignment: .leading)
+                DecimalTextField(value: $minAspectRatio)
+                  .focused($textFieldFocused)
+              }
+              HStack {
+                Text("Max aspect ratio")
+                  .frame(maxWidth: .infinity, alignment: .leading)
+                DecimalTextField(value: $maxAspectRatio)
+                  .focused($textFieldFocused)
+              }
+            }
           }
-          
+
           Toggle("Crop image to circle", isOn: $cropImageCircular)
           
           Toggle("Rotate image (gestures)", isOn: $rotateImage)
@@ -213,7 +236,10 @@ struct ContentView: View {
           rotateImageWithButtons: rotateImageWithButtons,
           usesLiquidGlassDesign: usesLiquidGlassDesign,
           zoomSensitivity: zoomSensitivity,
-          rectAspectRatio: rectAspectRatio.getValue()
+          rectAspectRatio: rectAspectRatio.getValue(),
+          allowAspectRatioResizing: allowAspectRatioResizing,
+          minAspectRatio: minAspectRatio,
+          maxAspectRatio: maxAspectRatio
         ),
         onCancel: {
           print("Operation cancelled")
