@@ -279,7 +279,7 @@ Thanks to [@puyanlin](https://github.com/puyanlin) for adding the traditional ch
 
 Thanks to [@navanchauhan](https://github.com/navanchauhan) for adding native macOS support 🖥️
 
-Thanks to [@drewhanshaw](https://github.com/drewhanshaw) for adding the aspect ratio resizing functionality 🎉
+Thanks to [@andrewhanshaw](https://github.com/andrewhanshaw) for adding the aspect ratio resizing functionality 🎉
 
 ## 📃 License
 
