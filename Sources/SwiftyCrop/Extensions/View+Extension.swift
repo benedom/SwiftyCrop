@@ -1,5 +1,10 @@
 import SwiftUI
 
+struct SizePreferenceKey: PreferenceKey {
+  static let defaultValue: CGSize = .zero
+  static func reduce(value: inout CGSize, nextValue: () -> CGSize) { value = nextValue() }
+}
+
 extension View {
   /// Calls `perform` whenever this view's size changes (including after first layout).
   /// Uses `PreferenceKey` so it's compatible with all supported OS versions.
@@ -16,9 +21,4 @@ extension View {
       .onPreferenceChange(SizePreferenceKey.self, perform: perform)
     }
   }
-}
-
-struct SizePreferenceKey: PreferenceKey {
-  static let defaultValue: CGSize = .zero
-  static func reduce(value: inout CGSize, nextValue: () -> CGSize) { value = nextValue() }
 }

@@ -55,6 +55,7 @@ The localization file can be found in `Sources/SwiftyCrop/Resources`.
 - [Installation](#-installation)
 - [Demo App](#-demo-app)
 - [Usage](#-usage)
+- [Aspect Ratio Resizing](#-aspect-ratio-resizing)
 - [iOS 26 & Liquid Glass](#-ios-26--liquid-glass)
 - [Contributors](#-contributors)
 - [License](#-license)
@@ -171,6 +172,9 @@ You can also configure `SwiftyCropView` by passing a `SwiftyCropConfiguration`. 
 | `usesLiquidGlassDesign` | `Bool?`: Apply the all new liquid glass design. Defaults to `true` if iOS 26 is available. |
 | `zoomSensitivity` | `CGFloat`: Zoom sensitivity when cropping. Increase to make zoom faster / less sensitive. Defaults to `1.0`. |
 | `rectAspectRatio` | `CGFloat`: The aspect ratio to use when a rectangular mask shape is used. Defaults to `4:3`. |
+| `allowAspectRatioResizing` | `Bool`: When using the `rectangle` mask shape, whether the user can freely resize the aspect ratio by dragging the edge handles. Defaults to `false`. |
+| `minAspectRatio` | `CGFloat`: The minimum allowed aspect ratio (width / height) when `allowAspectRatioResizing` is enabled. Defaults to `0.1`. |
+| `maxAspectRatio` | `CGFloat`: The maximum allowed aspect ratio (width / height) when `allowAspectRatioResizing` is enabled. Defaults to `10.0`. |
 | `texts` | `Texts`: Defines custom texts for the buttons and instructions. Defaults to using localized strings from resources. |
 | `fonts` | `Fonts`: Defines custom fonts for the buttons and instructions. Defaults to using system font. |
 | `colors` | `Colors`: Defines custom colors for the texts and background. Defaults to white text and black background. |
@@ -220,6 +224,23 @@ and use it like this:
         }
 ```
 
+## ↔️ Aspect Ratio Resizing
+
+When using the `rectangle` mask shape, you can allow users to freely adjust the crop area's aspect ratio at runtime by dragging handles on the edges of the mask. Enable this via `allowAspectRatioResizing` in the configuration and optionally constrain the range with `minAspectRatio` and `maxAspectRatio`.
+
+```swift
+let configuration = SwiftyCropConfiguration(
+    rectAspectRatio: 4/3,
+    allowAspectRatioResizing: true,
+    minAspectRatio: 0.5,  // narrowest: 1:2
+    maxAspectRatio: 3.0   // widest: 3:1
+)
+```
+
+<p align="center">
+    <img src="Assets/aspect_ratio_resizing.png" style="margin: auto; width: 250px"/>
+</p>
+
 ## 🪟 iOS 26 & Liquid Glass
 
 To adopt to the new Liquid Glass design Apple introduced with iOS 26, SwiftyCrop supplies a new UI which reflects this design. This will remove text buttons and replace them with icon buttons and much more. Below is the current way it looks. By default, this is active if iOS 26 or macOS 26 is available. You can change this by overriding the `SwiftyCropConfiguration`.
@@ -257,6 +278,8 @@ Thanks to [@KuuttiProductions](https://github.com/KuuttiProductions) for adding 
 Thanks to [@puyanlin](https://github.com/puyanlin) for adding the traditional chinese localization 🌐
 
 Thanks to [@navanchauhan](https://github.com/navanchauhan) for adding native macOS support 🖥️
+
+Thanks to [@drewhanshaw](https://github.com/drewhanshaw) for adding the aspect ratio resizing functionality 🎉
 
 ## 📃 License
 
