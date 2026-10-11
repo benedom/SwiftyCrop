@@ -139,7 +139,10 @@ struct CropView: View {
   private var rotationGesture: some Gesture {
     RotationGesture()
       .onChanged { value in
-        viewModel.angle = viewModel.lastAngle + value
+        let newAngle = viewModel.lastAngle + value
+        // RotationGesture can emit NaN in edge cases; ignore non-finite values so they never stick.
+        guard newAngle.degrees.isFinite else { return }
+        viewModel.angle = newAngle
       }
       .onEnded { _ in
         viewModel.lastAngle = viewModel.angle
@@ -492,7 +495,8 @@ struct RotationControlsView: ToolbarContent {
     .tintedGlassEffect(configuration.colors.rotateButtonBackground)
 
     Button {
-      let numberOfFullCircles = Int(angle.degrees / 360)
+      let degrees = angle.degrees.isFinite ? angle.degrees : 0
+      let numberOfFullCircles = Int(degrees / 360)
       let newValue = Double(numberOfFullCircles * 360)
       withAnimation {
         angle = Angle(degrees: newValue)
